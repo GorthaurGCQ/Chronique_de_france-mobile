@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+  <!-- Château de Chambord stylisé -->
+  <rect width="80" height="80" rx="12" fill="#d4b800"/>
+  <!-- Corps principal du château -->
+  <rect x="16" y="36" width="48" height="28" rx="2" fill="#fff"/>
+  <!-- Tours rondes aux coins -->
+  <circle cx="16" cy="44" r="8" fill="#fff"/>
+  <circle cx="64" cy="44" r="8" fill="#fff"/>
+  <!-- Tour centrale -->
+  <rect x="32" y="22" width="16" height="42" rx="2" fill="#fff"/>
+  <!-- Toit conique central -->
+  <polygon points="40,8 50,24 30,24" fill="#fff"/>
+  <!-- Fenêtres -->
+  <rect x="37" y="28" width="6" height="8" rx="2" fill="#d4b800"/>
+  <rect x="22" y="38" width="5" height="7" rx="2" fill="#d4b800"/>
+  <rect x="53" y="38" width="5" height="7" rx="2" fill="#d4b800"/>
+  <!-- Douves -->
+  <path d="M8 66 Q40 72 72 66" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
+</svg>

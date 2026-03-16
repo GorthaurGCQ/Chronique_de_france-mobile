@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+  <!-- Lion des Flandres stylisé -->
+  <rect width="80" height="80" rx="12" fill="#85C1E9"/>
+  <!-- Corps -->
+  <ellipse cx="42" cy="50" rx="18" ry="14" fill="#fff"/>
+  <!-- Tête -->
+  <circle cx="38" cy="30" r="13" fill="#fff"/>
+  <!-- Crinière -->
+  <circle cx="38" cy="30" r="16" fill="#fff" opacity="0.4"/>
+  <!-- Oreilles -->
+  <polygon points="28,18 23,10 33,18" fill="#fff"/>
+  <polygon points="48,18 53,10 43,18" fill="#fff"/>
+  <!-- Yeux -->
+  <circle cx="33" cy="28" r="2.5" fill="#85C1E9"/>
+  <circle cx="43" cy="28" r="2.5" fill="#85C1E9"/>
+  <!-- Queue recourbée -->
+  <path d="M60 50 Q72 40 70 58 Q74 66 64 62" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+</svg>

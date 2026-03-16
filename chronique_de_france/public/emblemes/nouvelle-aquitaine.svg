@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+  <!-- Lion d'Aquitaine stylisé -->
+  <rect width="80" height="80" rx="12" fill="#7EC8A0"/>
+  <!-- Corps du lion -->
+  <ellipse cx="40" cy="46" rx="20" ry="15" fill="#fff"/>
+  <!-- Tête -->
+  <circle cx="40" cy="28" r="14" fill="#fff"/>
+  <!-- Crinière -->
+  <circle cx="40" cy="28" r="17" fill="#fff" opacity="0.5"/>
+  <!-- Ril gauche -->
+  <circle cx="35" cy="26" r="2.5" fill="#7EC8A0"/>
+  <!-- Ril droit -->
+  <circle cx="45" cy="26" r="2.5" fill="#7EC8A0"/>
+  <!-- Nez -->
+  <ellipse cx="40" cy="31" rx="3" ry="2" fill="#7EC8A0"/>
+  <!-- Queue -->
+  <path d="M60 46 Q72 36 68 52 Q72 58 64 56" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+</svg>
