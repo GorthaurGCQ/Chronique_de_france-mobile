@@ -45,9 +45,20 @@
   max-width: 560px;
 }
 
+/* ─── Carte section ──────────────────────────────── */
+.mapSection {
+  padding: 4rem 2rem 5rem;
+  background: var(--color-bg);
+  display: flex;
+  justify-content: center;
+}
+
 /* ─── Responsive ─────────────────────────────────── */
 @media (max-width: 768px) {
   .header {
     padding: 3rem 1.25rem 2.5rem;
+  }
+  .mapSection {
+    padding: 2.5rem 1rem 3.5rem;
   }
 }

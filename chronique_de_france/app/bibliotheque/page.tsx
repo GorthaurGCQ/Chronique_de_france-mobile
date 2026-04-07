@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import TimelineHistorique from "@/components/TimelineHistorique/TimelineHistorique";
+import CarteInteractive from "@/components/CarteInteractive/CarteInteractive";
 import styles from "./bibliotheque.module.css";
 
 export const metadata: Metadata = {
@@ -17,14 +17,15 @@ export default function BibliothequePage() {
           <span className={styles.badge}>RESSOURCES PÉDAGOGIQUES</span>
           <h1 className={styles.title}>Bibliothèque</h1>
           <p className={styles.subtitle}>
-            Explorez nos chronologies, fiches thématiques et archives historiques.
-            Sélectionnez une région sur la carte pour découvrir les ressources associées.
+            Sélectionnez une région sur la carte pour découvrir son histoire et ses ressources associées.
           </p>
         </div>
       </section>
 
-      {/* Chronologie interactive */}
-      <TimelineHistorique />
+      {/* Carte interactive */}
+      <section className={styles.mapSection}>
+        <CarteInteractive />
+      </section>
     </main>
   );
 }

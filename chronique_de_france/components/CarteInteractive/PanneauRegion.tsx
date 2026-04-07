@@ -142,7 +142,7 @@ export default function PanneauRegion({ region, onClose }: Props) {
 
               {/* CTA */}
               <Link
-                href={`/bibliotheque?region=${encodeURIComponent(region.nom)}`}
+                href={`/regions/${region.id}`}
                 className={styles.btnExplore}
                 style={{ background: "var(--color-gold, #b8933a)" }}
                 onClick={onClose}

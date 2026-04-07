@@ -1,3 +1,31 @@
+/* ── Toggle header ─────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.arrow {
+  font-size: 0.8rem;
+  color: var(--color-navy, #1a2744);
+  display: inline-block;
+  transform: rotate(-90deg);
+  transition: transform 0.2s ease;
+  line-height: 1;
+}
+
+.arrowOpen {
+  transform: rotate(0deg);
+}
+
+/* ── Container ─────────────────────────────────────── */
 .legend {
   position: absolute;
   bottom: 12px;

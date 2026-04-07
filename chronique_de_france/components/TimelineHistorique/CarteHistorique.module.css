@@ -41,7 +41,7 @@
   display: block;
 }
 
-.territoire {
+.region {
   cursor: pointer;
   transition: filter 0.15s ease, transform 0.15s ease, stroke-width 0.1s ease;
   transform-box: fill-box;
@@ -49,12 +49,22 @@
   outline: none;
 }
 
-.territoire:focus-visible {
+.region:focus,
+.region:focus-visible {
+  outline: none;
+}
+
+.region:active {
+  transform: scale(0.97);
+  transition: transform 0.08s ease;
+}
+
+.region:focus-visible {
   stroke: var(--color-gold, #b8933a) !important;
   stroke-width: 2.5px !important;
 }
 
-.territoireHovered {
+.regionHovered {
   transform: scale(1.025);
   filter: brightness(1.12) url(#th-shadow-hover) !important;
 }

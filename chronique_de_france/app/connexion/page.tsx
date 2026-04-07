@@ -231,33 +231,6 @@ export default function ConnexionPage() {
                 />
               </div>
 
-              <div className={styles.roleField}>
-                <label className={styles.label}>Type de compte</label>
-                <div className={styles.roleOptions}>
-                  <label className={styles.roleOption}>
-                    <input type="radio" name="role" value="eleve" defaultChecked className={styles.radio} />
-                    <div className={styles.roleCard}>
-                      <span className={styles.roleIcon}>🎓</span>
-                      <span className={styles.roleLabel}>Élève</span>
-                    </div>
-                  </label>
-                  <label className={styles.roleOption}>
-                    <input type="radio" name="role" value="enseignant" className={styles.radio} />
-                    <div className={styles.roleCard}>
-                      <span className={styles.roleIcon}>📚</span>
-                      <span className={styles.roleLabel}>Enseignant</span>
-                    </div>
-                  </label>
-                  <label className={styles.roleOption}>
-                    <input type="radio" name="role" value="passionné" className={styles.radio} />
-                    <div className={styles.roleCard}>
-                      <span className={styles.roleIcon}>🏛️</span>
-                      <span className={styles.roleLabel}>Passionné</span>
-                    </div>
-                  </label>
-                </div>
-              </div>
-
               <label className={styles.checkboxRow}>
                 <input type="checkbox" className={styles.checkbox} required />
                 <span className={styles.checkboxLabel}>
