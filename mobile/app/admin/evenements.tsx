@@ -8,10 +8,11 @@ import { COLORS } from '@/constants/Colors';
 import { useAdminEvents, useAdminCreateEvent, useAdminUpdateEvent, useAdminDeleteEvent } from '@/hooks/useAdmin';
 import { Loader } from '@/components/ui/Loader';
 import { adminApi, type Event } from '@/lib/api';
-import { DOMAINES, REGIONS_LIST } from '@/lib/constants';
+import { DOMAINES, EPOQUES, REGIONS_LIST } from '@/lib/constants';
+import { ImageUploadField } from '@/components/admin/ImageUploadField';
 
-type FormData = { title: string; description: string; date: string; lieu: string; region: string; domaine: string };
-const EMPTY: FormData = { title: '', description: '', date: '', lieu: '', region: '', domaine: '' };
+type FormData = { title: string; description: string; date: string; lieu: string; region: string; domaine: string; epoque: string; imageUrl: string };
+const EMPTY: FormData = { title: '', description: '', date: '', lieu: '', region: '', domaine: '', epoque: 'CONTEMPORAIN', imageUrl: '' };
 
 function EventForm({ initial, onSave, onClose, isSaving }: { initial: FormData; onSave: (d: FormData) => void; onClose: () => void; isSaving: boolean }) {
   const [form, setForm] = useState(initial);
@@ -46,6 +47,15 @@ function EventForm({ initial, onSave, onClose, isSaving }: { initial: FormData; 
             </TouchableOpacity>
           ))}
         </ScrollView>
+        <Text style={fs.label}>Époque</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={fs.chips}>
+          {EPOQUES.map((e) => (
+            <TouchableOpacity key={e.id} style={[fs.chip, form.epoque === e.id && fs.chipActive]} onPress={() => set('epoque', form.epoque === e.id ? '' : e.id)}>
+              <Text style={[fs.chipText, form.epoque === e.id && fs.chipTextActive]}>{e.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+        <ImageUploadField label="Miniature" value={form.imageUrl} onChange={(v) => set('imageUrl', v)} />
         <TouchableOpacity style={fs.saveBtn} onPress={() => onSave(form)} disabled={isSaving || !form.title}>
           {isSaving ? <ActivityIndicator color={COLORS.bg} /> : <Text style={fs.saveBtnText}>Enregistrer</Text>}
         </TouchableOpacity>
@@ -141,6 +151,8 @@ export default function AdminEvenements() {
               title: editing.title, description: editing.description ?? '',
               date: editing.date, lieu: editing.lieu ?? '',
               region: editing.region ?? '', domaine: editing.domaine ?? '',
+              epoque: editing.epoque ?? 'CONTEMPORAIN',
+              imageUrl: editing.imageUrl ?? '',
             }}
             onSave={handleSave}
             onClose={() => setEditing(null)}

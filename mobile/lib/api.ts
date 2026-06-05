@@ -192,6 +192,8 @@ export const authApi = {
       method: 'POST',
       body: JSON.stringify({ token, newPassword }),
     }),
+
+  deleteAccount: () => apiJson<void>('/auth/delete-user', { method: 'POST' }),
 };
 
 // ── Profil ────────────────────────────────────────────────────────────────────
@@ -422,14 +424,14 @@ export const adminApi = {
   },
 
   getUsers: () =>
-    apiJson<{ id: string; name: string; email: string; role: string; banned: boolean; createdAt: string }[]>(
+    apiJson<{ id: string; name: string; email: string; role: string; banned: boolean; createdAt: string; customPermissions?: string | null }[]>(
       '/admin/users',
     ),
 
-  updateUser: (userId: string, action: AdminUserAction, role?: string) =>
+  updateUser: (userId: string, action: AdminUserAction, options?: { role?: string; permissions?: string[] }) =>
     apiJson<void>('/admin/users', {
       method: 'PATCH',
-      body: JSON.stringify({ userId, action, role }),
+      body: JSON.stringify({ userId, action, role: options?.role, permissions: options?.permissions }),
     }),
 
   getResources: async () => {

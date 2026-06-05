@@ -62,3 +62,45 @@ export function getDomaineLabel(id: string): string {
 export function getResourceTypeLabel(id: string): string {
   return RESOURCE_TYPES.find((t) => t.id === id)?.label ?? id.replace(/_/g, ' ').toLowerCase();
 }
+
+export function getRegionLabel(code: string): string {
+  return REGIONS_LIST.find((r) => r.code === code)?.nom ?? code.replace(/_/g, ' ').toLowerCase();
+}
+
+/** Codes courts legacy (regionsContent) → enum web PostgreSQL */
+export const LEGACY_TO_WEB_REGION: Record<string, RegionCode> = {
+  NATIONAL: 'NATIONAL',
+  ARA: 'AUVERGNE_RHONE_ALPES',
+  BFC: 'BOURGOGNE_FRANCHE_COMTE',
+  BRE: 'BRETAGNE',
+  CVL: 'CENTRE_VAL_DE_LOIRE',
+  COR: 'CORSE',
+  GES: 'GRAND_EST',
+  HDF: 'HAUTS_DE_FRANCE',
+  IDF: 'ILE_DE_FRANCE',
+  NOR: 'NORMANDIE',
+  NAQ: 'NOUVELLE_AQUITAINE',
+  OCC: 'OCCITANIE',
+  PDL: 'PAYS_DE_LA_LOIRE',
+  PAC: 'PROVENCE_ALPES_COTE_AZUR',
+};
+
+export const EPOQUE_COLORS: Record<string, string> = {
+  ANTIQUITE: '#C4956A',
+  MOYEN_AGE: '#8B2635',
+  RENAISSANCE: '#2D5A3D',
+  ANCIEN_REGIME: '#1a2744',
+  REVOLUTION: '#8B6914',
+  XIXE_SIECLE: '#4A4A2A',
+  CONTEMPORAIN: '#3B82F6',
+};
+
+export type UserPreferences = {
+  emailNotifications: boolean;
+  defaultRegion: RegionCode;
+};
+
+export const DEFAULT_USER_PREFERENCES: UserPreferences = {
+  emailNotifications: true,
+  defaultRegion: 'NATIONAL',
+};

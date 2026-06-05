@@ -47,6 +47,12 @@ export function useFavorites() {
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['favorites'] }),
   });
 
+  const noteMutation = useMutation({
+    mutationFn: ({ resourceId, note }: { resourceId: string; note: string }) =>
+      favoritesApi.updateNote(resourceId, note),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['favorites'] }),
+  });
+
   const toggle = (resourceId: string) => {
     if (favoriteIds.has(resourceId)) {
       removeMutation.mutate(resourceId);
@@ -55,5 +61,5 @@ export function useFavorites() {
     }
   };
 
-  return { favorites, favoriteIds, isLoading, toggle };
+  return { favorites, favoriteIds, isLoading, toggle, updateNote: noteMutation.mutateAsync, isUpdatingNote: noteMutation.isPending };
 }

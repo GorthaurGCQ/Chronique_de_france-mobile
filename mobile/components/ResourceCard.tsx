@@ -3,19 +3,8 @@ import { router } from 'expo-router';
 import { COLORS } from '@/constants/Colors';
 import { Badge } from '@/components/ui/Badge';
 import { BookmarkButton } from '@/components/BookmarkButton';
-import { getDomaineLabel, getEpoqueLabel, getResourceTypeLabel } from '@/lib/constants';
-
+import { getDomaineLabel, getEpoqueLabel, getResourceTypeLabel, EPOQUE_COLORS } from '@/lib/constants';
 import type { Resource } from '@/lib/api';
-
-const EPOQUE_COLORS: Record<string, string> = {
-  ANTIQUITE: '#C4956A',
-  MOYEN_AGE: '#8B2635',
-  RENAISSANCE: '#2D5A3D',
-  ANCIEN_REGIME: '#1a2744',
-  REVOLUTION: '#8B6914',
-  XIXE_SIECLE: '#4A4A2A',
-  CONTEMPORAIN: '#3B82F6',
-};
 
 type Props = {
   resource: Resource;

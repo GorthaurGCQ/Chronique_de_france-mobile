@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   View, Text, FlatList, StyleSheet, TouchableOpacity,
 } from 'react-native';
@@ -7,15 +7,24 @@ import { COLORS } from '@/constants/Colors';
 import { useResources } from '@/hooks/useResources';
 import { ResourceCard } from '@/components/ResourceCard';
 import { FilterBar } from '@/components/FilterBar';
+import { SearchBar } from '@/components/SearchBar';
 import { Loader } from '@/components/ui/Loader';
 import { EmptyState } from '@/components/ui/EmptyState';
-import type { DomaineId, EpoqueId } from '@/lib/constants';
+import type { DomaineId, EpoqueId, ResourceTypeId } from '@/lib/constants';
 
 const PAGE_SIZE = 20;
 
 export default function BibliothequéScreen() {
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [type, setType] = useState<ResourceTypeId | ''>('');
   const [domaine, setDomaine] = useState<DomaineId | ''>('');
   const [epoque, setEpoque] = useState<EpoqueId | ''>('');
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(search.trim()), 350);
+    return () => clearTimeout(t);
+  }, [search]);
 
   const {
     data,
@@ -25,15 +34,21 @@ export default function BibliothequéScreen() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useResources({ limit: PAGE_SIZE });
+  } = useResources({
+    limit: PAGE_SIZE,
+    search: debouncedSearch || undefined,
+    type: type || undefined,
+  });
 
-  const resources = data?.pages.flatMap((p) => p.items) ?? [];
-  const total = data?.pages[0]?.total ?? resources.length;
+  const loaded = data?.pages.flatMap((p) => p.items) ?? [];
+  const total = data?.pages[0]?.total ?? loaded.length;
 
-  const handleFilterChange = (type: 'domaine' | 'epoque', value: string) => {
-    if (type === 'domaine') setDomaine(value as DomaineId | '');
-    else setEpoque(value as EpoqueId | '');
-  };
+  const resources = useMemo(() => {
+    return loaded.filter((r) => {
+      if (epoque && r.epoque !== epoque) return false;
+      return true;
+    });
+  }, [loaded, epoque]);
 
   return (
     <View style={styles.container}>
@@ -50,15 +65,19 @@ export default function BibliothequéScreen() {
               <View style={styles.underline} />
               {!isLoading && (
                 <Text style={styles.count}>
-                  {total} ressource{total > 1 ? 's' : ''}
+                  {epoque ? `${resources.length} affichée(s) · ${total} au total` : `${total} ressource${total > 1 ? 's' : ''}`}
                 </Text>
               )}
             </View>
+            <SearchBar value={search} onChangeText={setSearch} />
             <FilterBar
+              selectedType={type}
               selectedDomaine={domaine}
               selectedEpoque={epoque}
-              onDomaineChange={(v) => handleFilterChange('domaine', v)}
-              onEpoqueChange={(v) => handleFilterChange('epoque', v)}
+              onTypeChange={setType}
+              onDomaineChange={setDomaine}
+              onEpoqueChange={setEpoque}
+              localFilterHint
             />
           </>
         }
@@ -76,13 +95,13 @@ export default function BibliothequéScreen() {
               : <EmptyState
                   icon="book-outline"
                   title="Aucune ressource"
-                  subtitle="Aucune ressource disponible pour le moment."
-                  actionLabel="Actualiser"
-                  onAction={refetch}
+                  subtitle="Aucune ressource ne correspond à votre recherche."
+                  actionLabel="Réinitialiser"
+                  onAction={() => { setSearch(''); setType(''); setEpoque(''); }}
                 />
         }
         ListFooterComponent={
-          hasNextPage ? (
+          hasNextPage && !epoque ? (
             <TouchableOpacity
               style={styles.loadMore}
               onPress={() => fetchNextPage()}
@@ -109,6 +128,7 @@ const styles = StyleSheet.create({
   header: {
     padding: 24,
     paddingTop: 20,
+    paddingBottom: 12,
     backgroundColor: COLORS.navyLight,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,

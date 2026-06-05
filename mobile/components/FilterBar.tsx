@@ -1,58 +1,98 @@
 import { ScrollView, TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { COLORS } from '@/constants/Colors';
-import { DOMAINES, EPOQUES, type DomaineId, type EpoqueId } from '@/lib/constants';
+import { DOMAINES, EPOQUES, RESOURCE_TYPES, type DomaineId, type EpoqueId, type ResourceTypeId } from '@/lib/constants';
 
 type Props = {
+  selectedType: ResourceTypeId | '';
   selectedDomaine: DomaineId | '';
   selectedEpoque: EpoqueId | '';
+  onTypeChange: (v: ResourceTypeId | '') => void;
   onDomaineChange: (v: DomaineId | '') => void;
   onEpoqueChange: (v: EpoqueId | '') => void;
+  localFilterHint?: boolean;
 };
 
-function DisabledChip({ label }: { label: string }) {
+function Chip({
+  label,
+  active,
+  onPress,
+  disabled,
+}: {
+  label: string;
+  active: boolean;
+  onPress: () => void;
+  disabled?: boolean;
+}) {
   return (
-    <View style={[styles.chip, styles.chipDisabled]}>
-      <Text style={styles.chipLabelDisabled}>{label}</Text>
-    </View>
+    <TouchableOpacity
+      style={[styles.chip, active && styles.chipActive, disabled && styles.chipDisabled]}
+      onPress={onPress}
+      disabled={disabled}
+    >
+      <Text style={[styles.chipLabel, active && styles.chipLabelActive, disabled && styles.chipLabelDisabled]}>
+        {label}
+      </Text>
+    </TouchableOpacity>
   );
 }
 
-export function FilterBar({ selectedDomaine, selectedEpoque, onDomaineChange, onEpoqueChange }: Props) {
+export function FilterBar({
+  selectedType,
+  selectedDomaine,
+  selectedEpoque,
+  onTypeChange,
+  onDomaineChange,
+  onEpoqueChange,
+  localFilterHint,
+}: Props) {
   return (
     <View style={styles.container}>
-      {/* Domaines — non supportés par l'API web pour l'instant */}
+      {/* Type — filtre API */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Domaines</Text>
-        <Text style={styles.soonBadge}>Bientôt disponible</Text>
+        <Text style={styles.sectionTitle}>Type</Text>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
-        <DisabledChip label="Tous" />
-        {DOMAINES.map((d) => (
-          <DisabledChip key={d.id} label={d.label} />
+        <Chip label="Tous" active={!selectedType} onPress={() => onTypeChange('')} />
+        {RESOURCE_TYPES.map((t) => (
+          <Chip
+            key={t.id}
+            label={t.label}
+            active={selectedType === t.id}
+            onPress={() => onTypeChange(selectedType === t.id ? '' : t.id)}
+          />
         ))}
       </ScrollView>
 
-      {/* Époques — non supportées par l'API web pour l'instant */}
+      {/* Époque — filtre local (timeline présent dans les réponses API) */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Époques</Text>
-        <Text style={styles.soonBadge}>Bientôt disponible</Text>
+        <Text style={styles.sectionTitle}>Époque</Text>
+        {localFilterHint && selectedEpoque ? (
+          <Text style={styles.hintBadge}>Résultats chargés</Text>
+        ) : null}
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
-        <DisabledChip label="Toutes les époques" />
+        <Chip label="Toutes" active={!selectedEpoque} onPress={() => onEpoqueChange('')} />
         {EPOQUES.map((e) => (
-          <DisabledChip key={e.id} label={e.label} />
+          <Chip
+            key={e.id}
+            label={e.label}
+            active={selectedEpoque === e.id}
+            onPress={() => onEpoqueChange(selectedEpoque === e.id ? '' : e.id)}
+          />
         ))}
       </ScrollView>
 
-      {/* État local conservé pour compatibilité, sans effet API */}
-      {(selectedDomaine || selectedEpoque) && (
-        <TouchableOpacity
-          style={styles.resetBtn}
-          onPress={() => { onDomaineChange(''); onEpoqueChange(''); }}
-        >
-          <Text style={styles.resetText}>Réinitialiser les filtres locaux</Text>
-        </TouchableOpacity>
-      )}
+      {/* Domaine — non disponible dans la liste publique API */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Domaine</Text>
+        <Text style={styles.soonBadge}>Bientôt disponible</Text>
+      </View>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
+        <Chip label="Tous" active={!selectedDomaine} onPress={() => {}} disabled />
+        {DOMAINES.map((d) => (
+          <Chip key={d.id} label={d.label} active={false} onPress={() => {}} disabled />
+        ))}
+      </ScrollView>
     </View>
   );
 }
@@ -60,7 +100,13 @@ export function FilterBar({ selectedDomaine, selectedEpoque, onDomaineChange, on
 const styles = StyleSheet.create({
   container: { gap: 8, paddingVertical: 12 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16 },
-  sectionTitle: { color: COLORS.textMuted, fontSize: 11, fontWeight: '700', letterSpacing: 1, textTransform: 'uppercase' },
+  sectionTitle: {
+    color: COLORS.textMuted,
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+  },
   soonBadge: {
     color: COLORS.gold,
     fontSize: 10,
@@ -69,6 +115,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 10,
+  },
+  hintBadge: {
+    color: COLORS.textMuted,
+    fontSize: 10,
+    fontStyle: 'italic',
   },
   row: { paddingHorizontal: 16, gap: 8 },
   chip: {
@@ -79,8 +130,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
   },
-  chipDisabled: { opacity: 0.45 },
-  chipLabelDisabled: { color: COLORS.textMuted, fontSize: 12, fontWeight: '600' },
-  resetBtn: { alignSelf: 'center', paddingVertical: 4 },
-  resetText: { color: COLORS.gold, fontSize: 12, fontWeight: '600' },
+  chipActive: { backgroundColor: COLORS.gold, borderColor: COLORS.gold },
+  chipDisabled: { opacity: 0.4 },
+  chipLabel: { color: COLORS.textMuted, fontSize: 12, fontWeight: '600' },
+  chipLabelActive: { color: COLORS.bg },
+  chipLabelDisabled: { color: COLORS.textMuted },
 });

@@ -8,7 +8,8 @@ import { COLORS } from '@/constants/Colors';
 import { useAdminResources, useAdminCreateResource, useAdminUpdateResource, useAdminDeleteResource } from '@/hooks/useAdmin';
 import { Loader } from '@/components/ui/Loader';
 import type { Resource } from '@/lib/api';
-import { EPOQUES, DOMAINES, RESOURCE_TYPES, REGIONS_LIST } from '@/lib/constants';
+import { EPOQUES, DOMAINES, RESOURCE_TYPES, REGIONS_LIST, getEpoqueLabel, getResourceTypeLabel } from '@/lib/constants';
+import { ImageUploadField } from '@/components/admin/ImageUploadField';
 
 type FormData = {
   title: string;
@@ -18,10 +19,12 @@ type FormData = {
   epoque: string;
   domaine: string;
   region: string;
-  auteur: string;
+  imageUrl: string;
 };
 
-const EMPTY_FORM: FormData = { title: '', description: '', content: '', type: '', epoque: '', domaine: '', region: '', auteur: '' };
+const EMPTY_FORM: FormData = {
+  title: '', description: '', content: '', type: '', epoque: '', domaine: '', region: '', imageUrl: '',
+};
 
 function ResourceForm({
   initial,
@@ -65,12 +68,11 @@ function ResourceForm({
         <TextInput style={fs.input} value={form.title} onChangeText={(v) => set('title', v)} placeholder="Titre" placeholderTextColor={COLORS.textMuted} />
         <Text style={fs.label}>Description</Text>
         <TextInput style={[fs.input, fs.textarea]} value={form.description} onChangeText={(v) => set('description', v)} placeholder="Description" placeholderTextColor={COLORS.textMuted} multiline numberOfLines={3} />
-        <Text style={fs.label}>Auteur</Text>
-        <TextInput style={fs.input} value={form.auteur} onChangeText={(v) => set('auteur', v)} placeholder="Auteur" placeholderTextColor={COLORS.textMuted} />
         {renderSelect('Type', 'type', RESOURCE_TYPES)}
         {renderSelect('Époque', 'epoque', EPOQUES)}
         {renderSelect('Domaine', 'domaine', DOMAINES)}
         {renderSelect('Région', 'region', REGIONS_LIST.map((r) => ({ id: r.code, label: r.nom })))}
+        <ImageUploadField label="Miniature" value={form.imageUrl} onChange={(v) => set('imageUrl', v)} />
         <Text style={fs.label}>Contenu (HTML)</Text>
         <TextInput style={[fs.input, fs.textarea, { height: 120 }]} value={form.content} onChangeText={(v) => set('content', v)} placeholder="<p>Contenu...</p>" placeholderTextColor={COLORS.textMuted} multiline />
         <TouchableOpacity style={fs.saveBtn} onPress={() => onSave(form)} disabled={isSaving || !form.title}>
@@ -132,7 +134,7 @@ export default function AdminRessources() {
           <View style={styles.row}>
             <View style={styles.rowInfo}>
               <Text style={styles.rowTitle} numberOfLines={1}>{item.title}</Text>
-              <Text style={styles.rowMeta}>{item.type} • {item.epoque ?? '—'}</Text>
+              <Text style={styles.rowMeta}>{getResourceTypeLabel(item.type)} • {item.epoque ? getEpoqueLabel(item.epoque) : '—'}</Text>
             </View>
             <TouchableOpacity style={styles.iconBtn} onPress={() => setEditing(item)}>
               <Ionicons name="pencil" size={18} color={COLORS.gold} />
@@ -165,7 +167,7 @@ export default function AdminRessources() {
               epoque: editing.epoque ?? '',
               domaine: editing.domaine ?? '',
               region: editing.region ?? '',
-              auteur: editing.auteur ?? '',
+              imageUrl: editing.imageUrl ?? '',
             }}
             onSave={handleSave}
             onClose={() => setEditing(null)}

@@ -3,13 +3,16 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Alert } 
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/constants/Colors';
 import { useAdminUsers, useAdminUserAction } from '@/hooks/useAdmin';
-import type { AdminUserAction } from '@/lib/api';
+import { PermissionsModal, type AdminUserRow } from '@/components/admin/PermissionsModal';
 import { Loader } from '@/components/ui/Loader';
+import type { AdminUserAction } from '@/lib/api';
+import type { Permission } from '@/lib/permissions';
 
 export default function AdminUtilisateurs() {
   const { data: users, isLoading } = useAdminUsers();
   const userAction = useAdminUserAction();
   const [search, setSearch] = useState('');
+  const [editingUser, setEditingUser] = useState<AdminUserRow | null>(null);
 
   const filtered = (users ?? []).filter(
     (u) => u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase()),
@@ -20,10 +23,20 @@ export default function AdminUtilisateurs() {
       { text: 'Annuler', style: 'cancel' },
       {
         text: 'Confirmer',
-        style: action === 'ban' ? 'destructive' : 'default',
+        style: action === 'ban' || action === 'delete' ? 'destructive' : 'default',
         onPress: () => userAction.mutate({ userId, action }),
       },
     ]);
+  };
+
+  const savePermissions = async (userId: string, role: string, permissions: Permission[]) => {
+    await userAction.mutateAsync({
+      userId,
+      action: 'updatePermissions',
+      role,
+      permissions,
+    });
+    setEditingUser(null);
   };
 
   if (isLoading) return <Loader />;
@@ -44,12 +57,15 @@ export default function AdminUtilisateurs() {
                 <Text style={styles.userEmail}>{item.email}</Text>
                 <View style={styles.userMeta}>
                   <Text style={[styles.roleTag, item.banned && styles.bannedTag]}>
-                    {item.banned ? 'BANNI' : item.role.toUpperCase()}
+                    {item.banned ? 'BANNI' : (item.role ?? 'user').toUpperCase()}
                   </Text>
                 </View>
               </View>
             </View>
             <View style={styles.actions}>
+              <TouchableOpacity style={styles.actionBtn} onPress={() => setEditingUser(item)}>
+                <Ionicons name="key" size={20} color="#76D7C4" />
+              </TouchableOpacity>
               {item.role !== 'admin' && item.role !== 'founder' && !item.banned && (
                 <TouchableOpacity
                   style={styles.actionBtn}
@@ -65,6 +81,11 @@ export default function AdminUtilisateurs() {
               ) : (
                 <TouchableOpacity style={styles.actionBtn} onPress={() => handleAction(item.id, 'ban', 'Bannir cet utilisateur')}>
                   <Ionicons name="ban" size={20} color="#e74c3c" />
+                </TouchableOpacity>
+              )}
+              {item.role !== 'founder' && (
+                <TouchableOpacity style={styles.actionBtn} onPress={() => handleAction(item.id, 'delete', 'Supprimer cet utilisateur')}>
+                  <Ionicons name="trash" size={20} color="#e74c3c" />
                 </TouchableOpacity>
               )}
             </View>
@@ -86,6 +107,13 @@ export default function AdminUtilisateurs() {
           </View>
         }
         contentContainerStyle={styles.list}
+      />
+
+      <PermissionsModal
+        user={editingUser}
+        onClose={() => setEditingUser(null)}
+        onSave={savePermissions}
+        isSaving={userAction.isPending}
       />
     </View>
   );
@@ -137,6 +165,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4,
   },
   bannedTag: { color: '#e74c3c', backgroundColor: 'rgba(231,76,60,0.15)' },
-  actions: { flexDirection: 'row', gap: 8 },
+  actions: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, maxWidth: 110, justifyContent: 'flex-end' },
   actionBtn: { padding: 4 },
 });

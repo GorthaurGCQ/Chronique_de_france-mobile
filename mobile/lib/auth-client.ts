@@ -65,4 +65,12 @@ export const authClient = {
   async resetPassword(token: string, newPassword: string): Promise<void> {
     await authApi.resetPassword(token, newPassword);
   },
+
+  async deleteAccount(): Promise<void> {
+    try {
+      await authApi.deleteAccount();
+    } finally {
+      await clearStoredToken();
+    }
+  },
 };

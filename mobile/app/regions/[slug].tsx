@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,15 +9,27 @@ import { ResourceCard } from '@/components/ResourceCard';
 import { FilterBar } from '@/components/FilterBar';
 import { Loader } from '@/components/ui/Loader';
 import { EmptyState } from '@/components/ui/EmptyState';
-import type { DomaineId, EpoqueId } from '@/lib/constants';
+import { LEGACY_TO_WEB_REGION, type DomaineId, type EpoqueId, type ResourceTypeId } from '@/lib/constants';
 
 export default function RegionDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const region = getRegionBySlug(slug ?? '');
+  const [type, setType] = useState<ResourceTypeId | ''>('');
   const [domaine, setDomaine] = useState<DomaineId | ''>('');
   const [epoque, setEpoque] = useState<EpoqueId | ''>('');
 
-  const { data: resources, isLoading } = useResourcesFlat({ limit: 50 });
+  const webRegionCode = region ? LEGACY_TO_WEB_REGION[region.code] : undefined;
+
+  const { data: allResources, isLoading } = useResourcesFlat({ limit: 100, type: type || undefined });
+
+  const resources = useMemo(() => {
+    if (!webRegionCode) return [];
+    return (allResources ?? []).filter((r) => {
+      if (r.region !== webRegionCode) return false;
+      if (epoque && r.epoque !== epoque) return false;
+      return true;
+    });
+  }, [allResources, webRegionCode, epoque]);
 
   if (!region) {
     return (
@@ -36,7 +48,6 @@ export default function RegionDetailScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* Hero */}
       <LinearGradient
         colors={[hexToRgba(region.couleur, 0.9), COLORS.bg]}
         style={styles.hero}
@@ -47,13 +58,11 @@ export default function RegionDetailScreen() {
         <Text style={styles.heroDesc}>{region.description}</Text>
       </LinearGradient>
 
-      {/* Histoire */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Histoire</Text>
         <Text style={styles.histoireText}>{region.histoire}</Text>
       </View>
 
-      {/* Patrimoine */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Patrimoine remarquable</Text>
         {region.patrimoine.map((p) => (
@@ -64,24 +73,26 @@ export default function RegionDetailScreen() {
         ))}
       </View>
 
-      {/* Ressources */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Ressources associées</Text>
+        <Text style={styles.sectionTitle}>Ressources associées ({resources.length})</Text>
         <FilterBar
+          selectedType={type}
           selectedDomaine={domaine}
           selectedEpoque={epoque}
-          onDomaineChange={(v) => setDomaine(v as DomaineId | '')}
-          onEpoqueChange={(v) => setEpoque(v as EpoqueId | '')}
+          onTypeChange={setType}
+          onDomaineChange={setDomaine}
+          onEpoqueChange={setEpoque}
+          localFilterHint
         />
         {isLoading ? (
           <Loader />
-        ) : resources && resources.length > 0 ? (
+        ) : resources.length > 0 ? (
           resources.map((r) => <ResourceCard key={r.id} resource={r} showBookmark />)
         ) : (
           <EmptyState
             icon="book-outline"
             title="Aucune ressource"
-            subtitle="Aucune ressource pour cette région avec ces filtres."
+            subtitle={`Aucune ressource publiée pour ${region.nom} avec ces filtres.`}
           />
         )}
       </View>

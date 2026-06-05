@@ -6,6 +6,13 @@ import { useLocalSearchParams, router } from 'expo-router';
 import RenderHtml from 'react-native-render-html';
 import { useWindowDimensions } from 'react-native';
 import { COLORS } from '@/constants/Colors';
+import {
+  EPOQUE_COLORS,
+  getDomaineLabel,
+  getEpoqueLabel,
+  getRegionLabel,
+  getResourceTypeLabel,
+} from '@/lib/constants';
 import { useResource } from '@/hooks/useResources';
 import { Badge } from '@/components/ui/Badge';
 import { Loader } from '@/components/ui/Loader';
@@ -13,16 +20,6 @@ import { MediaPlayer } from '@/components/MediaPlayer';
 import { profileApi } from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
 import { BookmarkButton } from '@/components/BookmarkButton';
-
-const EPOQUE_COLORS: Record<string, string> = {
-  prehistoire: '#8B6914',
-  antiquite: '#C4956A',
-  'moyen-age': '#8B2635',
-  renaissance: '#2D5A3D',
-  'epoque-moderne': '#1a2744',
-  'epoque-contemporaine': '#3B82F6',
-  'xxe-siecle': '#4A4A2A',
-};
 
 export default function ResourceDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -64,7 +61,7 @@ export default function ResourceDetailScreen() {
         <Image source={{ uri: resource.imageUrl }} style={styles.banner} resizeMode="cover" />
       ) : (
         <View style={[styles.banner, styles.bannerGradient, { backgroundColor: bannerColor }]}>
-          <Text style={styles.bannerLabel}>{resource.type?.toUpperCase()}</Text>
+          <Text style={styles.bannerLabel}>{getResourceTypeLabel(resource.type)}</Text>
         </View>
       )}
 
@@ -72,15 +69,15 @@ export default function ResourceDetailScreen() {
       <View style={styles.body}>
         {/* Badges */}
         <View style={styles.badges}>
-          {resource.type && <Badge label={resource.type} />}
+          {resource.type && <Badge label={getResourceTypeLabel(resource.type)} />}
           {resource.epoque && (
-            <Badge label={resource.epoque.replace(/-/g, ' ')} color={bannerColor} textColor="#fff" />
+            <Badge label={getEpoqueLabel(resource.epoque)} color={bannerColor} textColor="#fff" />
           )}
           {resource.domaine && (
-            <Badge label={resource.domaine} color="#1a3a5c" textColor={COLORS.textLight} />
+            <Badge label={getDomaineLabel(resource.domaine)} color="#1a3a5c" textColor={COLORS.textLight} />
           )}
           {resource.region && (
-            <Badge label={resource.region} color="#2D5A3D" textColor="#fff" />
+            <Badge label={getRegionLabel(resource.region)} color="#2D5A3D" textColor="#fff" />
           )}
         </View>
 

@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, StyleSheet, TouchableOpacity,
-  TextInput, Image, ActivityIndicator, Alert,
+  TextInput, Image, ActivityIndicator, Alert, Switch,
 } from 'react-native';
 import { router } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
@@ -10,7 +10,17 @@ import { COLORS } from '@/constants/Colors';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile, useProfileHistory, useUpdateProfile, useChangePassword, useUploadAvatar } from '@/hooks/useProfile';
 import { useFavorites } from '@/hooks/useFavorites';
-import { ResourceCard } from '@/components/ResourceCard';
+import { FavoriteItem } from '@/components/FavoriteItem';
+import { HistoryItemCard } from '@/components/HistoryItemCard';
+import { authClient } from '@/lib/auth-client';
+import {
+  DEFAULT_USER_PREFERENCES,
+  EPOQUE_COLORS,
+  REGIONS_LIST,
+  getEpoqueLabel,
+  type RegionCode,
+  type UserPreferences,
+} from '@/lib/constants';
 import { Loader } from '@/components/ui/Loader';
 
 type Section = 'profil' | 'securite' | 'stats' | 'favoris' | 'historique' | 'preferences';
@@ -35,18 +45,62 @@ function ProfilSection() {
   const { data: profile, isLoading } = useProfile();
   const updateProfile = useUpdateProfile();
   const uploadAvatar = useUploadAvatar();
+  const { logout } = useAuth();
   const [name, setName] = useState('');
-  const [editing, setEditing] = useState(false);
+  const [email, setEmail] = useState('');
+  const [editing, setEditing] = useState<'name' | 'email' | null>(null);
   const [saved, setSaved] = useState(false);
+  const [msg, setMsg] = useState('');
 
   if (isLoading) return <Loader />;
 
-  const handleSave = async () => {
+  const handleSaveName = async () => {
     if (!name.trim()) return;
-    await updateProfile.mutateAsync({ name: name.trim() });
-    setSaved(true);
-    setEditing(false);
-    setTimeout(() => setSaved(false), 2000);
+    try {
+      await updateProfile.mutateAsync({ name: name.trim() });
+      setSaved(true);
+      setEditing(null);
+      setMsg('Nom mis à jour');
+      setTimeout(() => { setSaved(false); setMsg(''); }, 2000);
+    } catch (e: unknown) {
+      setMsg(e instanceof Error ? e.message : 'Erreur');
+    }
+  };
+
+  const handleSaveEmail = async () => {
+    if (!email.trim()) return;
+    try {
+      await updateProfile.mutateAsync({ email: email.trim() });
+      setSaved(true);
+      setEditing(null);
+      setMsg('E-mail mis à jour');
+      setTimeout(() => { setSaved(false); setMsg(''); }, 2000);
+    } catch (e: unknown) {
+      setMsg(e instanceof Error ? e.message : 'Erreur');
+    }
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      'Supprimer le compte',
+      'Cette action est irréversible. Toutes vos données seront effacées.',
+      [
+        { text: 'Annuler', style: 'cancel' },
+        {
+          text: 'Supprimer',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await authClient.deleteAccount();
+              await logout();
+              router.replace('/connexion');
+            } catch (e: unknown) {
+              Alert.alert('Erreur', e instanceof Error ? e.message : 'Impossible de supprimer le compte.');
+            }
+          },
+        },
+      ],
+    );
   };
 
   const handlePickAvatar = async () => {
@@ -87,7 +141,7 @@ function ProfilSection() {
 
       {/* Nom */}
       <Text style={s.label}>Nom complet</Text>
-      {editing ? (
+      {editing === 'name' ? (
         <View style={s.row}>
           <TextInput
             style={[s.input, { flex: 1 }]}
@@ -97,28 +151,54 @@ function ProfilSection() {
             placeholderTextColor={COLORS.textMuted}
             autoFocus
           />
-          <TouchableOpacity style={s.saveBtn} onPress={handleSave}>
+          <TouchableOpacity style={s.saveBtn} onPress={handleSaveName}>
             <Text style={s.saveBtnText}>{updateProfile.isPending ? '...' : 'Sauv.'}</Text>
           </TouchableOpacity>
         </View>
       ) : (
-        <TouchableOpacity style={s.fieldRow} onPress={() => { setName(profile?.name ?? ''); setEditing(true); }}>
+        <TouchableOpacity style={s.fieldRow} onPress={() => { setName(profile?.name ?? ''); setEditing('name'); }}>
           <Text style={s.fieldValue}>{profile?.name}</Text>
           <Ionicons name="pencil" size={16} color={COLORS.textMuted} />
         </TouchableOpacity>
       )}
-      {saved && <Text style={s.successText}>✓ Profil mis à jour</Text>}
 
-      {/* Email (non éditable) */}
       <Text style={s.label}>Adresse e-mail</Text>
-      <View style={s.fieldRow}>
-        <Text style={s.fieldValue}>{profile?.email}</Text>
-      </View>
+      {editing === 'email' ? (
+        <View style={s.row}>
+          <TextInput
+            style={[s.input, { flex: 1 }]}
+            value={email}
+            onChangeText={setEmail}
+            placeholder={profile?.email}
+            placeholderTextColor={COLORS.textMuted}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoFocus
+          />
+          <TouchableOpacity style={s.saveBtn} onPress={handleSaveEmail}>
+            <Text style={s.saveBtnText}>{updateProfile.isPending ? '...' : 'Sauv.'}</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <TouchableOpacity style={s.fieldRow} onPress={() => { setEmail(profile?.email ?? ''); setEditing('email'); }}>
+          <Text style={s.fieldValue}>{profile?.email}</Text>
+          <Ionicons name="pencil" size={16} color={COLORS.textMuted} />
+        </TouchableOpacity>
+      )}
+      {(saved || msg) && <Text style={s.successText}>{msg || '✓ Profil mis à jour'}</Text>}
 
       {/* Rôle */}
       <Text style={s.label}>Rôle</Text>
       <View style={s.fieldRow}>
         <Text style={[s.fieldValue, { color: COLORS.gold }]}>{profile?.role ?? 'user'}</Text>
+      </View>
+
+      <View style={s.dangerZone}>
+        <Text style={s.dangerTitle}>Zone danger</Text>
+        <Text style={s.dangerDesc}>La suppression de votre compte est irréversible.</Text>
+        <TouchableOpacity style={s.dangerBtn} onPress={handleDeleteAccount}>
+          <Text style={s.dangerBtnText}>Supprimer mon compte</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -178,6 +258,13 @@ function StatsSection() {
     ? Math.floor((Date.now() - new Date(profile.createdAt as unknown as string).getTime()) / (1000 * 60 * 60 * 24))
     : 0;
 
+  const timelineCount: Record<string, number> = {};
+  favorites.forEach((f) => {
+    const epoque = f.resource?.epoque;
+    if (epoque) timelineCount[epoque] = (timelineCount[epoque] ?? 0) + 1;
+  });
+  const maxCount = Math.max(1, ...Object.values(timelineCount));
+
   const statCards = [
     { label: 'Favoris', value: favorites.length, icon: 'star' as const },
     { label: 'Consultées', value: history?.length ?? 0, icon: 'eye' as const },
@@ -196,6 +283,22 @@ function StatsSection() {
           </View>
         ))}
       </View>
+      {Object.keys(timelineCount).length > 0 && (
+        <View style={s.chartBox}>
+          <Text style={s.chartTitle}>Favoris par époque</Text>
+          {Object.entries(timelineCount)
+            .sort((a, b) => b[1] - a[1])
+            .map(([key, count]) => (
+              <View key={key} style={s.chartRow}>
+                <Text style={s.chartLabel}>{getEpoqueLabel(key)}</Text>
+                <View style={s.chartBarWrap}>
+                  <View style={[s.chartBar, { width: `${(count / maxCount) * 100}%`, backgroundColor: EPOQUE_COLORS[key] ?? COLORS.gold }]} />
+                </View>
+                <Text style={s.chartCount}>{count}</Text>
+              </View>
+            ))}
+        </View>
+      )}
     </View>
   );
 }
@@ -203,24 +306,32 @@ function StatsSection() {
 // ── Section Favoris ──────────────────────────────────────────────────────────
 
 function FavorisSection() {
-  const { favorites } = useFavorites();
-  const favResources = favorites
-    .map((f) => f.resource)
-    .filter((r): r is NonNullable<typeof r> => !!r);
+  const { favorites, toggle, updateNote, isUpdatingNote } = useFavorites();
 
-  if (favResources.length === 0) {
+  if (favorites.length === 0) {
     return (
       <View style={s.section}>
         <Text style={s.sectionTitle}>Favoris</Text>
         <Text style={s.emptyText}>Aucun favori enregistré.</Text>
+        <TouchableOpacity style={s.linkBtn} onPress={() => router.push('/(tabs)/bibliotheque')}>
+          <Text style={s.linkBtnText}>Explorer la bibliothèque →</Text>
+        </TouchableOpacity>
       </View>
     );
   }
 
   return (
     <View style={s.section}>
-      <Text style={s.sectionTitle}>Favoris ({favResources.length})</Text>
-      {favResources.map((r) => <ResourceCard key={r.id} resource={r} showBookmark />)}
+      <Text style={s.sectionTitle}>Favoris ({favorites.length})</Text>
+      {favorites.map((f) => (
+        <FavoriteItem
+          key={f.id}
+          favorite={f}
+          onRemove={toggle}
+          onSaveNote={(resourceId, note) => updateNote({ resourceId, note })}
+          isSavingNote={isUpdatingNote}
+        />
+      ))}
     </View>
   );
 }
@@ -229,13 +340,9 @@ function FavorisSection() {
 
 function HistoriqueSection() {
   const { data: history, isLoading } = useProfileHistory();
-  const histResources = (history ?? [])
-    .map((h) => h.resource)
-    .filter((r): r is NonNullable<typeof r> => !!r)
-    .slice(0, 20);
 
   if (isLoading) return <Loader />;
-  if (histResources.length === 0) {
+  if (!history?.length) {
     return (
       <View style={s.section}>
         <Text style={s.sectionTitle}>Historique</Text>
@@ -246,8 +353,82 @@ function HistoriqueSection() {
 
   return (
     <View style={s.section}>
-      <Text style={s.sectionTitle}>Dernières consultées ({histResources.length})</Text>
-      {histResources.map((r) => <ResourceCard key={r.id} resource={r} />)}
+      <Text style={s.sectionTitle}>Dernières consultées ({history.length})</Text>
+      {history.slice(0, 20).map((h) =>
+        h.resource ? (
+          <HistoryItemCard key={h.resourceId} resource={h.resource} viewedAt={h.viewedAt} />
+        ) : null,
+      )}
+    </View>
+  );
+}
+
+function PreferencesSection() {
+  const { data: profile } = useProfile();
+  const updateProfile = useUpdateProfile();
+  const [prefs, setPrefs] = useState<UserPreferences>(DEFAULT_USER_PREFERENCES);
+  const [msg, setMsg] = useState('');
+
+  useEffect(() => {
+    if (profile?.userPreferences) {
+      setPrefs({
+        emailNotifications: profile.userPreferences.emailNotifications !== false,
+        defaultRegion: (profile.userPreferences.defaultRegion as RegionCode) ?? 'NATIONAL',
+      });
+    }
+  }, [profile?.userPreferences]);
+
+  const save = async () => {
+    try {
+      await updateProfile.mutateAsync({ userPreferences: prefs });
+      setMsg('Préférences enregistrées ✓');
+      setTimeout(() => setMsg(''), 2500);
+    } catch (e: unknown) {
+      setMsg(e instanceof Error ? e.message : 'Erreur');
+    }
+  };
+
+  return (
+    <View style={s.section}>
+      <Text style={s.sectionTitle}>Préférences</Text>
+      <Text style={s.subtitle}>Personnalisez votre expérience sur l'application.</Text>
+      {!!msg && <Text style={s.successText}>{msg}</Text>}
+
+      <View style={s.prefRow}>
+        <View style={{ flex: 1 }}>
+          <Text style={s.prefLabel}>Notifications e-mail</Text>
+          <Text style={s.prefDesc}>Nouveaux événements ou ressources publiés.</Text>
+        </View>
+        <Switch
+          value={prefs.emailNotifications}
+          onValueChange={(v) => setPrefs((p) => ({ ...p, emailNotifications: v }))}
+          trackColor={{ false: COLORS.border, true: COLORS.gold }}
+          thumbColor={COLORS.textWhite}
+        />
+      </View>
+
+      <Text style={s.label}>Région par défaut</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.regionChips}>
+        {REGIONS_LIST.map((r) => (
+          <TouchableOpacity
+            key={r.code}
+            style={[s.regionChip, prefs.defaultRegion === r.code && s.regionChipActive]}
+            onPress={() => setPrefs((p) => ({ ...p, defaultRegion: r.code }))}
+          >
+            <Text style={[s.regionChipText, prefs.defaultRegion === r.code && s.regionChipTextActive]}>
+              {r.nom}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      <TouchableOpacity style={s.btn} onPress={save} disabled={updateProfile.isPending}>
+        {updateProfile.isPending ? (
+          <ActivityIndicator color={COLORS.bg} />
+        ) : (
+          <Text style={s.btnText}>Enregistrer les préférences</Text>
+        )}
+      </TouchableOpacity>
     </View>
   );
 }
@@ -279,6 +460,7 @@ export default function DashboardScreen() {
     { id: 'stats', label: 'Stats' },
     { id: 'favoris', label: 'Favoris' },
     { id: 'historique', label: 'Historique' },
+    { id: 'preferences', label: 'Préférences' },
   ];
 
   return (
@@ -330,6 +512,7 @@ export default function DashboardScreen() {
       {section === 'stats' && <StatsSection />}
       {section === 'favoris' && <FavorisSection />}
       {section === 'historique' && <HistoriqueSection />}
+      {section === 'preferences' && <PreferencesSection />}
     </ScrollView>
   );
 }
@@ -444,4 +627,49 @@ const s = StyleSheet.create({
   statValue: { color: COLORS.textWhite, fontSize: 24, fontWeight: '900' },
   statLabel: { color: COLORS.textMuted, fontSize: 12 },
   emptyText: { color: COLORS.textMuted, fontSize: 14, textAlign: 'center', marginTop: 20 },
+  linkBtn: { alignSelf: 'center', marginTop: 12 },
+  linkBtnText: { color: COLORS.gold, fontWeight: '700', fontSize: 14 },
+  dangerZone: {
+    marginTop: 24,
+    padding: 16,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#e74c3c55',
+    backgroundColor: '#e74c3c11',
+    gap: 8,
+  },
+  dangerTitle: { color: '#e74c3c', fontWeight: '800', fontSize: 14 },
+  dangerDesc: { color: COLORS.textMuted, fontSize: 12 },
+  dangerBtn: {
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: '#e74c3c',
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    marginTop: 4,
+  },
+  dangerBtnText: { color: '#e74c3c', fontWeight: '700', fontSize: 13 },
+  chartBox: { marginTop: 20, gap: 10 },
+  chartTitle: { color: COLORS.textLight, fontSize: 13, fontWeight: '700' },
+  chartRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  chartLabel: { width: 90, color: COLORS.textMuted, fontSize: 11 },
+  chartBarWrap: { flex: 1, height: 8, backgroundColor: COLORS.navyLight, borderRadius: 4, overflow: 'hidden' },
+  chartBar: { height: '100%', borderRadius: 4 },
+  chartCount: { width: 20, color: COLORS.textWhite, fontSize: 12, fontWeight: '700', textAlign: 'right' },
+  prefRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 12, marginBottom: 8 },
+  prefLabel: { color: COLORS.textWhite, fontSize: 14, fontWeight: '600' },
+  prefDesc: { color: COLORS.textMuted, fontSize: 11, marginTop: 2 },
+  regionChips: { gap: 8, paddingVertical: 8 },
+  regionChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    backgroundColor: COLORS.navyLight,
+  },
+  regionChipActive: { backgroundColor: COLORS.gold, borderColor: COLORS.gold },
+  regionChipText: { color: COLORS.textMuted, fontSize: 11, fontWeight: '600' },
+  regionChipTextActive: { color: COLORS.bg },
 });
