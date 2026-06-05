@@ -1,67 +1,135 @@
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import {
+  View, Text, FlatList, StyleSheet, TouchableOpacity,
+} from 'react-native';
+import { router } from 'expo-router';
 import { COLORS } from '@/constants/Colors';
-import CarteRegions from '@/components/CarteRegions';
+import { useResources } from '@/hooks/useResources';
+import { ResourceCard } from '@/components/ResourceCard';
+import { FilterBar } from '@/components/FilterBar';
+import { Loader } from '@/components/ui/Loader';
+import { EmptyState } from '@/components/ui/EmptyState';
+import type { DomaineId, EpoqueId } from '@/lib/constants';
+
+const PAGE_SIZE = 20;
 
 export default function BibliothequéScreen() {
-  return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* En-tête */}
-      <View style={styles.header}>
-        <Text style={styles.badge}>RESSOURCES PÉDAGOGIQUES</Text>
-        <Text style={styles.title}>Bibliothèque</Text>
-        <View style={styles.underline} />
-        <Text style={styles.subtitle}>
-          Sélectionnez une région sur la carte pour découvrir son histoire et ses ressources associées.
-        </Text>
-      </View>
+  const [domaine, setDomaine] = useState<DomaineId | ''>('');
+  const [epoque, setEpoque] = useState<EpoqueId | ''>('');
+  const [offset, setOffset] = useState(0);
 
-      {/* Carte interactive */}
-      <View style={styles.mapSection}>
-        <CarteRegions />
-      </View>
-    </ScrollView>
+  const { data: resources, isLoading, isError, refetch } = useResources({
+    domaine: domaine || undefined,
+    epoque: epoque || undefined,
+    limit: PAGE_SIZE,
+    offset,
+  });
+
+  const handleFilterChange = (type: 'domaine' | 'epoque', value: string) => {
+    setOffset(0);
+    if (type === 'domaine') setDomaine(value as DomaineId | '');
+    else setEpoque(value as EpoqueId | '');
+  };
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={resources ?? []}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <ResourceCard resource={item} showBookmark />}
+        contentContainerStyle={styles.list}
+        ListHeaderComponent={
+          <>
+            <View style={styles.header}>
+              <Text style={styles.badge}>RESSOURCES PÉDAGOGIQUES</Text>
+              <Text style={styles.title}>Bibliothèque</Text>
+              <View style={styles.underline} />
+              {resources && (
+                <Text style={styles.count}>{resources.length} ressource{resources.length > 1 ? 's' : ''}</Text>
+              )}
+            </View>
+            <FilterBar
+              selectedDomaine={domaine}
+              selectedEpoque={epoque}
+              onDomaineChange={(v) => handleFilterChange('domaine', v)}
+              onEpoqueChange={(v) => handleFilterChange('epoque', v)}
+            />
+          </>
+        }
+        ListEmptyComponent={
+          isLoading
+            ? <Loader />
+            : isError
+              ? <EmptyState
+                  icon="cloud-offline-outline"
+                  title="Erreur de chargement"
+                  subtitle="Impossible de récupérer les ressources."
+                  actionLabel="Réessayer"
+                  onAction={refetch}
+                />
+              : <EmptyState
+                  icon="book-outline"
+                  title="Aucune ressource"
+                  subtitle="Aucune ressource ne correspond à vos filtres."
+                  actionLabel="Réinitialiser"
+                  onAction={() => { setDomaine(''); setEpoque(''); }}
+                />
+        }
+        ListFooterComponent={
+          resources && resources.length === PAGE_SIZE + offset ? (
+            <TouchableOpacity style={styles.loadMore} onPress={() => setOffset(offset + PAGE_SIZE)}>
+              <Text style={styles.loadMoreText}>Charger plus</Text>
+            </TouchableOpacity>
+          ) : null
+        }
+      />
+
+      {/* Bouton flottant Régions */}
+      <TouchableOpacity style={styles.fab} onPress={() => router.push('/regions/index')}>
+        <Text style={styles.fabText}>🗺 Régions</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.bg,
-  },
-  content: {
-    paddingBottom: 60,
-  },
+  container: { flex: 1, backgroundColor: COLORS.bg },
+  list: { paddingBottom: 80 },
   header: {
     padding: 24,
-    paddingTop: 32,
+    paddingTop: 20,
     backgroundColor: COLORS.navyLight,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
-    gap: 8,
+    gap: 6,
   },
-  badge: {
-    color: COLORS.gold,
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 2,
+  badge: { color: COLORS.gold, fontSize: 11, fontWeight: '700', letterSpacing: 2 },
+  title: { color: COLORS.textWhite, fontSize: 26, fontWeight: '900' },
+  underline: { width: 40, height: 3, backgroundColor: COLORS.gold, borderRadius: 2 },
+  count: { color: COLORS.textMuted, fontSize: 13 },
+  loadMore: {
+    margin: 20,
+    backgroundColor: COLORS.navyLight,
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
-  title: {
-    color: COLORS.textWhite,
-    fontSize: 28,
-    fontWeight: '900',
-  },
-  underline: {
-    width: 40,
-    height: 3,
+  loadMoreText: { color: COLORS.gold, fontWeight: '600' },
+  fab: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
     backgroundColor: COLORS.gold,
-    borderRadius: 2,
+    borderRadius: 24,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
-  subtitle: {
-    color: COLORS.textMuted,
-    fontSize: 14,
-    lineHeight: 21,
-  },
-  mapSection: {
-    padding: 16,
-  },
+  fabText: { color: COLORS.bg, fontWeight: '800', fontSize: 14 },
 });
