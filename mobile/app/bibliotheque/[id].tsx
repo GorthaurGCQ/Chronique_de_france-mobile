@@ -12,6 +12,7 @@ import { Loader } from '@/components/ui/Loader';
 import { MediaPlayer } from '@/components/MediaPlayer';
 import { profileApi } from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
+import { BookmarkButton } from '@/components/BookmarkButton';
 
 const EPOQUE_COLORS: Record<string, string> = {
   prehistoire: '#8B6914',
@@ -83,8 +84,11 @@ export default function ResourceDetailScreen() {
           )}
         </View>
 
-        {/* Titre */}
-        <Text style={styles.title}>{resource.title}</Text>
+        {/* Titre + Bookmark */}
+        <View style={styles.titleRow}>
+          <Text style={[styles.title, { flex: 1 }]}>{resource.title}</Text>
+          <BookmarkButton resourceId={resource.id} size={28} />
+        </View>
 
         {/* Méta */}
         <View style={styles.meta}>
@@ -157,6 +161,7 @@ const styles = StyleSheet.create({
   bannerLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 14, fontWeight: '700', letterSpacing: 2 },
   body: { padding: 20, gap: 12 },
   badges: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  titleRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
   title: { color: COLORS.textWhite, fontSize: 22, fontWeight: '900', lineHeight: 30 },
   meta: { gap: 4 },
   metaText: { color: COLORS.textMuted, fontSize: 13 },

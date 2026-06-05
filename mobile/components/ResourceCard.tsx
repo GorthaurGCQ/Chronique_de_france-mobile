@@ -2,6 +2,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { COLORS } from '@/constants/Colors';
 import { Badge } from '@/components/ui/Badge';
+import { BookmarkButton } from '@/components/BookmarkButton';
 import type { Resource } from '@/lib/api';
 
 const EPOQUE_COLORS: Record<string, string> = {
@@ -16,12 +17,10 @@ const EPOQUE_COLORS: Record<string, string> = {
 
 type Props = {
   resource: Resource;
-  onBookmarkToggle?: (id: string) => void;
-  isFavorite?: boolean;
   showBookmark?: boolean;
 };
 
-export function ResourceCard({ resource, showBookmark = false, isFavorite = false, onBookmarkToggle }: Props) {
+export function ResourceCard({ resource, showBookmark = false }: Props) {
   const epoqueColor = resource.epoque ? EPOQUE_COLORS[resource.epoque] ?? COLORS.navyLight : COLORS.navyLight;
 
   return (
@@ -61,15 +60,9 @@ export function ResourceCard({ resource, showBookmark = false, isFavorite = fals
       </View>
 
       {showBookmark && (
-        <TouchableOpacity
-          style={styles.bookmark}
-          onPress={() => onBookmarkToggle?.(resource.id)}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-        >
-          <Text style={[styles.bookmarkIcon, isFavorite && styles.bookmarkActive]}>
-            {isFavorite ? '★' : '☆'}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.bookmark}>
+          <BookmarkButton resourceId={resource.id} size={22} />
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -99,7 +92,5 @@ const styles = StyleSheet.create({
   footer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 },
   epoque: { color: COLORS.gold, fontSize: 11, textTransform: 'capitalize' },
   readingTime: { color: COLORS.textMuted, fontSize: 11 },
-  bookmark: { position: 'absolute', top: 8, right: 8, padding: 4 },
-  bookmarkIcon: { fontSize: 22, color: COLORS.textMuted },
-  bookmarkActive: { color: COLORS.gold },
+  bookmark: { position: 'absolute', top: 8, right: 8 },
 });
