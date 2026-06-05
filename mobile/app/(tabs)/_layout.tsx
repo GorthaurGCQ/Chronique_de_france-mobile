@@ -1,13 +1,13 @@
 import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { COLORS } from '@/constants/Colors';
 
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
+  name: React.ComponentProps<typeof Ionicons>['name'];
   color: string;
 }) {
-  return <FontAwesome size={22} style={{ marginBottom: -3 }} {...props} />;
+  return <Ionicons size={24} style={{ marginBottom: -3 }} {...props} />;
 }
 
 export default function TabLayout() {
@@ -24,7 +24,7 @@ export default function TabLayout() {
           paddingBottom: 8,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
+          fontSize: 10,
           fontWeight: '600',
         },
         headerStyle: { backgroundColor: COLORS.bg },
@@ -40,7 +40,7 @@ export default function TabLayout() {
         options={{
           title: 'Accueil',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-          headerTitle: 'CHRONIQUES DE FRANCE',
+          headerTitle: 'CHRONIQUE DE FRANCE',
         }}
       />
       <Tabs.Screen
@@ -48,6 +48,7 @@ export default function TabLayout() {
         options={{
           title: 'Bibliothèque',
           tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+          headerTitle: 'Bibliothèque',
         }}
       />
       <Tabs.Screen
@@ -55,13 +56,23 @@ export default function TabLayout() {
         options={{
           title: 'Événements',
           tabBarIcon: ({ color }) => <TabBarIcon name="calendar" color={color} />,
+          headerTitle: 'Événements',
+        }}
+      />
+      <Tabs.Screen
+        name="dashboard"
+        options={{
+          title: 'Espace membre',
+          tabBarIcon: ({ color }) => <TabBarIcon name="person" color={color} />,
+          headerTitle: 'Espace membre',
         }}
       />
       <Tabs.Screen
         name="a-propos"
         options={{
           title: 'À propos',
-          tabBarIcon: ({ color }) => <TabBarIcon name="info-circle" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="information-circle" color={color} />,
+          headerTitle: 'À propos',
         }}
       />
     </Tabs>
