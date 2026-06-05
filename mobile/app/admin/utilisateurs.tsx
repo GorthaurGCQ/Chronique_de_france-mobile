@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Alert } 
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/constants/Colors';
 import { useAdminUsers, useAdminUserAction } from '@/hooks/useAdmin';
+import type { AdminUserAction } from '@/lib/api';
 import { Loader } from '@/components/ui/Loader';
 
 export default function AdminUtilisateurs() {
@@ -14,7 +15,7 @@ export default function AdminUtilisateurs() {
     (u) => u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const handleAction = (userId: string, action: 'ban' | 'unban' | 'setRole', label: string) => {
+  const handleAction = (userId: string, action: AdminUserAction, label: string) => {
     Alert.alert('Confirmer', `${label} ?`, [
       { text: 'Annuler', style: 'cancel' },
       {
@@ -49,6 +50,14 @@ export default function AdminUtilisateurs() {
               </View>
             </View>
             <View style={styles.actions}>
+              {item.role !== 'admin' && item.role !== 'founder' && !item.banned && (
+                <TouchableOpacity
+                  style={styles.actionBtn}
+                  onPress={() => handleAction(item.id, 'makeAdmin', 'Promouvoir administrateur')}
+                >
+                  <Ionicons name="shield-checkmark" size={20} color={COLORS.gold} />
+                </TouchableOpacity>
+              )}
               {item.banned ? (
                 <TouchableOpacity style={styles.actionBtn} onPress={() => handleAction(item.id, 'unban', 'Débannir cet utilisateur')}>
                   <Ionicons name="checkmark-circle" size={20} color="#2ecc71" />

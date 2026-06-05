@@ -16,17 +16,21 @@ const PAGE_SIZE = 20;
 export default function BibliothequéScreen() {
   const [domaine, setDomaine] = useState<DomaineId | ''>('');
   const [epoque, setEpoque] = useState<EpoqueId | ''>('');
-  const [offset, setOffset] = useState(0);
 
-  const { data: resources, isLoading, isError, refetch } = useResources({
-    domaine: domaine || undefined,
-    epoque: epoque || undefined,
-    limit: PAGE_SIZE,
-    offset,
-  });
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useResources({ limit: PAGE_SIZE });
+
+  const resources = data?.pages.flatMap((p) => p.items) ?? [];
+  const total = data?.pages[0]?.total ?? resources.length;
 
   const handleFilterChange = (type: 'domaine' | 'epoque', value: string) => {
-    setOffset(0);
     if (type === 'domaine') setDomaine(value as DomaineId | '');
     else setEpoque(value as EpoqueId | '');
   };
@@ -34,7 +38,7 @@ export default function BibliothequéScreen() {
   return (
     <View style={styles.container}>
       <FlatList
-        data={resources ?? []}
+        data={resources}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <ResourceCard resource={item} showBookmark />}
         contentContainerStyle={styles.list}
@@ -44,8 +48,10 @@ export default function BibliothequéScreen() {
               <Text style={styles.badge}>RESSOURCES PÉDAGOGIQUES</Text>
               <Text style={styles.title}>Bibliothèque</Text>
               <View style={styles.underline} />
-              {resources && (
-                <Text style={styles.count}>{resources.length} ressource{resources.length > 1 ? 's' : ''}</Text>
+              {!isLoading && (
+                <Text style={styles.count}>
+                  {total} ressource{total > 1 ? 's' : ''}
+                </Text>
               )}
             </View>
             <FilterBar
@@ -70,21 +76,26 @@ export default function BibliothequéScreen() {
               : <EmptyState
                   icon="book-outline"
                   title="Aucune ressource"
-                  subtitle="Aucune ressource ne correspond à vos filtres."
-                  actionLabel="Réinitialiser"
-                  onAction={() => { setDomaine(''); setEpoque(''); }}
+                  subtitle="Aucune ressource disponible pour le moment."
+                  actionLabel="Actualiser"
+                  onAction={refetch}
                 />
         }
         ListFooterComponent={
-          resources && resources.length === PAGE_SIZE + offset ? (
-            <TouchableOpacity style={styles.loadMore} onPress={() => setOffset(offset + PAGE_SIZE)}>
-              <Text style={styles.loadMoreText}>Charger plus</Text>
+          hasNextPage ? (
+            <TouchableOpacity
+              style={styles.loadMore}
+              onPress={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+            >
+              <Text style={styles.loadMoreText}>
+                {isFetchingNextPage ? 'Chargement…' : 'Charger plus'}
+              </Text>
             </TouchableOpacity>
           ) : null
         }
       />
 
-      {/* Bouton flottant Régions */}
       <TouchableOpacity style={styles.fab} onPress={() => router.push('/regions/index')}>
         <Text style={styles.fabText}>🗺 Régions</Text>
       </TouchableOpacity>

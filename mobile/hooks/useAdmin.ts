@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { adminApi, type Resource, type Event } from '@/lib/api';
+import { adminApi, type AdminUserAction, type Resource, type Event } from '@/lib/api';
 
 export function useAdminStats() {
   return useQuery({ queryKey: ['admin-stats'], queryFn: adminApi.getStats });
@@ -12,7 +12,7 @@ export function useAdminUsers() {
 export function useAdminUserAction() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ userId, action, role }: { userId: string; action: 'ban' | 'unban' | 'setRole'; role?: string }) =>
+    mutationFn: ({ userId, action, role }: { userId: string; action: AdminUserAction; role?: string }) =>
       adminApi.updateUser(userId, action, role),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['admin-users'] }),
   });

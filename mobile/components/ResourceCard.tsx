@@ -3,16 +3,18 @@ import { router } from 'expo-router';
 import { COLORS } from '@/constants/Colors';
 import { Badge } from '@/components/ui/Badge';
 import { BookmarkButton } from '@/components/BookmarkButton';
+import { getDomaineLabel, getEpoqueLabel, getResourceTypeLabel } from '@/lib/constants';
+
 import type { Resource } from '@/lib/api';
 
 const EPOQUE_COLORS: Record<string, string> = {
-  prehistoire: '#8B6914',
-  antiquite: '#C4956A',
-  'moyen-age': '#8B2635',
-  renaissance: '#2D5A3D',
-  'epoque-moderne': '#1a2744',
-  'epoque-contemporaine': '#3B82F6',
-  'xxe-siecle': '#4A4A2A',
+  ANTIQUITE: '#C4956A',
+  MOYEN_AGE: '#8B2635',
+  RENAISSANCE: '#2D5A3D',
+  ANCIEN_REGIME: '#1a2744',
+  REVOLUTION: '#8B6914',
+  XIXE_SIECLE: '#4A4A2A',
+  CONTEMPORAIN: '#3B82F6',
 };
 
 type Props = {
@@ -40,9 +42,9 @@ export function ResourceCard({ resource, showBookmark = false }: Props) {
 
       <View style={styles.body}>
         <View style={styles.badges}>
-          {resource.type && <Badge label={resource.type} size="sm" />}
+          {resource.type && <Badge label={getResourceTypeLabel(resource.type)} size="sm" />}
           {resource.domaine && (
-            <Badge label={resource.domaine} size="sm" color="#1a3a5c" textColor={COLORS.textLight} />
+            <Badge label={getDomaineLabel(resource.domaine)} size="sm" color="#1a3a5c" textColor={COLORS.textLight} />
           )}
         </View>
         <Text style={styles.title} numberOfLines={2}>{resource.title}</Text>
@@ -51,7 +53,7 @@ export function ResourceCard({ resource, showBookmark = false }: Props) {
         )}
         <View style={styles.footer}>
           {resource.epoque && (
-            <Text style={styles.epoque}>{resource.epoque.replace(/-/g, ' ')}</Text>
+            <Text style={styles.epoque}>{getEpoqueLabel(resource.epoque)}</Text>
           )}
           {resource.readingTime && (
             <Text style={styles.readingTime}>{resource.readingTime} min</Text>

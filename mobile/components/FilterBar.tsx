@@ -9,56 +9,67 @@ type Props = {
   onEpoqueChange: (v: EpoqueId | '') => void;
 };
 
+function DisabledChip({ label }: { label: string }) {
+  return (
+    <View style={[styles.chip, styles.chipDisabled]}>
+      <Text style={styles.chipLabelDisabled}>{label}</Text>
+    </View>
+  );
+}
+
 export function FilterBar({ selectedDomaine, selectedEpoque, onDomaineChange, onEpoqueChange }: Props) {
   return (
     <View style={styles.container}>
-      {/* Domaines */}
+      {/* Domaines — non supportés par l'API web pour l'instant */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Domaines</Text>
+        <Text style={styles.soonBadge}>Bientôt disponible</Text>
+      </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
-        <TouchableOpacity
-          style={[styles.chip, !selectedDomaine && styles.chipActive]}
-          onPress={() => onDomaineChange('')}
-        >
-          <Text style={[styles.chipLabel, !selectedDomaine && styles.chipLabelActive]}>Tous</Text>
-        </TouchableOpacity>
+        <DisabledChip label="Tous" />
         {DOMAINES.map((d) => (
-          <TouchableOpacity
-            key={d.id}
-            style={[styles.chip, selectedDomaine === d.id && styles.chipActive]}
-            onPress={() => onDomaineChange(selectedDomaine === d.id ? '' : d.id)}
-          >
-            <Text style={[styles.chipLabel, selectedDomaine === d.id && styles.chipLabelActive]}>
-              {d.label}
-            </Text>
-          </TouchableOpacity>
+          <DisabledChip key={d.id} label={d.label} />
         ))}
       </ScrollView>
 
-      {/* Époques */}
+      {/* Époques — non supportées par l'API web pour l'instant */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Époques</Text>
+        <Text style={styles.soonBadge}>Bientôt disponible</Text>
+      </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
-        <TouchableOpacity
-          style={[styles.chip, styles.chipEpoque, !selectedEpoque && styles.chipEpoqueActive]}
-          onPress={() => onEpoqueChange('')}
-        >
-          <Text style={[styles.chipLabel, !selectedEpoque && styles.chipLabelActive]}>Toutes les époques</Text>
-        </TouchableOpacity>
+        <DisabledChip label="Toutes les époques" />
         {EPOQUES.map((e) => (
-          <TouchableOpacity
-            key={e.id}
-            style={[styles.chip, styles.chipEpoque, selectedEpoque === e.id && styles.chipEpoqueActive]}
-            onPress={() => onEpoqueChange(selectedEpoque === e.id ? '' : e.id)}
-          >
-            <Text style={[styles.chipLabel, selectedEpoque === e.id && styles.chipLabelActive]}>
-              {e.label}
-            </Text>
-          </TouchableOpacity>
+          <DisabledChip key={e.id} label={e.label} />
         ))}
       </ScrollView>
+
+      {/* État local conservé pour compatibilité, sans effet API */}
+      {(selectedDomaine || selectedEpoque) && (
+        <TouchableOpacity
+          style={styles.resetBtn}
+          onPress={() => { onDomaineChange(''); onEpoqueChange(''); }}
+        >
+          <Text style={styles.resetText}>Réinitialiser les filtres locaux</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { gap: 8, paddingVertical: 12 },
+  sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16 },
+  sectionTitle: { color: COLORS.textMuted, fontSize: 11, fontWeight: '700', letterSpacing: 1, textTransform: 'uppercase' },
+  soonBadge: {
+    color: COLORS.gold,
+    fontSize: 10,
+    fontWeight: '600',
+    backgroundColor: 'rgba(184,147,58,0.12)',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
   row: { paddingHorizontal: 16, gap: 8 },
   chip: {
     paddingHorizontal: 14,
@@ -68,9 +79,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
   },
-  chipActive: { backgroundColor: COLORS.gold, borderColor: COLORS.gold },
-  chipEpoque: { backgroundColor: 'transparent' },
-  chipEpoqueActive: { backgroundColor: '#1a3a5c', borderColor: COLORS.gold },
-  chipLabel: { color: COLORS.textMuted, fontSize: 12, fontWeight: '600' },
-  chipLabelActive: { color: COLORS.bg },
+  chipDisabled: { opacity: 0.45 },
+  chipLabelDisabled: { color: COLORS.textMuted, fontSize: 12, fontWeight: '600' },
+  resetBtn: { alignSelf: 'center', paddingVertical: 4 },
+  resetText: { color: COLORS.gold, fontSize: 12, fontWeight: '600' },
 });

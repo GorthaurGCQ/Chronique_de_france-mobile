@@ -1,50 +1,64 @@
+/** Enums alignés sur apps/web/db/schema.ts (PostgreSQL) */
+
 export const EPOQUES = [
-  { id: 'prehistoire', label: 'Préhistoire' },
-  { id: 'antiquite', label: 'Antiquité' },
-  { id: 'moyen-age', label: 'Moyen Âge' },
-  { id: 'renaissance', label: 'Renaissance' },
-  { id: 'epoque-moderne', label: 'Époque moderne' },
-  { id: 'epoque-contemporaine', label: 'Époque contemporaine' },
-  { id: 'xxe-siecle', label: 'XXe siècle' },
+  { id: 'ANTIQUITE', label: 'Antiquité' },
+  { id: 'MOYEN_AGE', label: 'Moyen Âge' },
+  { id: 'RENAISSANCE', label: 'Renaissance' },
+  { id: 'ANCIEN_REGIME', label: 'Ancien Régime' },
+  { id: 'REVOLUTION', label: 'Révolution' },
+  { id: 'XIXE_SIECLE', label: 'XIXe siècle' },
+  { id: 'CONTEMPORAIN', label: 'Contemporain' },
 ] as const;
 
 export type EpoqueId = (typeof EPOQUES)[number]['id'];
 
 export const DOMAINES = [
-  { id: 'histoire', label: 'Histoire' },
-  { id: 'patrimoine', label: 'Patrimoine' },
-  { id: 'culture', label: 'Culture' },
-  { id: 'art', label: 'Art' },
-  { id: 'science', label: 'Science' },
-  { id: 'nature', label: 'Nature' },
+  { id: 'PATRIMOINE_HISTOIRE', label: 'Patrimoine & Histoire' },
+  { id: 'CULTURE_TRADITIONS', label: 'Culture & Traditions' },
+  { id: 'ARCHITECTURE', label: 'Architecture' },
+  { id: 'GEOGRAPHIE', label: 'Géographie' },
+  { id: 'FIGURES_HISTORIQUES', label: 'Figures historiques' },
+  { id: 'EVENEMENTS_MARQUANTS', label: 'Événements marquants' },
 ] as const;
 
 export type DomaineId = (typeof DOMAINES)[number]['id'];
 
 export const RESOURCE_TYPES = [
-  { id: 'chronologie', label: 'Chronologie' },
-  { id: 'fiche', label: 'Fiche' },
-  { id: 'document', label: 'Document' },
-  { id: 'publication', label: 'Publication' },
+  { id: 'CHRONOLOGIE', label: 'Chronologie' },
+  { id: 'FICHE_THEMATIQUE', label: 'Fiche thématique' },
+  { id: 'DOCUMENT_EDUCATIF', label: 'Document éducatif' },
+  { id: 'PUBLICATION', label: 'Publication' },
 ] as const;
 
 export type ResourceTypeId = (typeof RESOURCE_TYPES)[number]['id'];
 
 export const REGIONS_LIST = [
-  { code: 'ARA', slug: 'auvergne-rhone-alpes', nom: 'Auvergne-Rhône-Alpes', couleur: '#F4A460' },
-  { code: 'BFC', slug: 'bourgogne-franche-comte', nom: 'Bourgogne-Franche-Comté', couleur: '#F1948A' },
-  { code: 'BRE', slug: 'bretagne', nom: 'Bretagne', couleur: '#85929E' },
-  { code: 'CVL', slug: 'centre-val-de-loire', nom: 'Centre-Val de Loire', couleur: '#F7DC6F' },
-  { code: 'COR', slug: 'corse', nom: 'Corse', couleur: '#F1948A' },
-  { code: 'GES', slug: 'grand-est', nom: 'Grand Est', couleur: '#BB8FCE' },
-  { code: 'HDF', slug: 'hauts-de-france', nom: 'Hauts-de-France', couleur: '#85C1E9' },
-  { code: 'IDF', slug: 'ile-de-france', nom: 'Île-de-France', couleur: '#7B9ED9' },
-  { code: 'NOR', slug: 'normandie', nom: 'Normandie', couleur: '#76D7C4' },
-  { code: 'NAQ', slug: 'nouvelle-aquitaine', nom: 'Nouvelle-Aquitaine', couleur: '#7EC8A0' },
-  { code: 'OCC', slug: 'occitanie', nom: 'Occitanie', couleur: '#C8A07E' },
-  { code: 'PDL', slug: 'pays-de-la-loire', nom: 'Pays de la Loire', couleur: '#82E0AA' },
-  { code: 'PAC', slug: 'paca', nom: "Provence-Alpes-Côte d'Azur", couleur: '#FDEBD0' },
   { code: 'NATIONAL', slug: 'national', nom: 'National', couleur: '#b8933a' },
+  { code: 'AUVERGNE_RHONE_ALPES', slug: 'auvergne-rhone-alpes', nom: 'Auvergne-Rhône-Alpes', couleur: '#F4A460' },
+  { code: 'BOURGOGNE_FRANCHE_COMTE', slug: 'bourgogne-franche-comte', nom: 'Bourgogne-Franche-Comté', couleur: '#F1948A' },
+  { code: 'BRETAGNE', slug: 'bretagne', nom: 'Bretagne', couleur: '#85929E' },
+  { code: 'CENTRE_VAL_DE_LOIRE', slug: 'centre-val-de-loire', nom: 'Centre-Val de Loire', couleur: '#F7DC6F' },
+  { code: 'CORSE', slug: 'corse', nom: 'Corse', couleur: '#F1948A' },
+  { code: 'GRAND_EST', slug: 'grand-est', nom: 'Grand Est', couleur: '#BB8FCE' },
+  { code: 'HAUTS_DE_FRANCE', slug: 'hauts-de-france', nom: 'Hauts-de-France', couleur: '#85C1E9' },
+  { code: 'ILE_DE_FRANCE', slug: 'ile-de-france', nom: 'Île-de-France', couleur: '#7B9ED9' },
+  { code: 'NORMANDIE', slug: 'normandie', nom: 'Normandie', couleur: '#76D7C4' },
+  { code: 'NOUVELLE_AQUITAINE', slug: 'nouvelle-aquitaine', nom: 'Nouvelle-Aquitaine', couleur: '#7EC8A0' },
+  { code: 'OCCITANIE', slug: 'occitanie', nom: 'Occitanie', couleur: '#C8A07E' },
+  { code: 'PAYS_DE_LA_LOIRE', slug: 'pays-de-la-loire', nom: 'Pays de la Loire', couleur: '#82E0AA' },
+  { code: 'PROVENCE_ALPES_COTE_AZUR', slug: 'paca', nom: "Provence-Alpes-Côte d'Azur", couleur: '#FDEBD0' },
 ] as const;
 
 export type RegionCode = (typeof REGIONS_LIST)[number]['code'];
+
+export function getEpoqueLabel(id: string): string {
+  return EPOQUES.find((e) => e.id === id)?.label ?? id.replace(/_/g, ' ').toLowerCase();
+}
+
+export function getDomaineLabel(id: string): string {
+  return DOMAINES.find((d) => d.id === id)?.label ?? id.replace(/_/g, ' ').toLowerCase();
+}
+
+export function getResourceTypeLabel(id: string): string {
+  return RESOURCE_TYPES.find((t) => t.id === id)?.label ?? id.replace(/_/g, ' ').toLowerCase();
+}

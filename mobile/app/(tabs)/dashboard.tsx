@@ -10,7 +10,6 @@ import { COLORS } from '@/constants/Colors';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile, useProfileHistory, useUpdateProfile, useChangePassword, useUploadAvatar } from '@/hooks/useProfile';
 import { useFavorites } from '@/hooks/useFavorites';
-import { useResources } from '@/hooks/useResources';
 import { ResourceCard } from '@/components/ResourceCard';
 import { Loader } from '@/components/ui/Loader';
 
@@ -204,12 +203,11 @@ function StatsSection() {
 // ── Section Favoris ──────────────────────────────────────────────────────────
 
 function FavorisSection() {
-  const { favorites, toggle } = useFavorites();
-  const ids = favorites.map((f) => f.resourceId);
-  const { data: resources, isLoading } = useResources({});
-  const favResources = (resources ?? []).filter((r) => ids.includes(r.id));
+  const { favorites } = useFavorites();
+  const favResources = favorites
+    .map((f) => f.resource)
+    .filter((r): r is NonNullable<typeof r> => !!r);
 
-  if (isLoading) return <Loader />;
   if (favResources.length === 0) {
     return (
       <View style={s.section}>
@@ -231,9 +229,10 @@ function FavorisSection() {
 
 function HistoriqueSection() {
   const { data: history, isLoading } = useProfileHistory();
-  const ids = (history ?? []).map((h) => h.resourceId);
-  const { data: resources } = useResources({});
-  const histResources = (resources ?? []).filter((r) => ids.includes(r.id)).slice(0, 20);
+  const histResources = (history ?? [])
+    .map((h) => h.resource)
+    .filter((r): r is NonNullable<typeof r> => !!r)
+    .slice(0, 20);
 
   if (isLoading) return <Loader />;
   if (histResources.length === 0) {

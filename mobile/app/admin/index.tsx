@@ -13,7 +13,6 @@ export default function AdminDashboard() {
     { label: 'Utilisateurs', value: stats?.users ?? 0, icon: 'people' as const, color: '#7B9ED9' },
     { label: 'Ressources', value: stats?.resources ?? 0, icon: 'book' as const, color: '#76D7C4' },
     { label: 'Événements', value: stats?.events ?? 0, icon: 'calendar' as const, color: '#C8A07E' },
-    { label: 'Favoris', value: stats?.favorites ?? 0, icon: 'star' as const, color: COLORS.gold },
   ];
 
   return (

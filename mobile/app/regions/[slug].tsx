@@ -4,7 +4,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '@/constants/Colors';
 import { getRegionBySlug } from '@/data/regionsContent';
-import { useResources } from '@/hooks/useResources';
+import { useResourcesFlat } from '@/hooks/useResources';
 import { ResourceCard } from '@/components/ResourceCard';
 import { FilterBar } from '@/components/FilterBar';
 import { Loader } from '@/components/ui/Loader';
@@ -17,11 +17,7 @@ export default function RegionDetailScreen() {
   const [domaine, setDomaine] = useState<DomaineId | ''>('');
   const [epoque, setEpoque] = useState<EpoqueId | ''>('');
 
-  const { data: resources, isLoading } = useResources({
-    region: region?.code,
-    domaine: domaine || undefined,
-    epoque: epoque || undefined,
-  });
+  const { data: resources, isLoading } = useResourcesFlat({ limit: 50 });
 
   if (!region) {
     return (
