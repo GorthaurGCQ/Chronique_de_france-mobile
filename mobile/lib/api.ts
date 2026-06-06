@@ -1,4 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
+import { useAuthStore } from '@/store/authStore';
 import {
   mapAdminStats,
   mapAuditLog,
@@ -20,14 +22,25 @@ if (!API_URL) {
 // ── Gestion du token ─────────────────────────────────────────────────────────
 
 export async function getStoredToken(): Promise<string | null> {
+  if (Platform.OS === 'web') {
+    return typeof localStorage !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null;
+  }
   return SecureStore.getItemAsync(TOKEN_KEY);
 }
 
 export async function setStoredToken(token: string): Promise<void> {
+  if (Platform.OS === 'web') {
+    localStorage.setItem(TOKEN_KEY, token);
+    return;
+  }
   await SecureStore.setItemAsync(TOKEN_KEY, token);
 }
 
 export async function clearStoredToken(): Promise<void> {
+  if (Platform.OS === 'web') {
+    localStorage.removeItem(TOKEN_KEY);
+    return;
+  }
   await SecureStore.deleteItemAsync(TOKEN_KEY);
 }
 
@@ -41,7 +54,10 @@ async function buildHeaders(extra?: Record<string, string>): Promise<Record<stri
   const token = await getStoredToken();
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
-    headers['Cookie'] = `better-auth.session_token=${token}`;
+    // Cookie interdit en fetch navigateur — Authorization suffit pour Better Auth
+    if (Platform.OS !== 'web') {
+      headers['Cookie'] = `better-auth.session_token=${token}`;
+    }
   }
   return headers;
 }
@@ -92,14 +108,28 @@ export async function apiFetch(
   );
   if (isFormData) delete headers['Content-Type'];
 
-  return fetch(url, {
-    ...options,
-    credentials: 'include',
-    headers: {
-      ...headers,
-      ...(options.headers as Record<string, string> | undefined),
-    },
-  });
+  try {
+    return await fetch(url, {
+      ...options,
+      credentials: 'include',
+      headers: {
+        ...headers,
+        ...(options.headers as Record<string, string> | undefined),
+      },
+    });
+  } catch (error) {
+    const hint =
+      Platform.OS === 'web'
+        ? `Vérifiez que le backend Next.js tourne sur ${API_URL} et que CORS autorise cette page.`
+        : `Sur téléphone/émulateur, remplacez localhost par l'IP de votre PC dans mobile/.env (ex. http://192.168.x.x:3000).`;
+    const message =
+      error instanceof Error && error.message === 'Failed to fetch'
+        ? `Impossible de joindre l'API (${API_URL}). ${hint}`
+        : error instanceof Error
+          ? error.message
+          : 'Erreur réseau';
+    throw new ApiError(0, message);
+  }
 }
 
 export async function apiJson<T>(
@@ -124,9 +154,12 @@ export async function apiJson<T>(
   return unwrapApiResponse<T>(json, res.status);
 }
 
-export async function storeAuthTokenFromResponse(res: Response, body: { token?: string }): Promise<void> {
+export async function storeAuthTokenFromResponse(
+  res: Response,
+  body: { token?: string; session?: { token?: string } },
+): Promise<void> {
   const headerToken = res.headers.get('set-auth-token');
-  const token = body.token ?? headerToken;
+  const token = body.token ?? body.session?.token ?? headerToken;
   if (token) {
     await setStoredToken(token);
   }
@@ -210,7 +243,7 @@ export type Profile = {
 
 export const profileApi = {
   get: async (): Promise<Profile> => {
-    const { user } = await authApi.getSession();
+    const user = useAuthStore.getState().user;
     if (!user) throw new ApiError(401, 'Non authentifié');
 
     const res = await apiFetch('/profile');
@@ -232,7 +265,7 @@ export const profileApi = {
       email: user.email,
       role: user.role ?? 'user',
       image: user.image,
-      createdAt: user.createdAt,
+      createdAt: undefined,
       userPreferences,
     };
   },

@@ -10,5 +10,12 @@ export function Loader({ size = 'large' }: { size?: 'small' | 'large' }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32 },
+  container: {
+    flex: 1,
+    minHeight: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 32,
+    backgroundColor: COLORS.bg,
+  },
 });

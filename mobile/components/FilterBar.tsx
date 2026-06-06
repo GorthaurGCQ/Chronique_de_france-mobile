@@ -10,6 +10,7 @@ type Props = {
   onDomaineChange: (v: DomaineId | '') => void;
   onEpoqueChange: (v: EpoqueId | '') => void;
   localFilterHint?: boolean;
+  hideEpoque?: boolean;
 };
 
 function Chip({
@@ -44,6 +45,7 @@ export function FilterBar({
   onDomaineChange,
   onEpoqueChange,
   localFilterHint,
+  hideEpoque,
 }: Props) {
   return (
     <View style={styles.container}>
@@ -63,24 +65,28 @@ export function FilterBar({
         ))}
       </ScrollView>
 
-      {/* Époque — filtre local (timeline présent dans les réponses API) */}
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Époque</Text>
-        {localFilterHint && selectedEpoque ? (
-          <Text style={styles.hintBadge}>Résultats chargés</Text>
-        ) : null}
-      </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
-        <Chip label="Toutes" active={!selectedEpoque} onPress={() => onEpoqueChange('')} />
-        {EPOQUES.map((e) => (
-          <Chip
-            key={e.id}
-            label={e.label}
-            active={selectedEpoque === e.id}
-            onPress={() => onEpoqueChange(selectedEpoque === e.id ? '' : e.id)}
-          />
-        ))}
-      </ScrollView>
+      {/* Époque — filtre local (frise dédiée sur Bibliothèque) */}
+      {!hideEpoque && (
+        <>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Époque</Text>
+            {localFilterHint && selectedEpoque ? (
+              <Text style={styles.hintBadge}>Résultats chargés</Text>
+            ) : null}
+          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
+            <Chip label="Toutes" active={!selectedEpoque} onPress={() => onEpoqueChange('')} />
+            {EPOQUES.map((e) => (
+              <Chip
+                key={e.id}
+                label={e.label}
+                active={selectedEpoque === e.id}
+                onPress={() => onEpoqueChange(selectedEpoque === e.id ? '' : e.id)}
+              />
+            ))}
+          </ScrollView>
+        </>
+      )}
 
       {/* Domaine — non disponible dans la liste publique API */}
       <View style={styles.sectionHeader}>

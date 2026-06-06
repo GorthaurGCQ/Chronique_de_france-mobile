@@ -8,6 +8,7 @@ import { StatusBar } from 'react-native';
 import 'react-native-reanimated';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { COLORS } from '@/constants/Colors';
+import { initAuthSession } from '@/hooks/useAuth';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -48,6 +49,10 @@ export default function RootLayout() {
   useEffect(() => {
     if (error) throw error;
   }, [error]);
+
+  useEffect(() => {
+    initAuthSession();
+  }, []);
 
   useEffect(() => {
     if (loaded) {

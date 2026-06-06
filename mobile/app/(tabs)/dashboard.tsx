@@ -42,17 +42,21 @@ const tab = StyleSheet.create({
 // ── Section Profil ──────────────────────────────────────────────────────────
 
 function ProfilSection() {
-  const { data: profile, isLoading } = useProfile();
+  const { user: authUser, logout } = useAuth();
+  const { data: profile, isLoading, isError } = useProfile();
   const updateProfile = useUpdateProfile();
   const uploadAvatar = useUploadAvatar();
-  const { logout } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [editing, setEditing] = useState<'name' | 'email' | null>(null);
   const [saved, setSaved] = useState(false);
   const [msg, setMsg] = useState('');
 
-  if (isLoading) return <Loader />;
+  if (isLoading && !authUser) return <Loader />;
+
+  const displayName = profile?.name ?? authUser?.name ?? '';
+  const displayEmail = profile?.email ?? authUser?.email ?? '';
+  const displayRole = profile?.role ?? authUser?.role ?? 'user';
 
   const handleSaveName = async () => {
     if (!name.trim()) return;
@@ -125,6 +129,9 @@ function ProfilSection() {
   return (
     <View style={s.section}>
       <Text style={s.sectionTitle}>Profil</Text>
+      {isError && (
+        <Text style={s.errorText}>Impossible de charger le profil complet. Affichage des infos de session.</Text>
+      )}
 
       {/* Avatar */}
       <TouchableOpacity style={s.avatarContainer} onPress={handlePickAvatar}>
@@ -147,7 +154,7 @@ function ProfilSection() {
             style={[s.input, { flex: 1 }]}
             value={name}
             onChangeText={setName}
-            placeholder={profile?.name}
+            placeholder={displayName}
             placeholderTextColor={COLORS.textMuted}
             autoFocus
           />
@@ -156,8 +163,8 @@ function ProfilSection() {
           </TouchableOpacity>
         </View>
       ) : (
-        <TouchableOpacity style={s.fieldRow} onPress={() => { setName(profile?.name ?? ''); setEditing('name'); }}>
-          <Text style={s.fieldValue}>{profile?.name}</Text>
+        <TouchableOpacity style={s.fieldRow} onPress={() => { setName(displayName); setEditing('name'); }}>
+          <Text style={s.fieldValue}>{displayName}</Text>
           <Ionicons name="pencil" size={16} color={COLORS.textMuted} />
         </TouchableOpacity>
       )}
@@ -169,7 +176,7 @@ function ProfilSection() {
             style={[s.input, { flex: 1 }]}
             value={email}
             onChangeText={setEmail}
-            placeholder={profile?.email}
+            placeholder={displayEmail}
             placeholderTextColor={COLORS.textMuted}
             keyboardType="email-address"
             autoCapitalize="none"
@@ -180,8 +187,8 @@ function ProfilSection() {
           </TouchableOpacity>
         </View>
       ) : (
-        <TouchableOpacity style={s.fieldRow} onPress={() => { setEmail(profile?.email ?? ''); setEditing('email'); }}>
-          <Text style={s.fieldValue}>{profile?.email}</Text>
+        <TouchableOpacity style={s.fieldRow} onPress={() => { setEmail(displayEmail); setEditing('email'); }}>
+          <Text style={s.fieldValue}>{displayEmail}</Text>
           <Ionicons name="pencil" size={16} color={COLORS.textMuted} />
         </TouchableOpacity>
       )}
@@ -190,7 +197,7 @@ function ProfilSection() {
       {/* Rôle */}
       <Text style={s.label}>Rôle</Text>
       <View style={s.fieldRow}>
-        <Text style={[s.fieldValue, { color: COLORS.gold }]}>{profile?.role ?? 'user'}</Text>
+        <Text style={[s.fieldValue, { color: COLORS.gold }]}>{displayRole}</Text>
       </View>
 
       <View style={s.dangerZone}>
@@ -439,7 +446,13 @@ export default function DashboardScreen() {
   const { user, isLoading, isAuthenticated, logout, isAdmin } = useAuth();
   const [section, setSection] = useState<Section>('profil');
 
-  if (isLoading) return <Loader />;
+  if (isLoading) {
+    return (
+      <View style={styles.loadingWrap}>
+        <Loader />
+      </View>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -518,7 +531,8 @@ export default function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, backgroundColor: COLORS.bg, alignItems: 'center', justifyContent: 'center', padding: 32, gap: 12 },
+  loadingWrap: { flex: 1, backgroundColor: COLORS.bg, minHeight: 400 },
+  center: { flex: 1, backgroundColor: COLORS.bg, alignItems: 'center', justifyContent: 'center', padding: 32, gap: 12, minHeight: 400 },
   guestTitle: { color: COLORS.textWhite, fontSize: 22, fontWeight: '800' },
   guestSub: { color: COLORS.textMuted, fontSize: 14, textAlign: 'center' },
   loginBtn: { marginTop: 8, backgroundColor: COLORS.gold, borderRadius: 10, paddingHorizontal: 24, paddingVertical: 12 },

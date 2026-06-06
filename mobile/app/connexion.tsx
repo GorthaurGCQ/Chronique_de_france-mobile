@@ -77,7 +77,7 @@ export default function ConnexionScreen() {
     setIsLoading(true);
     try {
       await login(loginEmail.trim(), loginPassword);
-      router.back();
+      router.replace('/(tabs)/dashboard');
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Identifiants incorrects.');
     } finally {
@@ -103,7 +103,7 @@ export default function ConnexionScreen() {
     try {
       const name = `${regPrenom.trim()} ${regNom.trim()}`;
       await register(regEmail.trim(), regPassword, name);
-      router.back();
+      router.replace('/(tabs)/dashboard');
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Erreur lors de l'inscription.");
     } finally {

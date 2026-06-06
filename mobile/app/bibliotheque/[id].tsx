@@ -50,10 +50,6 @@ export default function ResourceDetailScreen() {
     ? EPOQUE_COLORS[resource.epoque] ?? COLORS.navyLight
     : COLORS.navyLight;
 
-  const isVideo = resource.mediaUrl && (
-    resource.mediaUrl.includes('.mp4') || resource.mediaUrl.includes('.mov') || resource.mediaUrl.includes('video')
-  );
-
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Bannière */}
@@ -105,19 +101,6 @@ export default function ResourceDetailScreen() {
           <Text style={styles.description}>{resource.description}</Text>
         )}
 
-        {/* Lecteur média */}
-        {resource.mediaUrl && (
-          <View style={styles.mediaSection}>
-            <Text style={styles.sectionTitle}>
-              {isVideo ? 'Vidéo' : 'Audio'}
-            </Text>
-            <MediaPlayer
-              uri={resource.mediaUrl}
-              type={isVideo ? 'video' : 'audio'}
-            />
-          </View>
-        )}
-
         {/* Contenu HTML */}
         {resource.content && (
           <View style={styles.contentSection}>
@@ -143,6 +126,13 @@ export default function ResourceDetailScreen() {
               }}
               baseStyle={{ color: COLORS.textLight }}
             />
+          </View>
+        )}
+
+        {/* Lecteur média (après le contenu, comme sur le web) */}
+        {resource.mediaUrl && (
+          <View style={styles.mediaSection}>
+            <MediaPlayer url={resource.mediaUrl} />
           </View>
         )}
       </View>

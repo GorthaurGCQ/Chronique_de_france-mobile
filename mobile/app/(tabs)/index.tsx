@@ -4,12 +4,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/constants/Colors';
 import { useUpcomingEvents } from '@/hooks/useEvents';
+import { useAuth } from '@/hooks/useAuth';
 import { EventCard } from '@/components/EventCard';
 import { Loader } from '@/components/ui/Loader';
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
 
 function Hero() {
+  const { isAuthenticated, user } = useAuth();
+
   return (
     <LinearGradient
       colors={[COLORS.bg, COLORS.navyLight, '#1a2744']}
@@ -18,6 +21,9 @@ function Hero() {
       <View style={hero.badge}>
         <Text style={hero.badgeText}>INSTITUTION CULTURELLE</Text>
       </View>
+      {isAuthenticated && user && (
+        <Text style={hero.welcome}>Bonjour, {user.name.split(' ')[0]} 👋</Text>
+      )}
       <Text style={hero.titleTop}>Préserver et transmettre</Text>
       <Text style={hero.titleBottom}>l'héritage de France</Text>
       <Text style={hero.subtitle}>
@@ -33,9 +39,15 @@ function Hero() {
         </TouchableOpacity>
         <TouchableOpacity
           style={hero.btnSecondary}
-          onPress={() => router.push('/connexion')}
+          onPress={() =>
+            isAuthenticated
+              ? router.push('/(tabs)/dashboard')
+              : router.push('/connexion')
+          }
         >
-          <Text style={hero.btnSecondaryText}>Se connecter</Text>
+          <Text style={hero.btnSecondaryText}>
+            {isAuthenticated ? 'Mon espace membre' : 'Se connecter'}
+          </Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>
@@ -53,6 +65,7 @@ const hero = StyleSheet.create({
     paddingVertical: 4,
   },
   badgeText: { color: COLORS.gold, fontSize: 10, fontWeight: '700', letterSpacing: 2 },
+  welcome: { color: COLORS.gold, fontSize: 14, fontWeight: '600' },
   titleTop: { color: COLORS.textMuted, fontSize: 18, fontWeight: '400', lineHeight: 24 },
   titleBottom: { color: COLORS.textWhite, fontSize: 28, fontWeight: '900', lineHeight: 34, marginTop: -4 },
   subtitle: { color: COLORS.textMuted, fontSize: 14, lineHeight: 22, marginTop: 4 },

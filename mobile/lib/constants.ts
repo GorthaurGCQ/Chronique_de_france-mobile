@@ -1,13 +1,13 @@
 /** Enums alignés sur apps/web/db/schema.ts (PostgreSQL) */
 
 export const EPOQUES = [
-  { id: 'ANTIQUITE', label: 'Antiquité' },
-  { id: 'MOYEN_AGE', label: 'Moyen Âge' },
-  { id: 'RENAISSANCE', label: 'Renaissance' },
-  { id: 'ANCIEN_REGIME', label: 'Ancien Régime' },
-  { id: 'REVOLUTION', label: 'Révolution' },
-  { id: 'XIXE_SIECLE', label: 'XIXe siècle' },
-  { id: 'CONTEMPORAIN', label: 'Contemporain' },
+  { id: 'ANTIQUITE', label: 'Antiquité', date: 'av. J.-C. – Ve s.' },
+  { id: 'MOYEN_AGE', label: 'Moyen Âge', date: 'Ve – XVe s.' },
+  { id: 'RENAISSANCE', label: 'Renaissance', date: 'XVe – XVIIe s.' },
+  { id: 'ANCIEN_REGIME', label: 'Ancien Régime', date: 'XVIIe – 1789' },
+  { id: 'REVOLUTION', label: 'Révolution', date: '1789 – 1815' },
+  { id: 'XIXE_SIECLE', label: 'XIXe siècle', date: '1815 – 1914' },
+  { id: 'CONTEMPORAIN', label: 'Contemporain', date: '1914 – auj.' },
 ] as const;
 
 export type EpoqueId = (typeof EPOQUES)[number]['id'];
@@ -65,6 +65,10 @@ export function getResourceTypeLabel(id: string): string {
 
 export function getRegionLabel(code: string): string {
   return REGIONS_LIST.find((r) => r.code === code)?.nom ?? code.replace(/_/g, ' ').toLowerCase();
+}
+
+export function getWebRegionCodeFromSlug(slug: string): RegionCode | undefined {
+  return REGIONS_LIST.find((r) => r.slug === slug)?.code;
 }
 
 /** Codes courts legacy (regionsContent) → enum web PostgreSQL */

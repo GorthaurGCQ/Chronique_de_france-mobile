@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from 'react';
 import {
   View, Text, FlatList, StyleSheet, TouchableOpacity,
 } from 'react-native';
-import { router } from 'expo-router';
 import { COLORS } from '@/constants/Colors';
 import { useResources } from '@/hooks/useResources';
 import { ResourceCard } from '@/components/ResourceCard';
@@ -10,7 +9,10 @@ import { FilterBar } from '@/components/FilterBar';
 import { SearchBar } from '@/components/SearchBar';
 import { Loader } from '@/components/ui/Loader';
 import { EmptyState } from '@/components/ui/EmptyState';
-import type { DomaineId, EpoqueId, ResourceTypeId } from '@/lib/constants';
+import CarteRegions from '@/components/CarteRegions';
+import { FriseChronologique } from '@/components/FriseChronologique';
+import type { Region } from '@/data/regions';
+import { getWebRegionCodeFromSlug, type DomaineId, type EpoqueId, type ResourceTypeId } from '@/lib/constants';
 
 const PAGE_SIZE = 20;
 
@@ -20,11 +22,16 @@ export default function BibliothequéScreen() {
   const [type, setType] = useState<ResourceTypeId | ''>('');
   const [domaine, setDomaine] = useState<DomaineId | ''>('');
   const [epoque, setEpoque] = useState<EpoqueId | ''>('');
+  const [selectedRegion, setSelectedRegion] = useState<Region | null>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(search.trim()), 350);
     return () => clearTimeout(t);
   }, [search]);
+
+  const regionFilterCode = selectedRegion
+    ? getWebRegionCodeFromSlug(selectedRegion.id)
+    : 'NATIONAL';
 
   const {
     data,
@@ -41,14 +48,31 @@ export default function BibliothequéScreen() {
   });
 
   const loaded = data?.pages.flatMap((p) => p.items) ?? [];
-  const total = data?.pages[0]?.total ?? loaded.length;
 
   const resources = useMemo(() => {
     return loaded.filter((r) => {
+      if (regionFilterCode && r.region !== regionFilterCode) return false;
       if (epoque && r.epoque !== epoque) return false;
       return true;
     });
-  }, [loaded, epoque]);
+  }, [loaded, regionFilterCode, epoque]);
+
+  const sectionTitle = selectedRegion
+    ? `Ressources — ${selectedRegion.nom}`
+    : 'Ressources — France entière';
+
+  function handleRegionSelect(region: Region | null) {
+    setSelectedRegion(region);
+    setEpoque('');
+  }
+
+  function resetFilters() {
+    setSearch('');
+    setType('');
+    setDomaine('');
+    setEpoque('');
+    setSelectedRegion(null);
+  }
 
   return (
     <View style={styles.container}>
@@ -63,12 +87,26 @@ export default function BibliothequéScreen() {
               <Text style={styles.badge}>RESSOURCES PÉDAGOGIQUES</Text>
               <Text style={styles.title}>Bibliothèque</Text>
               <View style={styles.underline} />
+              <Text style={styles.subtitle}>
+                Sélectionnez une région sur la carte pour découvrir son histoire et ses ressources associées.
+              </Text>
+            </View>
+
+            <CarteRegions
+              selectedCode={selectedRegion?.code ?? null}
+              onSelectRegion={handleRegionSelect}
+            />
+
+            <View style={styles.resourcesHeader}>
+              <Text style={styles.resourcesTitle}>{sectionTitle}</Text>
               {!isLoading && (
                 <Text style={styles.count}>
-                  {epoque ? `${resources.length} affichée(s) · ${total} au total` : `${total} ressource${total > 1 ? 's' : ''}`}
+                  {resources.length} ressource{resources.length > 1 ? 's' : ''}
+                  {epoque ? ' · filtre époque actif' : ''}
                 </Text>
               )}
             </View>
+
             <SearchBar value={search} onChangeText={setSearch} />
             <FilterBar
               selectedType={type}
@@ -77,8 +115,9 @@ export default function BibliothequéScreen() {
               onTypeChange={setType}
               onDomaineChange={setDomaine}
               onEpoqueChange={setEpoque}
-              localFilterHint
+              hideEpoque
             />
+            <FriseChronologique selectedEpoque={epoque} onEpoqueChange={setEpoque} />
           </>
         }
         ListEmptyComponent={
@@ -95,9 +134,13 @@ export default function BibliothequéScreen() {
               : <EmptyState
                   icon="book-outline"
                   title="Aucune ressource"
-                  subtitle="Aucune ressource ne correspond à votre recherche."
+                  subtitle={
+                    selectedRegion
+                      ? `Aucune ressource pour ${selectedRegion.nom} avec ces filtres.`
+                      : 'Aucune ressource ne correspond à votre recherche.'
+                  }
                   actionLabel="Réinitialiser"
-                  onAction={() => { setSearch(''); setType(''); setEpoque(''); }}
+                  onAction={resetFilters}
                 />
         }
         ListFooterComponent={
@@ -114,17 +157,13 @@ export default function BibliothequéScreen() {
           ) : null
         }
       />
-
-      <TouchableOpacity style={styles.fab} onPress={() => router.push('/regions/index')}>
-        <Text style={styles.fabText}>🗺 Régions</Text>
-      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.bg },
-  list: { paddingBottom: 80 },
+  list: { paddingBottom: 40 },
   header: {
     padding: 24,
     paddingTop: 20,
@@ -137,6 +176,14 @@ const styles = StyleSheet.create({
   badge: { color: COLORS.gold, fontSize: 11, fontWeight: '700', letterSpacing: 2 },
   title: { color: COLORS.textWhite, fontSize: 26, fontWeight: '900' },
   underline: { width: 40, height: 3, backgroundColor: COLORS.gold, borderRadius: 2 },
+  subtitle: { color: COLORS.textMuted, fontSize: 13, lineHeight: 20, marginTop: 4 },
+  resourcesHeader: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 4,
+    gap: 4,
+  },
+  resourcesTitle: { color: COLORS.textWhite, fontSize: 17, fontWeight: '800' },
   count: { color: COLORS.textMuted, fontSize: 13 },
   loadMore: {
     margin: 20,
@@ -148,19 +195,4 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
   },
   loadMoreText: { color: COLORS.gold, fontWeight: '600' },
-  fab: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    backgroundColor: COLORS.gold,
-    borderRadius: 24,
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-  },
-  fabText: { color: COLORS.bg, fontWeight: '800', fontSize: 14 },
 });
