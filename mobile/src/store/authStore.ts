@@ -1,3 +1,7 @@
+/**
+ * État global d'authentification (Zustand).
+ * Source de vérité pour user/isAuthenticated — alimenté par useAuth et initAuthSession.
+ */
 import { create } from 'zustand';
 import type { AuthUser } from '@/models_M/types/auth.types';
 

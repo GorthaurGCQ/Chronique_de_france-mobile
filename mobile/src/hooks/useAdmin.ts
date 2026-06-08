@@ -1,4 +1,5 @@
-﻿import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+﻿/** Hooks React Query pour la zone admin — stats, CRUD, audit. */
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi, type AdminUserAction, type Resource, type Event } from '@/lib/api';
 import type { Permission } from '@/models_M/constants/permissions';
 

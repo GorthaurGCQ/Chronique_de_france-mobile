@@ -1,3 +1,4 @@
+/** Lien externe — ouvre expo-web-browser en natif, nouvel onglet sur web. */
 import { Link } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';

@@ -1,4 +1,5 @@
-﻿import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+﻿/** Carte historique de lecture — ressource consultée avec date. */
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { COLORS } from '@/models_M/constants/Colors';
 import type { Resource } from '@/lib/api';

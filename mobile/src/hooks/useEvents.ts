@@ -8,6 +8,7 @@ export function useEvents() {
   });
 }
 
+/** Filtre et trie les événements à venir (date > maintenant). */
 export function useUpcomingEvents(count = 3) {
   const query = useEvents();
   const now = new Date();

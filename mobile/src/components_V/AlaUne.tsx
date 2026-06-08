@@ -1,4 +1,5 @@
-﻿import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
+﻿/** Section accueil « À la une » — cartes statiques vers bibliothèque et événements. */
+import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { COLORS } from '@/models_M/constants/Colors';
 

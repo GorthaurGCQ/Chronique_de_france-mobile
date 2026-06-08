@@ -1,3 +1,4 @@
+/** Frise historique — 7 époques avec dates, couleurs et faits marquants. */
 export type Epoque = {
   id: string;
   label: string;

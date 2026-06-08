@@ -1,4 +1,5 @@
-﻿import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+﻿/** Champ recherche textuelle bibliothèque — icône et bouton effacer. */
+import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/models_M/constants/Colors';
 

@@ -1,7 +1,13 @@
+/**
+ * Client HTTP central de l'application mobile.
+ * Toutes les requêtes passent par ici vers le backend Next.js externe ({API_URL}/api/*).
+ * Gère l'authentification hybride Better Auth (Bearer + cookie sur natif).
+ */
 import { Platform } from 'react-native';
 import type { ApiEnvelope } from '@/models_M/types/api.types';
 import { getStoredToken } from '@/lib/auth/token';
 
+/** URL de base du backend Next.js — définie dans mobile/.env (EXPO_PUBLIC_API_URL) */
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 if (!API_URL) {
@@ -10,6 +16,7 @@ if (!API_URL) {
 
 export { API_URL };
 
+/** Construit les en-têtes HTTP avec le token Better Auth stocké localement. */
 async function buildHeaders(extra?: Record<string, string>): Promise<Record<string, string>> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -18,6 +25,7 @@ async function buildHeaders(extra?: Record<string, string>): Promise<Record<stri
   const token = await getStoredToken();
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
+    // Sur natif, Better Auth attend aussi le cookie de session (absent sur web via fetch)
     if (Platform.OS !== 'web') {
       headers['Cookie'] = `better-auth.session_token=${token}`;
     }
@@ -36,6 +44,7 @@ export class ApiError extends Error {
   }
 }
 
+/** Extrait `data` de l'enveloppe API `{ success, data, message }` ou renvoie le JSON brut. */
 function unwrapApiResponse<T>(json: unknown, status: number): T {
   if (json && typeof json === 'object' && 'success' in json) {
     const envelope = json as ApiEnvelope<T>;
@@ -53,6 +62,7 @@ function unwrapApiResponse<T>(json: unknown, status: number): T {
   return json as T;
 }
 
+/** Requête HTTP brute — `path` sans préfixe /api (ex. `/resources`, `/auth/sign-in/email`). */
 export async function apiFetch(
   path: string,
   options: RequestInit = {},
@@ -110,6 +120,7 @@ export async function apiJson<T>(
   return unwrapApiResponse<T>(json, res.status);
 }
 
+/** Persiste le token d'auth depuis le corps JSON ou l'en-tête `set-auth-token` de Better Auth. */
 export async function storeAuthTokenFromResponse(
   res: Response,
   body: { token?: string; session?: { token?: string } },

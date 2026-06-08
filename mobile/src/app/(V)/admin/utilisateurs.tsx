@@ -1,4 +1,5 @@
-﻿import { useState } from 'react';
+﻿/** Gestion utilisateurs — recherche, ban/rôles et permissions granulaires. */
+import { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/models_M/constants/Colors';

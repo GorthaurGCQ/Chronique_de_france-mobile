@@ -1,3 +1,7 @@
+/**
+ * Gestion des favoris avec mutations optimistes (UI réactive avant réponse API).
+ * Nécessite une session authentifiée.
+ */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { favoritesApi } from '@/lib/api';
 import { useAuth } from './useAuth';
@@ -12,6 +16,7 @@ export function useFavorites() {
     enabled: isAuthenticated,
   });
 
+  /** Set des resourceId favoris — lookup O(1) pour BookmarkButton */
   const favoriteIds = new Set(favorites.map((f) => f.resourceId));
 
   const addMutation = useMutation({

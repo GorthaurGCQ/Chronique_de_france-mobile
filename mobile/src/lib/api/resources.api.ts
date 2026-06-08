@@ -1,9 +1,11 @@
+/** API bibliothèque — liste paginée et détail des ressources éditoriales. */
 import type { Resource, ResourceFilters, ResourceListResult } from '@/models_M/types/resource.types';
 import { ApiError, apiFetch, apiJson } from '@/lib/api/client.api';
 import { mapResource } from '@/lib/services/mappers.service';
 
 export const resourcesApi = {
   list: async (filters: ResourceFilters = {}): Promise<ResourceListResult> => {
+    // Accepte page ou offset — convertit offset en numéro de page pour l'API web
     const limit = filters.limit ?? 10;
     const page =
       filters.page ??

@@ -1,3 +1,4 @@
+/** Texte monospace SpaceMono — usage template Expo. */
 import { Text, TextProps } from './Themed';
 
 export function MonoText(props: TextProps) {

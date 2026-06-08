@@ -1,3 +1,4 @@
+/** Surface API admin — CRUD ressources/événements, utilisateurs, audit, upload. */
 import type { AdminUserAction } from '@/models_M/types/admin.types';
 import type { Event } from '@/models_M/types/event.types';
 import type { Resource } from '@/models_M/types/resource.types';

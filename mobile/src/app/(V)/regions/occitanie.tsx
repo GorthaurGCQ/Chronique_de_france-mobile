@@ -1,4 +1,5 @@
-﻿import { useState } from 'react';
+﻿/** Page dédiée Occitanie — carousel catégories et filtres par époque. */
+import { useState } from 'react';
 import {
   View, Text, ScrollView, StyleSheet, Pressable, FlatList,
 } from 'react-native';

@@ -1,4 +1,5 @@
-﻿import { useState } from 'react';
+﻿/** CRUD événements admin — formulaire modal avec upload image. */
+import { useState } from 'react';
 import {
   View, Text, FlatList, StyleSheet, TouchableOpacity,
   Modal, ScrollView, Alert, ActivityIndicator, TextInput,
@@ -14,6 +15,7 @@ import { ImageUploadField } from '@/components_V/admin/ImageUploadField';
 type FormData = { title: string; description: string; date: string; lieu: string; region: string; domaine: string; epoque: string; imageUrl: string };
 const EMPTY: FormData = { title: '', description: '', date: '', lieu: '', region: '', domaine: '', epoque: 'CONTEMPORAIN', imageUrl: '' };
 
+/** Formulaire événement admin — date AAAA-MM-JJ, lieu et métadonnées éditoriales. */
 function EventForm({ initial, onSave, onClose, isSaving }: { initial: FormData; onSave: (d: FormData) => void; onClose: () => void; isSaving: boolean }) {
   const [form, setForm] = useState(initial);
   const set = (k: keyof FormData, v: string) => setForm((p) => ({ ...p, [k]: v }));

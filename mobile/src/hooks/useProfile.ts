@@ -1,3 +1,4 @@
+/** Hooks profil — données, historique, avatar, mot de passe. */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { profileApi } from '@/lib/api';
 import { useAuth } from './useAuth';

@@ -1,4 +1,5 @@
-﻿import type { ReactNode } from 'react';
+﻿/** Filtres bibliothèque — chips type/domaine/époque (enums PostgreSQL). */
+import type { ReactNode } from 'react';
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { COLORS } from '@/models_M/constants/Colors';
 import { DOMAINES, EPOQUES, RESOURCE_TYPES, type DomaineId, type EpoqueId, type ResourceTypeId } from '@/models_M/constants/app.constants';

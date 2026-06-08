@@ -1,4 +1,5 @@
-﻿import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+﻿/** Carte ressource bibliothèque — badges type/domaine et favori optionnel. */
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { COLORS } from '@/models_M/constants/Colors';
 import { Badge } from '@/components_V/ui/Badge';

@@ -2,6 +2,7 @@ import { authApi } from '@/lib/api/auth.api';
 import { clearStoredToken } from '@/lib/auth/token';
 import type { AuthSessionUser, AuthUser, SignInResult, SignUpResult } from '@/models_M/types/auth.types';
 
+/** Normalise le rôle Better Auth en minuscules pour les comparaisons (admin, founder). */
 function normalizeUser(user: AuthSessionUser): AuthUser {
   return {
     id: user.id,

@@ -1,4 +1,5 @@
-﻿import { Link, Stack } from 'expo-router';
+﻿/** Écran 404 — route inexistante, lien retour accueil. */
+import { Link, Stack } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 import { Text, View } from '@/components_V/Themed';

@@ -1,3 +1,4 @@
+/** Types session Better Auth — utilisateur normalisé et résultats sign-in/up. */
 export type AuthSessionUser = {
   id: string;
   name: string;
@@ -7,6 +8,7 @@ export type AuthSessionUser = {
   createdAt?: string;
 };
 
+/** Utilisateur tel que renvoyé par Better Auth (rôle en minuscules après normalizeUser). */
 export type AuthUser = {
   id: string;
   name: string;

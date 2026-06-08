@@ -1,4 +1,5 @@
-﻿import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+﻿/** Bouton favori — toggle via useFavorites, redirige vers connexion si anonyme. */
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { COLORS } from '@/models_M/constants/Colors';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';

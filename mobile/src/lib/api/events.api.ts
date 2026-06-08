@@ -1,3 +1,4 @@
+/** API événements — liste publique et inscription. */
 import type { Event } from '@/models_M/types/event.types';
 import { ApiError, apiFetch, apiJson } from '@/lib/api/client.api';
 import { mapEvent } from '@/lib/services/mappers.service';

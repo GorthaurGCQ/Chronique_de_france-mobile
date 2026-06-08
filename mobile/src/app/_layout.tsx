@@ -1,4 +1,5 @@
-﻿import FontAwesome from '@expo/vector-icons/FontAwesome';
+﻿/** Point d'entrée racine — fonts, React Query, thème sombre, init auth au démarrage. */
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -18,6 +19,7 @@ export const unstable_settings = {
 
 SplashScreen.preventAutoHideAsync();
 
+/** Cache React Query — 2 min staleTime, 1 retry en cas d'échec réseau. */
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

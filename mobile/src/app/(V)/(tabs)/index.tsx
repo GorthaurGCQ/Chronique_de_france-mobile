@@ -1,4 +1,5 @@
-﻿import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
+﻿/** Écran accueil — hero, missions, carte régions, prochains événements. */
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';

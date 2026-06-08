@@ -1,7 +1,9 @@
-﻿import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+﻿/** Carte événement — date FR, badge domaine et CTA inscription optionnel. */
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS } from '@/models_M/constants/Colors';
 import type { Event } from '@/lib/api';
 
+/** Couleurs accent par slug domaine legacy (histoire, patrimoine…). */
 const DOMAINE_COLORS: Record<string, string> = {
   histoire: '#b8933a',
   patrimoine: '#4a7c59',

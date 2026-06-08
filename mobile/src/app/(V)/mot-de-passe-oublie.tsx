@@ -1,4 +1,5 @@
-﻿import { useState } from 'react';
+﻿/** Demande réinitialisation mot de passe — envoi e-mail via Better Auth. */
+import { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   KeyboardAvoidingView, Platform, ActivityIndicator,

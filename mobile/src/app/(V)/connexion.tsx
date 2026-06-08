@@ -1,4 +1,5 @@
-﻿import { useState } from 'react';
+﻿/** Écran connexion/inscription — Better Auth via useAuth (login/register). */
+import { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator,

@@ -1,3 +1,7 @@
+/**
+ * Données statiques des 13 régions métropolitaines.
+ * `code` = code INSEE (utilisé par france-svg-paths) — distinct de REGIONS_LIST (enum PostgreSQL).
+ */
 export type Region = {
   id: string;
   code: string;

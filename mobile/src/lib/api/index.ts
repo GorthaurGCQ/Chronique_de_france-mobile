@@ -1,3 +1,4 @@
+/** Point d'entrée public de la couche API — réexporte clients, types et utilitaires auth. */
 export { ApiError, apiFetch, apiJson } from '@/lib/api/client.api';
 export { authApi } from '@/lib/api/auth.api';
 export { profileApi } from '@/lib/api/profile.api';

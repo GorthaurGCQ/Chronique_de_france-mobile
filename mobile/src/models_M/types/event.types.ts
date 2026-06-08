@@ -1,3 +1,4 @@
+/** Modèle événement culturel — champs alignés sur l'API web. */
 export type Event = {
   id: string;
   title: string;

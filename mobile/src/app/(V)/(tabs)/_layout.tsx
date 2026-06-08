@@ -1,4 +1,5 @@
-﻿import React from 'react';
+﻿/** Barre d'onglets — 5 sections : Accueil, Bibliothèque, Événements, Espace membre, À propos. */
+import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { COLORS } from '@/models_M/constants/Colors';

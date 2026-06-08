@@ -1,4 +1,5 @@
-﻿import { useState } from 'react';
+﻿/** CRUD ressources bibliothèque — formulaire modal création/édition. */
+import { useState } from 'react';
 import {
   View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput,
   Modal, ScrollView, Alert, ActivityIndicator,
@@ -26,6 +27,7 @@ const EMPTY_FORM: FormData = {
   title: '', description: '', content: '', type: '', epoque: '', domaine: '', region: '', imageUrl: '',
 };
 
+/** Formulaire ressource admin — chips type/époque/domaine/région + upload image. */
 function ResourceForm({
   initial,
   onSave,

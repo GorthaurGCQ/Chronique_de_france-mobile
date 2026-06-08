@@ -1,3 +1,4 @@
+/** Navigation stack principale — tabs, auth, bibliothèque, régions, admin. */
 import { Stack } from 'expo-router';
 import { COLORS } from '@/models_M/constants/Colors';
 

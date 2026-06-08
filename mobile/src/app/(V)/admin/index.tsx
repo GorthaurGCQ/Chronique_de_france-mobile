@@ -1,4 +1,5 @@
-﻿import { View, Text, ScrollView, StyleSheet } from 'react-native';
+﻿/** Tableau de bord admin — compteurs utilisateurs, ressources et événements. */
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/models_M/constants/Colors';
 import { useAdminStats } from '@/hooks/useAdmin';

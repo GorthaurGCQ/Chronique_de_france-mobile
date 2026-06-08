@@ -1,3 +1,8 @@
+/**
+ * Couche de mapping web ↔ mobile.
+ * Le backend PostgreSQL utilise des noms français (titre, contenu, timeline)
+ * tandis que l'app mobile utilise des noms anglais (title, content, epoque).
+ */
 type WebResourceRow = {
   id: string;
   titre: string;
@@ -77,6 +82,7 @@ function toIso(value: string | Date | null | undefined): string {
   return value instanceof Date ? value.toISOString() : String(value);
 }
 
+/** Convertit une ressource API web → modèle mobile Resource. */
 export function mapResource(row: WebResourceRow) {
   return {
     id: row.id,
@@ -94,6 +100,7 @@ export function mapResource(row: WebResourceRow) {
   };
 }
 
+/** Convertit une ressource mobile → payload API web (valeurs par défaut : NATIONAL, CONTEMPORAIN). */
 export function mapResourceToWeb(data: {
   title?: string;
   description?: string;

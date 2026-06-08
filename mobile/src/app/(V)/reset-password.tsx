@@ -1,4 +1,5 @@
-﻿import { useState } from 'react';
+﻿/** Nouveau mot de passe — token reçu par lien e-mail (param URL). */
+import { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   KeyboardAvoidingView, Platform, ActivityIndicator,

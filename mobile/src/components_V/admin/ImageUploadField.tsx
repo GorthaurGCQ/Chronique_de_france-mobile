@@ -1,4 +1,5 @@
-﻿import { useState } from 'react';
+﻿/** Upload image admin — ImagePicker → FormData → adminApi.upload. */
+import { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';

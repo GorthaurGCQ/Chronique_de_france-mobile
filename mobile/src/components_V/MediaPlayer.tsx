@@ -1,4 +1,8 @@
-﻿import { useState, useRef } from 'react';
+﻿/**
+ * Lecteur média multi-plateforme pour les ressources bibliothèque.
+ * Web : iframe natif | Natif : WebView (embed) ou expo-av (fichiers directs).
+ */
+import { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -21,6 +25,7 @@ type Props = {
   url: string;
 };
 
+/** Lecteur audio/vidéo natif via expo-av (fichiers .mp4, .mp3, etc.). */
 function NativeAvPlayer({ uri, type }: { uri: string; type: 'video' | 'audio' }) {
   const videoRef = useRef<Video>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -143,6 +148,7 @@ function NativeEmbedWebView({ embedUrl }: { embedUrl: string }) {
   );
 }
 
+/** Sélectionne iframe (web) ou WebView (natif) pour YouTube, Vimeo, Drive. */
 function EmbedPlayer({ embedUrl }: { embedUrl: string }) {
   if (Platform.OS === 'web') {
     return <WebEmbedFrame embedUrl={embedUrl} />;

@@ -3,6 +3,7 @@ import { useAuthStore } from '@/store/authStore';
 import { authClient } from '@/lib/auth/auth-client';
 import { getStoredToken } from '@/lib/auth/token';
 
+/** Promesse singleton — garantit un seul appel initAuthSession au démarrage. */
 let initPromise: Promise<void> | null = null;
 
 /** Appelé une seule fois au démarrage (RootLayout). */
@@ -70,6 +71,7 @@ export function useAuth() {
     initPromise = null;
   };
 
+  /** Rôles admin/founder — accès à la zone /admin */
   const isAdmin = user?.role === 'admin' || user?.role === 'founder';
 
   return { user, isLoading, isAuthenticated, isAdmin, login, register, logout, loadSession };

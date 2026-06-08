@@ -1,4 +1,5 @@
-﻿import { useEffect, useState } from 'react';
+﻿/** Modal admin — édition rôle et permissions granulaires d'un utilisateur. */
+import { useEffect, useState } from 'react';
 import {
   View, Text, Modal, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator,
 } from 'react-native';

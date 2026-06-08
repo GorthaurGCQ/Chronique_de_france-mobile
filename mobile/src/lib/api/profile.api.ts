@@ -1,3 +1,7 @@
+/**
+ * API profil utilisateur.
+ * get() fusionne les données authStore (identité) avec les préférences stockées côté API.
+ */
 import type { Profile } from '@/models_M/types/profile.types';
 import { useAuthStore } from '@/store/authStore';
 import { ApiError, apiFetch, apiJson } from '@/lib/api/client.api';

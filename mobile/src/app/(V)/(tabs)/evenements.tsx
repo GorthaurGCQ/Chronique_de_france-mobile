@@ -1,4 +1,5 @@
-﻿import { useState } from 'react';
+﻿/** Liste événements publics — affichage et inscription via modal. */
+import { useState } from 'react';
 import {
   View, Text, FlatList, StyleSheet, Modal, TouchableOpacity,
   TextInput, KeyboardAvoidingView, Platform, ActivityIndicator, ScrollView,
@@ -12,6 +13,7 @@ import { eventsApi, type Event } from '@/lib/api';
 
 type InscriptionForm = { nom: string; prenom: string; email: string };
 
+/** Modal inscription — formulaire nom/prénom/e-mail puis eventsApi.register. */
 function InscriptionModal({
   event,
   visible,

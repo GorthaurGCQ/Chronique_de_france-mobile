@@ -1,4 +1,5 @@
-﻿import { View, ActivityIndicator, StyleSheet } from 'react-native';
+﻿/** Indicateur chargement centré — ActivityIndicator couleur gold. */
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { COLORS } from '@/models_M/constants/Colors';
 
 export function Loader({ size = 'large' }: { size?: 'small' | 'large' }) {

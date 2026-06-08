@@ -1,4 +1,5 @@
-﻿import { useState, useEffect, useMemo } from 'react';
+﻿/** Bibliothèque — filtres (type, domaine, époque, région) + scroll infini React Query. */
+import { useState, useEffect, useMemo } from 'react';
 import {
   View, Text, FlatList, StyleSheet, TouchableOpacity,
 } from 'react-native';

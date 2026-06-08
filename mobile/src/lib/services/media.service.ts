@@ -1,5 +1,10 @@
+/**
+ * Détection et conversion d'URLs média pour le lecteur multi-plateforme.
+ * YouTube/Vimeo → embed, fichiers locaux → expo-av, Google Drive → iframe.
+ */
 export type MediaKind = 'youtube' | 'vimeo' | 'video' | 'audio' | 'iframe' | 'external';
 
+/** Identifie le type de média à partir de l'URL source. */
 export function detectMediaKind(url: string): MediaKind {
   if (/youtube\.com|youtu\.be/i.test(url)) return 'youtube';
   if (/vimeo\.com/i.test(url)) return 'vimeo';
@@ -30,6 +35,7 @@ export function toDriveEmbed(url: string): string {
   return url.replace(/\/view(\?.*)?$/, '/preview');
 }
 
+/** Retourne l'URL d'intégration (iframe) adaptée au type de média détecté. */
 export function getEmbedUrl(url: string, kind: MediaKind): string {
   if (kind === 'youtube') return toYouTubeEmbed(url);
   if (kind === 'vimeo') return toVimeoEmbed(url);

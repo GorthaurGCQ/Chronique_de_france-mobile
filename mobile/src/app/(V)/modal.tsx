@@ -1,4 +1,5 @@
-﻿import { StatusBar } from 'expo-status-bar';
+﻿/** Modal Expo Router par défaut — écran d'exemple (template). */
+import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet } from 'react-native';
 
 import EditScreenInfo from '@/components_V/EditScreenInfo';

@@ -1,4 +1,8 @@
-﻿import { View, Text, StyleSheet, Pressable, useWindowDimensions } from 'react-native';
+﻿/**
+ * Carte SVG interactive de France — codes INSEE liés à REGIONS et france-svg-paths.
+ * Sélection → callback ou navigation vers /regions/[slug].
+ */
+import { View, Text, StyleSheet, Pressable, useWindowDimensions } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { FRANCE_SVG_PATHS } from '@/models_M/data/france-svg-paths';

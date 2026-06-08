@@ -1,3 +1,4 @@
+/** Pagination infinie des ressources bibliothèque avec filtres optionnels. */
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { resourcesApi, type ResourceFilters } from '@/lib/api';
 
@@ -14,6 +15,7 @@ export function useResources(filters: Omit<ResourceFilters, 'page' | 'offset'> =
   });
 }
 
+/** Aplatit les pages de useResources en un tableau unique pour l'affichage. */
 export function useResourcesFlat(filters: Omit<ResourceFilters, 'page' | 'offset'> = {}) {
   const query = useResources(filters);
   const items = query.data?.pages.flatMap((p) => p.items) ?? [];

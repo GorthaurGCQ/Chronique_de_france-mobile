@@ -1,5 +1,4 @@
-// Données statiques de la région Occitanie
-// Modifier cet objet pour mettre à jour le contenu de la page /regions/occitanie
+/** Données statiques page Occitanie — textes et cartes thématiques (édition manuelle). */
 
 export const OCCITANIE_INFO = {
   id: "occitanie",

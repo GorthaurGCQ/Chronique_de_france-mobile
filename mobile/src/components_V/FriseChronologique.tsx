@@ -1,4 +1,5 @@
-﻿import { Pressable, Text, View, StyleSheet } from 'react-native';
+﻿/** Sélecteur d'époque en grille — filtre bibliothèque (7 périodes + Tout). */
+import { Pressable, Text, View, StyleSheet } from 'react-native';
 import { COLORS } from '@/models_M/constants/Colors';
 import { EPOQUES, type EpoqueId } from '@/models_M/constants/app.constants';
 

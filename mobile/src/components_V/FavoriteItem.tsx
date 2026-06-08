@@ -1,4 +1,5 @@
-﻿import { useState } from 'react';
+﻿/** Ligne favori dashboard — aperçu ressource, note éditable, suppression. */
+import { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';

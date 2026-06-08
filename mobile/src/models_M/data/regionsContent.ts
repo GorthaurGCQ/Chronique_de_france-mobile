@@ -1,3 +1,4 @@
+/** Contenu éditorial statique des 13 régions métropolitaines (histoire, patrimoine). */
 export type RegionContent = {
   slug: string;
   code: string;
@@ -170,6 +171,7 @@ export const REGIONS_CONTENT: RegionContent[] = [
   },
 ];
 
+/** Recherche une région par son slug URL (ex. ile-de-france). */
 export function getRegionBySlug(slug: string): RegionContent | undefined {
   return REGIONS_CONTENT.find((r) => r.slug === slug);
 }

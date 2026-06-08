@@ -1,3 +1,4 @@
+/** Modèle ressource bibliothèque — noms anglais côté mobile (mappés depuis l'API web). */
 export type Resource = {
   id: string;
   title: string;

@@ -1,3 +1,4 @@
+/** Endpoints Better Auth — sign-in/up, session, reset mot de passe. */
 import type { AuthSessionUser } from '@/models_M/types/auth.types';
 import { API_URL, ApiError, apiFetch, apiJson, storeAuthTokenFromResponse } from '@/lib/api/client.api';
 

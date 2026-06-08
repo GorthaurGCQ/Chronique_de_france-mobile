@@ -1,4 +1,8 @@
-﻿import { useEffect } from 'react';
+﻿/**
+ * Layout admin — garde d'accès (isAdmin) + sidebar de navigation.
+ * Redirige vers /dashboard si non authentifié ou non admin.
+ */
+import { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Slot, router, useSegments } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';

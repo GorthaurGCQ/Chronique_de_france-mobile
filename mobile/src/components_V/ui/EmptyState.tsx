@@ -1,4 +1,5 @@
-﻿import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+﻿/** Placeholder liste vide — icône, texte et action optionnelle. */
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/models_M/constants/Colors';
 

@@ -1,4 +1,5 @@
-﻿import { useState } from 'react';
+﻿/** Journal d'audit admin — logs filtrés par catégorie (auth, resources, etc.). */
+import { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { COLORS } from '@/models_M/constants/Colors';
 import { useAdminAuditLogs } from '@/hooks/useAdmin';
@@ -7,6 +8,7 @@ import { EmptyState } from '@/components_V/ui/EmptyState';
 
 const CATEGORIES = ['auth', 'resources', 'events', 'users', 'admin'];
 
+/** Couleurs par type d'action audit (create, ban, login…). */
 const ACTION_COLORS: Record<string, string> = {
   create: '#2ecc71',
   update: '#f39c12',

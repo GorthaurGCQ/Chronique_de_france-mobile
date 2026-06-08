@@ -32,6 +32,7 @@ export const RESOURCE_TYPES = [
 
 export type ResourceTypeId = (typeof RESOURCE_TYPES)[number]['id'];
 
+/** Régions alignées sur l'enum PostgreSQL — codes utilisés par l'API web et les filtres bibliothèque. */
 export const REGIONS_LIST = [
   { code: 'NATIONAL', slug: 'national', nom: 'National', couleur: '#b8933a' },
   { code: 'AUVERGNE_RHONE_ALPES', slug: 'auvergne-rhone-alpes', nom: 'Auvergne-Rhône-Alpes', couleur: '#F4A460' },

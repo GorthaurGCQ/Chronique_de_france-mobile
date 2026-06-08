@@ -1,4 +1,8 @@
-﻿import { useState, useEffect } from 'react';
+﻿/**
+ * Espace membre — 6 sections : profil, sécurité, stats, favoris, historique, préférences.
+ * Point d'entrée admin si isAdmin (lien vers /admin).
+ */
+import { useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, StyleSheet, TouchableOpacity,
   TextInput, Image, ActivityIndicator, Alert, Switch,

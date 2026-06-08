@@ -1,3 +1,8 @@
+/**
+ * Persistance du token Better Auth selon la plateforme :
+ * - Natif (iOS/Android) : expo-secure-store (chiffrement matériel)
+ * - Web : localStorage
+ */
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 

@@ -1,9 +1,11 @@
-﻿import { View, Text, FlatList, StyleSheet } from 'react-native';
+﻿/** Grille des 13 régions — navigation vers fiches détail par slug. */
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { COLORS } from '@/models_M/constants/Colors';
 import { REGIONS_CONTENT } from '@/models_M/data/regionsContent';
 import { RegionCard } from '@/components_V/RegionCard';
 
 export default function RegionsScreen() {
+  // Regroupe par paires pour affichage en grille 2 colonnes
   const pairs = [];
   for (let i = 0; i < REGIONS_CONTENT.length; i += 2) {
     pairs.push(REGIONS_CONTENT.slice(i, i + 2));

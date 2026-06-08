@@ -1,3 +1,4 @@
+/** Détail ressource — rendu HTML, lecteur média, favori, enregistrement historique. */
 import { useEffect } from 'react';
 import {
   View, Text, ScrollView, StyleSheet, Image, TouchableOpacity,

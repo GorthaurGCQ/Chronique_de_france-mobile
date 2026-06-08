@@ -1,3 +1,4 @@
+/** Fiche région — contenu statique + ressources filtrées (code legacy → enum API). */
 import { useState, useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
@@ -18,6 +19,7 @@ export default function RegionDetailScreen() {
   const [domaine, setDomaine] = useState<DomaineId | ''>('');
   const [epoque, setEpoque] = useState<EpoqueId | ''>('');
 
+  // Mappe le code court legacy (IDF, NOR…) vers l'enum région PostgreSQL
   const webRegionCode = region ? LEGACY_TO_WEB_REGION[region.code] : undefined;
 
   const { data: allResources, isLoading } = useResourcesFlat({ limit: 100, type: type || undefined });

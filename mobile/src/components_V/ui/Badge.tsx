@@ -1,4 +1,5 @@
-﻿import { View, Text, StyleSheet } from 'react-native';
+﻿/** Pastille label — type/domaine/époque sur les cartes (tailles sm/md). */
+import { View, Text, StyleSheet } from 'react-native';
 import { COLORS } from '@/models_M/constants/Colors';
 
 type Props = {

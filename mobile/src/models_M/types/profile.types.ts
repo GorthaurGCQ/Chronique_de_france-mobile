@@ -1,3 +1,4 @@
+/** Profil membre — fusion identité auth + préférences JSON (userPreferences). */
 export type Profile = {
   id: string;
   name: string;

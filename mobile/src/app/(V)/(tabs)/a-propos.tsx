@@ -1,4 +1,5 @@
-﻿import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+﻿/** À propos — mission, valeurs, équipe et contacts institutionnels. */
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/models_M/constants/Colors';
 

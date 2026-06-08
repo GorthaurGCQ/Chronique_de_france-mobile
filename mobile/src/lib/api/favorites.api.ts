@@ -1,3 +1,4 @@
+/** API favoris — liste, ajout, note personnelle, suppression. */
 import type { Favorite } from '@/models_M/types/favorite.types';
 import { apiJson } from '@/lib/api/client.api';
 import { mapFavorite } from '@/lib/services/mappers.service';

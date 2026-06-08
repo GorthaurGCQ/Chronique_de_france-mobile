@@ -1,4 +1,5 @@
-﻿import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+﻿/** Tuile région — couleur, chef-lieu et époque phare, lien vers /regions/[slug]. */
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { COLORS } from '@/models_M/constants/Colors';
 import type { RegionContent } from '@/models_M/data/regionsContent';

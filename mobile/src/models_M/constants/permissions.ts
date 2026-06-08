@@ -1,3 +1,7 @@
+/**
+ * Système RBAC granulaire — permissions custom par utilisateur (JSON en base).
+ * DEFAULT_PAGE_PERMISSIONS = droits de base pour tout membre connecté.
+ */
 export type Permission =
   | 'CREER_RESSOURCES'
   | 'MODIFIER_RESSOURCES'

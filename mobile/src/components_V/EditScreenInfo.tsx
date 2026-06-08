@@ -1,4 +1,5 @@
-﻿import React from 'react';
+﻿/** Bloc info développeur Expo — chemin fichier et liens doc (template). */
+import React from 'react';
 import { StyleSheet } from 'react-native';
 
 import { ExternalLink } from './ExternalLink';
