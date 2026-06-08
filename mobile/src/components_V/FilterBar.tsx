@@ -1,4 +1,5 @@
-﻿import { ScrollView, TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+﻿import type { ReactNode } from 'react';
+import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { COLORS } from '@/models_M/constants/Colors';
 import { DOMAINES, EPOQUES, RESOURCE_TYPES, type DomaineId, type EpoqueId, type ResourceTypeId } from '@/models_M/constants/app.constants';
 
@@ -30,11 +31,18 @@ function Chip({
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={[styles.chipLabel, active && styles.chipLabelActive, disabled && styles.chipLabelDisabled]}>
+      <Text
+        style={[styles.chipLabel, active && styles.chipLabelActive, disabled && styles.chipLabelDisabled]}
+        numberOfLines={2}
+      >
         {label}
       </Text>
     </TouchableOpacity>
   );
+}
+
+function ChipRow({ children }: { children: ReactNode }) {
+  return <View style={styles.row}>{children}</View>;
 }
 
 export function FilterBar({
@@ -49,11 +57,10 @@ export function FilterBar({
 }: Props) {
   return (
     <View style={styles.container}>
-      {/* Type — filtre API */}
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Type</Text>
       </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
+      <ChipRow>
         <Chip label="Tous" active={!selectedType} onPress={() => onTypeChange('')} />
         {RESOURCE_TYPES.map((t) => (
           <Chip
@@ -63,9 +70,8 @@ export function FilterBar({
             onPress={() => onTypeChange(selectedType === t.id ? '' : t.id)}
           />
         ))}
-      </ScrollView>
+      </ChipRow>
 
-      {/* Époque — filtre local (frise dédiée sur Bibliothèque) */}
       {!hideEpoque && (
         <>
           <View style={styles.sectionHeader}>
@@ -74,7 +80,7 @@ export function FilterBar({
               <Text style={styles.hintBadge}>Résultats chargés</Text>
             ) : null}
           </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
+          <ChipRow>
             <Chip label="Toutes" active={!selectedEpoque} onPress={() => onEpoqueChange('')} />
             {EPOQUES.map((e) => (
               <Chip
@@ -84,28 +90,33 @@ export function FilterBar({
                 onPress={() => onEpoqueChange(selectedEpoque === e.id ? '' : e.id)}
               />
             ))}
-          </ScrollView>
+          </ChipRow>
         </>
       )}
 
-      {/* Domaine — non disponible dans la liste publique API */}
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Domaine</Text>
         <Text style={styles.soonBadge}>Bientôt disponible</Text>
       </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
+      <ChipRow>
         <Chip label="Tous" active={!selectedDomaine} onPress={() => {}} disabled />
         {DOMAINES.map((d) => (
           <Chip key={d.id} label={d.label} active={false} onPress={() => {}} disabled />
         ))}
-      </ScrollView>
+      </ChipRow>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { gap: 8, paddingVertical: 12 },
-  sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16 },
+  container: { gap: 8, paddingVertical: 12, width: '100%', maxWidth: '100%' },
+  sectionHeader: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 16,
+  },
   sectionTitle: {
     color: COLORS.textMuted,
     fontSize: 11,
@@ -121,13 +132,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 10,
+    flexShrink: 1,
   },
   hintBadge: {
     color: COLORS.textMuted,
     fontSize: 10,
     fontStyle: 'italic',
+    flexShrink: 1,
   },
-  row: { paddingHorizontal: 16, gap: 8 },
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 16,
+    gap: 8,
+    width: '100%',
+    maxWidth: '100%',
+  },
   chip: {
     paddingHorizontal: 14,
     paddingVertical: 7,
@@ -135,6 +155,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.navyLight,
     borderWidth: 1,
     borderColor: COLORS.border,
+    flexShrink: 0,
+    maxWidth: '100%',
   },
   chipActive: { backgroundColor: COLORS.gold, borderColor: COLORS.gold },
   chipDisabled: { opacity: 0.4 },

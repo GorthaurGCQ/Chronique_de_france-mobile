@@ -1,12 +1,9 @@
-﻿import { View, Text, StyleSheet, Pressable, Dimensions } from 'react-native';
+﻿import { View, Text, StyleSheet, Pressable, useWindowDimensions } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { FRANCE_SVG_PATHS } from '@/models_M/data/france-svg-paths';
 import { REGIONS, getRegionByCode, type Region } from '@/models_M/data/regions';
 import { COLORS } from '@/models_M/constants/Colors';
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const MAP_SIZE = SCREEN_WIDTH - 32;
 
 type Props = {
   selectedCode?: string | null;
@@ -15,6 +12,8 @@ type Props = {
 
 export default function CarteRegions({ selectedCode = null, onSelectRegion }: Props) {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const mapSize = Math.min(width - 32, 420);
   const selectedRegion = selectedCode ? getRegionByCode(selectedCode) ?? null : null;
 
   function handleRegionPress(code: string) {
@@ -44,8 +43,8 @@ export default function CarteRegions({ selectedCode = null, onSelectRegion }: Pr
       <View style={styles.mapCard}>
         <Svg
           viewBox="0 0 600 680"
-          width={MAP_SIZE}
-          height={MAP_SIZE * (680 / 600)}
+          width={mapSize}
+          height={mapSize * (680 / 600)}
         >
           {FRANCE_SVG_PATHS.map(({ code, d }) => {
             const region = getRegionByCode(code);
@@ -115,6 +114,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 8,
     gap: 12,
+    width: '100%',
+    maxWidth: '100%',
   },
   header: { gap: 6, alignItems: 'center' },
   title: { color: COLORS.textWhite, fontSize: 18, fontWeight: '800' },
@@ -131,6 +132,10 @@ const styles = StyleSheet.create({
   badgeText: { color: COLORS.textLight, fontSize: 12, fontWeight: '600' },
   mapCard: {
     alignItems: 'center',
+    alignSelf: 'center',
+    width: '100%',
+    maxWidth: '100%',
+    overflow: 'hidden',
     backgroundColor: COLORS.bgCard,
     borderRadius: 12,
     borderWidth: 1,
@@ -152,9 +157,10 @@ const styles = StyleSheet.create({
   panelName: { color: COLORS.textWhite, fontSize: 17, fontWeight: '800' },
   panelMeta: { color: COLORS.textMuted, fontSize: 12, marginTop: 2 },
   panelDesc: { color: COLORS.textLight, fontSize: 13, lineHeight: 20 },
-  panelActions: { flexDirection: 'row', gap: 10, marginTop: 4 },
+  panelActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 4 },
   btnPrimary: {
     flex: 1,
+    minWidth: 140,
     backgroundColor: COLORS.gold,
     borderRadius: 8,
     paddingVertical: 12,

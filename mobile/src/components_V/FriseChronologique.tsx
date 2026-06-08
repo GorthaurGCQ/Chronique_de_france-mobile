@@ -1,4 +1,4 @@
-﻿import { ScrollView, Pressable, Text, View, StyleSheet } from 'react-native';
+﻿import { Pressable, Text, View, StyleSheet } from 'react-native';
 import { COLORS } from '@/models_M/constants/Colors';
 import { EPOQUES, type EpoqueId } from '@/models_M/constants/app.constants';
 
@@ -11,42 +11,53 @@ export function FriseChronologique({ selectedEpoque, onEpoqueChange }: Props) {
   return (
     <View style={styles.wrapper}>
       <Text style={styles.sectionTitle}>Frise chronologique</Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.frise}
-      >
+      <Text style={styles.hint}>Les 7 périodes historiques — touchez pour filtrer</Text>
+
+      <View style={styles.grid}>
         <Pressable
-          style={[styles.friseTout, !selectedEpoque && styles.friseToutActive]}
+          style={[styles.chip, !selectedEpoque && styles.chipActive]}
           onPress={() => onEpoqueChange('')}
         >
-          <Text style={[styles.friseToutText, !selectedEpoque && styles.friseToutTextActive]}>
+          <Text style={[styles.chipLabel, !selectedEpoque && styles.chipLabelActive]}>
             Tout
           </Text>
+          <Text style={[styles.chipDate, styles.chipDateTout, !selectedEpoque && styles.chipDateActive]}>
+            Toutes les époques
+          </Text>
         </Pressable>
+
         {EPOQUES.map((epoque) => {
           const isActive = selectedEpoque === epoque.id;
           return (
             <Pressable
               key={epoque.id}
-              style={[styles.frisePoint, isActive && styles.frisePointActive]}
+              style={[styles.chip, isActive && styles.chipActive]}
               onPress={() => onEpoqueChange(isActive ? '' : epoque.id)}
             >
-              <Text style={styles.friseDate}>{epoque.date}</Text>
-              <View style={[styles.friseDot, isActive && styles.friseDotActive]} />
-              <Text style={[styles.friseLabel, isActive && styles.friseLabelActive]}>
-                {epoque.label}
+              <View style={styles.chipHeader}>
+                <View style={[styles.dot, isActive && styles.dotActive]} />
+                <Text style={[styles.chipLabel, isActive && styles.chipLabelActive]} numberOfLines={2}>
+                  {epoque.label}
+                </Text>
+              </View>
+              <Text style={[styles.chipDate, isActive && styles.chipDateActive]} numberOfLines={2}>
+                {epoque.date}
               </Text>
             </Pressable>
           );
         })}
-      </ScrollView>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: { gap: 8, paddingVertical: 8 },
+  wrapper: {
+    gap: 6,
+    paddingVertical: 8,
+    width: '100%',
+    maxWidth: '100%',
+  },
   sectionTitle: {
     color: COLORS.textMuted,
     fontSize: 11,
@@ -55,69 +66,72 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     paddingHorizontal: 16,
   },
-  frise: {
+  hint: {
+    color: COLORS.textMuted,
+    fontSize: 11,
+    fontStyle: 'italic',
     paddingHorizontal: 16,
-    paddingVertical: 4,
-    gap: 4,
-    alignItems: 'flex-end',
+    marginBottom: 4,
   },
-  friseTout: {
-    paddingHorizontal: 14,
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 16,
+    gap: 8,
+    width: '100%',
+  },
+  chip: {
+    flexGrow: 1,
+    flexBasis: '30%',
+    minWidth: 100,
+    maxWidth: '100%',
+    paddingHorizontal: 10,
     paddingVertical: 10,
-    borderRadius: 8,
+    borderRadius: 10,
+    backgroundColor: COLORS.navyLight,
     borderWidth: 1,
     borderColor: COLORS.border,
-    marginRight: 8,
-    alignSelf: 'stretch',
-    justifyContent: 'center',
+    gap: 4,
   },
-  friseToutActive: {
+  chipActive: {
     backgroundColor: COLORS.gold,
     borderColor: COLORS.gold,
   },
-  friseToutText: {
-    color: COLORS.textMuted,
-    fontSize: 12,
-    fontWeight: '700',
+  chipHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
-  friseToutTextActive: {
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: COLORS.border,
+    flexShrink: 0,
+  },
+  dotActive: {
+    backgroundColor: COLORS.bg,
+  },
+  chipLabel: {
+    color: COLORS.textWhite,
+    fontSize: 11,
+    fontWeight: '700',
+    flex: 1,
+    lineHeight: 14,
+  },
+  chipLabelActive: {
     color: COLORS.bg,
   },
-  frisePoint: {
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    minWidth: 72,
-  },
-  frisePointActive: {},
-  friseDate: {
+  chipDate: {
     color: COLORS.textMuted,
     fontSize: 9,
-    marginBottom: 6,
-    textAlign: 'center',
+    lineHeight: 12,
+    paddingLeft: 14,
   },
-  friseDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: COLORS.border,
-    borderWidth: 2,
-    borderColor: COLORS.navyLight,
-    marginBottom: 6,
+  chipDateTout: {
+    paddingLeft: 0,
   },
-  friseDotActive: {
-    backgroundColor: COLORS.gold,
-    borderColor: COLORS.gold,
-    transform: [{ scale: 1.3 }],
-  },
-  friseLabel: {
-    color: COLORS.textMuted,
-    fontSize: 10,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  friseLabelActive: {
-    color: COLORS.gold,
-    fontWeight: '800',
+  chipDateActive: {
+    color: 'rgba(11,22,34,0.75)',
   },
 });

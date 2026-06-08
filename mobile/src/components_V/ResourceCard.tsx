@@ -67,6 +67,8 @@ const styles = StyleSheet.create({
     borderColor: COLORS.borderLight,
     overflow: 'hidden',
     marginBottom: 12,
+    width: '100%',
+    maxWidth: '100%',
   },
   image: { width: '100%', height: 140 },
   imagePlaceholder: {

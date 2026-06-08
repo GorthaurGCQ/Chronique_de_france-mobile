@@ -80,6 +80,7 @@ export default function BibliothequéScreen() {
         data={resources}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <ResourceCard resource={item} showBookmark />}
+        style={styles.listScroll}
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <>
@@ -162,9 +163,11 @@ export default function BibliothequéScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.bg },
-  list: { paddingBottom: 40 },
+  container: { flex: 1, backgroundColor: COLORS.bg, width: '100%', maxWidth: '100%', overflow: 'hidden' },
+  listScroll: { width: '100%', maxWidth: '100%' },
+  list: { paddingBottom: 40, paddingHorizontal: 16 },
   header: {
+    marginHorizontal: -16,
     padding: 24,
     paddingTop: 20,
     paddingBottom: 12,
@@ -178,6 +181,7 @@ const styles = StyleSheet.create({
   underline: { width: 40, height: 3, backgroundColor: COLORS.gold, borderRadius: 2 },
   subtitle: { color: COLORS.textMuted, fontSize: 13, lineHeight: 20, marginTop: 4 },
   resourcesHeader: {
+    marginHorizontal: -16,
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 4,

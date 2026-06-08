@@ -27,6 +27,10 @@ export default function TabLayout() {
           fontSize: 10,
           fontWeight: '600',
         },
+        tabBarItemStyle: {
+          flex: 1,
+          maxWidth: '100%',
+        },
         headerStyle: { backgroundColor: COLORS.bg },
         headerTintColor: COLORS.gold,
         headerTitleStyle: {

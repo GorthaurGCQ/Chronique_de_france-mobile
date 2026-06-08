@@ -33,7 +33,7 @@ function SectionTab({ label, active, onPress }: { label: string; active: boolean
   );
 }
 const tab = StyleSheet.create({
-  btn: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: COLORS.border },
+  btn: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: COLORS.border, flexShrink: 0 },
   btnActive: { backgroundColor: COLORS.gold, borderColor: COLORS.gold },
   label: { color: COLORS.textMuted, fontSize: 12, fontWeight: '600' },
   labelActive: { color: COLORS.bg },
@@ -415,7 +415,13 @@ function PreferencesSection() {
       </View>
 
       <Text style={s.label}>Région par défaut</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.regionChips}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={s.horizontalScroll}
+        contentContainerStyle={s.regionChips}
+        nestedScrollEnabled
+      >
         {REGIONS_LIST.map((r) => (
           <TouchableOpacity
             key={r.code}
@@ -507,7 +513,9 @@ export default function DashboardScreen() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
+        style={styles.sectionNavScroll}
         contentContainerStyle={styles.sectionNav}
+        nestedScrollEnabled
       >
         {SECTIONS.map((sec) => (
           <SectionTab
@@ -537,8 +545,8 @@ const styles = StyleSheet.create({
   guestSub: { color: COLORS.textMuted, fontSize: 14, textAlign: 'center' },
   loginBtn: { marginTop: 8, backgroundColor: COLORS.gold, borderRadius: 10, paddingHorizontal: 24, paddingVertical: 12 },
   loginBtnText: { color: COLORS.bg, fontWeight: '800', fontSize: 15 },
-  container: { flex: 1, backgroundColor: COLORS.bg },
-  content: { paddingBottom: 60 },
+  container: { flex: 1, backgroundColor: COLORS.bg, width: '100%', maxWidth: '100%' },
+  content: { paddingBottom: 60, width: '100%', maxWidth: '100%' },
   userHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -570,7 +578,8 @@ const styles = StyleSheet.create({
     borderColor: COLORS.gold,
   },
   adminBtnText: { color: COLORS.gold, fontWeight: '700', fontSize: 13 },
-  sectionNav: { paddingHorizontal: 16, paddingVertical: 12, gap: 8 },
+  sectionNavScroll: { width: '100%', maxWidth: '100%' },
+  sectionNav: { paddingHorizontal: 16, paddingVertical: 12, gap: 8, flexGrow: 0 },
 });
 
 const s = StyleSheet.create({
@@ -674,7 +683,8 @@ const s = StyleSheet.create({
   prefRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 12, marginBottom: 8 },
   prefLabel: { color: COLORS.textWhite, fontSize: 14, fontWeight: '600' },
   prefDesc: { color: COLORS.textMuted, fontSize: 11, marginTop: 2 },
-  regionChips: { gap: 8, paddingVertical: 8 },
+  horizontalScroll: { width: '100%', maxWidth: '100%' },
+  regionChips: { gap: 8, paddingVertical: 8, flexGrow: 0 },
   regionChip: {
     paddingHorizontal: 12,
     paddingVertical: 8,
@@ -682,6 +692,7 @@ const s = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     backgroundColor: COLORS.navyLight,
+    flexShrink: 0,
   },
   regionChipActive: { backgroundColor: COLORS.gold, borderColor: COLORS.gold },
   regionChipText: { color: COLORS.textMuted, fontSize: 11, fontWeight: '600' },
