@@ -1,0 +1,49 @@
+﻿import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
+import { COLORS } from '@/models_M/constants/Colors';
+import type { RegionContent } from '@/models_M/data/regionsContent';
+
+type Props = {
+  region: RegionContent;
+};
+
+export function RegionCard({ region }: Props) {
+  return (
+    <TouchableOpacity
+      style={styles.card}
+      activeOpacity={0.85}
+      onPress={() => router.push(`/regions/${region.slug}`)}
+    >
+      {/* Bande couleur */}
+      <View style={[styles.colorBar, { backgroundColor: region.couleur }]} />
+
+      <View style={styles.body}>
+        <Text style={styles.nom}>{region.nom}</Text>
+        <Text style={styles.chefLieu}>{region.chefLieu}</Text>
+        <View style={styles.footer}>
+          <Text style={styles.dept}>{region.nbDepartements} dépt.</Text>
+          <Text style={styles.epoque}>{region.epoque}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    flex: 1,
+    backgroundColor: COLORS.bgCard,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.borderLight,
+    overflow: 'hidden',
+    minHeight: 110,
+  },
+  colorBar: { height: 6 },
+  body: { padding: 12, gap: 4, flex: 1 },
+  nom: { color: COLORS.textWhite, fontSize: 14, fontWeight: '700', lineHeight: 18 },
+  chefLieu: { color: COLORS.textMuted, fontSize: 12 },
+  footer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 },
+  dept: { color: COLORS.textMuted, fontSize: 11 },
+  epoque: { color: COLORS.gold, fontSize: 10, fontWeight: '600' },
+});
