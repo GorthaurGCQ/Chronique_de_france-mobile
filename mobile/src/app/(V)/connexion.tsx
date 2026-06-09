@@ -7,7 +7,7 @@ import {
   ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator, Switch,
 } from 'react-native';
 // Module : node_modules/expo-router
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 // Hook : src/hooks/useAuth.ts
@@ -19,7 +19,8 @@ type Tab = 'login' | 'register';
 
 export default function ConnexionScreen() {
   const { login, register } = useAuth();
-  const [tab, setTab] = useState<Tab>('login');
+  const { mode } = useLocalSearchParams<{ mode?: string }>();
+  const [tab, setTab] = useState<Tab>(mode === 'register' ? 'register' : 'login');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 

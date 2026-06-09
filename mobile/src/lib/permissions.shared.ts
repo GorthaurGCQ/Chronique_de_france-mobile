@@ -155,14 +155,14 @@ export function canAccessAdminRoute(
   return false;
 }
 
-/** Visiteur non connecté → accès libre ; membre → droit granulaire requis. */
+/** Visiteur non connecté → accès refusé ; membre → droit granulaire requis. */
 export function canAccessPage(
   isAuthenticated: boolean,
   role: string | null | undefined,
   permissions: Permission[],
   permission: Permission,
 ): boolean {
-  if (!isAuthenticated) return true;
+  if (!isAuthenticated) return false;
   if (isPrivilegedRole(role)) return true;
   return permissions.includes(permission);
 }

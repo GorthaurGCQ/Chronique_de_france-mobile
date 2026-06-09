@@ -71,6 +71,7 @@ export default function TabLayout() {
   const { isAuthenticated } = useAuth();
   const { canAccessPage, permissionsReady } = usePermissions();
 
+  /** Onglets visibles : toujours affichés aux visiteurs (message compte requis à l'ouverture). */
   const showBibliotheque =
     !isAuthenticated || (permissionsReady && canAccessPage('ACCES_BIBLIOTHEQUE'));
   const showEvenements =

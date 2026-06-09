@@ -21,7 +21,7 @@ export function RegionCard({ region }: Props) {
   const { canAccessPage, permissionsReady } = usePermissions();
 
   const canNavigate =
-    !isAuthenticated || !permissionsReady || canAccessPage('ACCES_REGIONS');
+    isAuthenticated && permissionsReady && canAccessPage('ACCES_REGIONS');
 
   const handlePress = () => {
     if (!canNavigate) return;

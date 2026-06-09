@@ -42,6 +42,8 @@ import {
 } from '@/models_M/constants/app.constants';
 // Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
+// Composant : src/components_V/LoginRequiredScreen.tsx
+import { LoginRequiredScreen } from '@/components_V/LoginRequiredScreen';
 
 type Section = 'profil' | 'securite' | 'stats' | 'favoris' | 'historique' | 'preferences';
 
@@ -496,7 +498,7 @@ function PreferencesSection() {
 // ── Ecran principal ──────────────────────────────────────────────────────────
 
 export default function DashboardScreen() {
-  const { user, isLoading, isAuthenticated, logout, hasAdminPanelAccess } = useAuth();
+  const { user, isLoading, isAuthenticated, hasAdminPanelAccess } = useAuth();
   const [section, setSection] = useState<Section>('profil');
 
   if (isLoading) {
@@ -508,31 +510,8 @@ export default function DashboardScreen() {
   }
 
   if (!isAuthenticated) {
-    return (
-      <View style={styles.center}>
-        <Ionicons name="person-circle-outline" size={64} color={COLORS.textMuted} />
-        <Text style={styles.guestTitle}>Espace membre</Text>
-        <Text style={styles.guestSub}>Connectez-vous pour accéder à votre espace.</Text>
-        <TouchableOpacity style={styles.loginBtn} onPress={() => router.push('/connexion')}>
-          <Text style={styles.loginBtnText}>Se connecter</Text>
-        </TouchableOpacity>
-      </View>
-    );
+    return <LoginRequiredScreen title="Espace membre" icon="person-circle-outline" />;
   }
-
-  const handleLogout = () => {
-    Alert.alert(
-      'Déconnexion',
-      'Voulez-vous vous déconnecter ?',
-      [
-        { text: 'Annuler', style: 'cancel' },
-        {
-          text: 'Se déconnecter',
-          onPress: () => logout(),
-        },
-      ],
-    );
-  };
 
   const SECTIONS: { id: Section; label: string }[] = [
     { id: 'profil', label: 'Profil' },
@@ -557,10 +536,6 @@ export default function DashboardScreen() {
             <Text style={styles.userRole}>{user?.role}</Text>
           </View>
         </View>
-        <TouchableOpacity onPress={handleLogout} style={styles.logoutBtn} accessibilityLabel="Se déconnecter">
-          <Ionicons name="log-out-outline" size={20} color={COLORS.gold} />
-          <Text style={styles.logoutBtnText}>Déconnexion</Text>
-        </TouchableOpacity>
       </View>
 
       {/* Bouton admin */}
@@ -602,11 +577,6 @@ export default function DashboardScreen() {
 
 const styles = StyleSheet.create({
   loadingWrap: { flex: 1, backgroundColor: COLORS.bg, minHeight: 400 },
-  center: { flex: 1, backgroundColor: COLORS.bg, alignItems: 'center', justifyContent: 'center', padding: 32, gap: 12, minHeight: 400 },
-  guestTitle: { color: COLORS.textWhite, fontSize: 22, fontWeight: '800' },
-  guestSub: { color: COLORS.textMuted, fontSize: 14, textAlign: 'center' },
-  loginBtn: { marginTop: 8, backgroundColor: COLORS.gold, borderRadius: 10, paddingHorizontal: 24, paddingVertical: 12 },
-  loginBtnText: { color: COLORS.bg, fontWeight: '800', fontSize: 15 },
   container: { flex: 1, backgroundColor: COLORS.bg, width: '100%', maxWidth: '100%' },
   content: { paddingBottom: 60, width: '100%', maxWidth: '100%' },
   userHeader: {
@@ -627,18 +597,6 @@ const styles = StyleSheet.create({
   userName: { color: COLORS.textWhite, fontSize: 16, fontWeight: '700' },
   userEmail: { color: COLORS.textMuted, fontSize: 12 },
   userRole: { color: COLORS.gold, fontSize: 11, fontWeight: '600', textTransform: 'capitalize' },
-  logoutBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    backgroundColor: COLORS.navyLight,
-  },
-  logoutBtnText: { color: COLORS.gold, fontSize: 12, fontWeight: '700' },
   adminBtn: {
     flexDirection: 'row',
     alignItems: 'center',

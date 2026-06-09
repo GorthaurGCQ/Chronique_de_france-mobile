@@ -44,7 +44,7 @@ export default function CarteRegions({ selectedCode = null, onSelectRegion }: Pr
   const selectedRegion = selectedCode ? getRegionByCode(selectedCode) ?? null : null;
 
   const canNavigateRegions =
-    !isAuthenticated || !permissionsReady || canAccessPage('ACCES_REGIONS');
+    isAuthenticated && permissionsReady && canAccessPage('ACCES_REGIONS');
 
   function handleRegionPress(code: string) {
     const region = getRegionByCode(code);
