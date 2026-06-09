@@ -100,7 +100,12 @@ export function mapResource(row: WebResourceRow) {
   };
 }
 
-/** Convertit une ressource mobile → payload API web (valeurs par défaut : NATIONAL, CONTEMPORAIN). */
+function withDefault(value: string | undefined, fallback: string): string {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : fallback;
+}
+
+/** Convertit une ressource mobile → payload API web (defaults alignés web admin). */
 export function mapResourceToWeb(data: {
   title?: string;
   description?: string;
@@ -116,10 +121,10 @@ export function mapResourceToWeb(data: {
     titre: data.title,
     description: data.description ?? '',
     contenu: data.content ?? '',
-    type: data.type,
-    region: data.region ?? 'NATIONAL',
-    timeline: data.epoque ?? 'CONTEMPORAIN',
-    domaine: data.domaine ?? 'PATRIMOINE_HISTOIRE',
+    type: withDefault(data.type, 'CHRONOLOGIE'),
+    region: withDefault(data.region, 'NATIONAL'),
+    timeline: withDefault(data.epoque, 'ANTIQUITE'),
+    domaine: withDefault(data.domaine, 'PATRIMOINE_HISTOIRE'),
     thumbnailUrl: data.imageUrl ?? null,
     mediaUrl: data.mediaUrl ?? null,
   };
@@ -159,9 +164,9 @@ export function mapEventToWeb(data: {
     lieu: data.lieu,
     date: data.date,
     thumbnailUrl: data.imageUrl ?? null,
-    region: data.region ?? 'NATIONAL',
-    timeline: data.epoque ?? 'CONTEMPORAIN',
-    domaine: data.domaine ?? 'PATRIMOINE_HISTOIRE',
+    region: withDefault(data.region, 'NATIONAL'),
+    timeline: withDefault(data.epoque, 'CONTEMPORAIN'),
+    domaine: withDefault(data.domaine, 'EVENEMENTS_MARQUANTS'),
   };
 }
 

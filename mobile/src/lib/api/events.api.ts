@@ -6,6 +6,12 @@ import { ApiError, apiFetch, apiJson } from '@/lib/api/client.api';
 // Service : src/lib/services/mappers.service.ts
 import { mapEvent } from '@/lib/services/mappers.service';
 
+export type EventRegisterResult = {
+  success: boolean;
+  message: string;
+  emailSent: boolean;
+};
+
 export const eventsApi = {
   list: async () => {
     const res = await apiFetch('/events?limit=100');
@@ -19,5 +25,5 @@ export const eventsApi = {
   },
 
   register: (data: { eventId: string; nom: string; prenom: string; email: string }) =>
-    apiJson<void>('/events/register', { method: 'POST', body: JSON.stringify(data) }),
+    apiJson<EventRegisterResult>('/events/register', { method: 'POST', body: JSON.stringify(data) }),
 };

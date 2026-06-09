@@ -3,17 +3,18 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Modèle : src/models_M/constants/app.constants.ts
+import { getDomaineLabel } from '@/models_M/constants/app.constants';
 // API : src/lib/api/index.ts
 import type { Event } from '@/lib/api';
 
-/** Couleurs accent par slug domaine legacy (histoire, patrimoine…). */
 const DOMAINE_COLORS: Record<string, string> = {
-  histoire: '#b8933a',
-  patrimoine: '#4a7c59',
-  culture: '#1a3a5c',
-  art: '#6b2d2d',
-  science: '#2d4a6b',
-  nature: '#2d6b4a',
+  PATRIMOINE_HISTOIRE: '#6b4c2a',
+  CULTURE_TRADITIONS: '#2a4a6b',
+  ARCHITECTURE: '#3a2a5a',
+  GEOGRAPHIE: '#1a5a3a',
+  FIGURES_HISTORIQUES: '#5a2a2a',
+  EVENEMENTS_MARQUANTS: '#4a3a1a',
 };
 
 type Props = {
@@ -41,8 +42,9 @@ export function EventCard({ event, onPress, onRegister, compact = false }: Props
   return (
     <TouchableOpacity
       style={[styles.card, compact && styles.cardCompact]}
-      activeOpacity={0.85}
+      activeOpacity={onPress ? 0.85 : 1}
       onPress={onPress}
+      disabled={!onPress}
     >
       <View style={[styles.accent, { backgroundColor: accentColor }]} />
 
@@ -53,7 +55,7 @@ export function EventCard({ event, onPress, onRegister, compact = false }: Props
       <View style={styles.body}>
         {event.domaine && (
           <View style={[styles.typeBadge, { backgroundColor: accentColor }]}>
-            <Text style={styles.typeBadgeText}>{event.domaine.toUpperCase()}</Text>
+            <Text style={styles.typeBadgeText}>{getDomaineLabel(event.domaine).toUpperCase()}</Text>
           </View>
         )}
         <Text style={styles.title} numberOfLines={compact ? 1 : 2}>{event.title}</Text>
@@ -64,9 +66,9 @@ export function EventCard({ event, onPress, onRegister, compact = false }: Props
           <Text style={styles.infoText}>📅 {formattedDate}</Text>
           {event.lieu && <Text style={styles.infoText}>📍 {event.lieu}</Text>}
         </View>
-        {!compact && (
+        {!compact && onRegister && (
           <TouchableOpacity style={styles.registerBtn} onPress={onRegister}>
-            <Text style={styles.registerBtnText}>S'inscrire →</Text>
+            <Text style={styles.registerBtnText}>S&apos;inscrire →</Text>
           </TouchableOpacity>
         )}
       </View>

@@ -1,9 +1,9 @@
-﻿/** Liste événements publics — affichage et inscription via modal. */
+﻿/** Liste événements publics — à venir / passés + inscription (aligné web). */
 // Module : node_modules/react
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 // Module : node_modules/react-native
 import {
-  View, Text, FlatList, StyleSheet, Modal, TouchableOpacity,
+  View, Text, SectionList, StyleSheet, Modal, TouchableOpacity,
   TextInput, KeyboardAvoidingView, Platform, ActivityIndicator, ScrollView,
 } from 'react-native';
 // Modèle : src/models_M/constants/Colors.ts
@@ -21,6 +21,19 @@ import { eventsApi, type Event } from '@/lib/api';
 
 type InscriptionForm = { nom: string; prenom: string; email: string };
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function formatEventDateTime(dateStr: string): string {
+  try {
+    const d = new Date(dateStr);
+    const date = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    return `${date} · ${time}`;
+  } catch {
+    return dateStr;
+  }
+}
+
 /** Modal inscription — formulaire nom/prénom/e-mail puis eventsApi.register. */
 function InscriptionModal({
   event,
@@ -34,11 +47,15 @@ function InscriptionModal({
   const [form, setForm] = useState<InscriptionForm>({ nom: '', prenom: '', email: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState('');
   const [error, setError] = useState('');
 
   const reset = () => {
     setForm({ nom: '', prenom: '', email: '' });
     setSuccess(false);
+    setEmailSent(false);
+    setSubmittedEmail('');
     setError('');
   };
 
@@ -49,14 +66,25 @@ function InscriptionModal({
 
   const handleSubmit = async () => {
     setError('');
-    if (!form.nom || !form.prenom || !form.email) {
+    const nom = form.nom.trim();
+    const prenom = form.prenom.trim();
+    const email = form.email.trim().toLowerCase();
+
+    if (!nom || !prenom || !email) {
       setError('Veuillez remplir tous les champs.');
       return;
     }
+    if (!EMAIL_RE.test(email)) {
+      setError('Adresse e-mail invalide.');
+      return;
+    }
     if (!event) return;
+
     setIsLoading(true);
     try {
-      await eventsApi.register({ eventId: event.id, ...form });
+      const result = await eventsApi.register({ eventId: event.id, nom, prenom, email });
+      setSubmittedEmail(email);
+      setEmailSent(result.emailSent === true);
       setSuccess(true);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Erreur lors de l'inscription.");
@@ -74,13 +102,16 @@ function InscriptionModal({
       >
         <View style={styles.modalContent}>
           <View style={styles.modalHandle} />
-          <Text style={styles.modalTitle}>S'inscrire à l'événement</Text>
+          <Text style={styles.modalTitle}>S&apos;inscrire</Text>
           {event && <Text style={styles.modalEventTitle}>{event.title}</Text>}
 
           {success ? (
             <View style={styles.successBox}>
               <Text style={styles.successText}>
-                Inscription confirmée ! Vous recevrez un e-mail de confirmation.
+                Inscription confirmée ! Vous êtes inscrit(e) à {event?.title}.
+                {emailSent
+                  ? ` Un récapitulatif a été envoyé à ${submittedEmail}.`
+                  : " Votre inscription est enregistrée, mais l'e-mail de confirmation n'a pas pu être envoyé."}
               </Text>
               <TouchableOpacity style={styles.closeBtn} onPress={handleClose}>
                 <Text style={styles.closeBtnText}>Fermer</Text>
@@ -88,6 +119,12 @@ function InscriptionModal({
             </View>
           ) : (
             <ScrollView keyboardShouldPersistTaps="handled">
+              {event && (
+                <View style={styles.modalEventInfo}>
+                  <Text style={styles.modalEventInfoText}>📅 {formatEventDateTime(event.date)}</Text>
+                  {event.lieu ? <Text style={styles.modalEventInfoText}>📍 {event.lieu}</Text> : null}
+                </View>
+              )}
               {!!error && (
                 <View style={styles.errorBox}>
                   <Text style={styles.errorText}>{error}</Text>
@@ -128,7 +165,7 @@ function InscriptionModal({
               <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit} disabled={isLoading}>
                 {isLoading
                   ? <ActivityIndicator color={COLORS.bg} />
-                  : <Text style={styles.submitBtnText}>Confirmer l'inscription</Text>}
+                  : <Text style={styles.submitBtnText}>Confirmer l&apos;inscription</Text>}
               </TouchableOpacity>
             </ScrollView>
           )}
@@ -143,6 +180,21 @@ export default function EvenementsScreen() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const sections = useMemo(() => {
+    const now = new Date();
+    const upcoming = (events ?? [])
+      .filter((e) => new Date(e.date) > now)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const past = (events ?? [])
+      .filter((e) => new Date(e.date) <= now)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    const result: { title: string; data: Event[]; upcoming: boolean }[] = [];
+    if (upcoming.length > 0) result.push({ title: 'À venir', data: upcoming, upcoming: true });
+    if (past.length > 0) result.push({ title: 'Événements passés', data: past, upcoming: false });
+    return result;
+  }, [events]);
+
   const openModal = (event: Event) => {
     setSelectedEvent(event);
     setModalVisible(true);
@@ -150,14 +202,17 @@ export default function EvenementsScreen() {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={events ?? []}
+      <SectionList
+        sections={sections}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
+        renderSectionHeader={({ section }) => (
+          <Text style={styles.sectionTitle}>{section.title}</Text>
+        )}
+        renderItem={({ item, section }) => (
           <EventCard
             event={item}
-            onPress={() => openModal(item)}
-            onRegister={() => openModal(item)}
+            onPress={section.upcoming ? () => openModal(item) : undefined}
+            onRegister={section.upcoming ? () => openModal(item) : undefined}
           />
         )}
         contentContainerStyle={styles.list}
@@ -187,6 +242,7 @@ export default function EvenementsScreen() {
                   subtitle="Aucun événement n'est programmé pour le moment."
                 />
         }
+        stickySectionHeadersEnabled={false}
       />
 
       <InscriptionModal
@@ -216,6 +272,13 @@ const styles = StyleSheet.create({
   title: { color: COLORS.textWhite, fontSize: 26, fontWeight: '900' },
   underline: { width: 40, height: 3, backgroundColor: COLORS.gold, borderRadius: 2 },
   subtitle: { color: COLORS.textMuted, fontSize: 13, lineHeight: 20 },
+  sectionTitle: {
+    color: COLORS.textWhite,
+    fontSize: 17,
+    fontWeight: '800',
+    marginBottom: 12,
+    marginTop: 8,
+  },
 
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' },
   modalWrapper: { justifyContent: 'flex-end' },
@@ -231,7 +294,9 @@ const styles = StyleSheet.create({
     borderRadius: 2, alignSelf: 'center', marginBottom: 20,
   },
   modalTitle: { color: COLORS.textWhite, fontSize: 20, fontWeight: '800', marginBottom: 4 },
-  modalEventTitle: { color: COLORS.gold, fontSize: 14, marginBottom: 20 },
+  modalEventTitle: { color: COLORS.gold, fontSize: 14, marginBottom: 12 },
+  modalEventInfo: { gap: 4, marginBottom: 16 },
+  modalEventInfoText: { color: COLORS.textMuted, fontSize: 13 },
   modalRow: { flexDirection: 'row', gap: 12 },
   modalHalf: { flex: 1 },
   label: { color: COLORS.textLight, fontSize: 13, fontWeight: '600', marginBottom: 6, marginTop: 12 },

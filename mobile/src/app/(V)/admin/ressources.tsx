@@ -33,7 +33,14 @@ type FormData = {
 };
 
 const EMPTY_FORM: FormData = {
-  title: '', description: '', content: '', type: '', epoque: '', domaine: '', region: '', imageUrl: '',
+  title: '',
+  description: '',
+  content: '',
+  type: 'CHRONOLOGIE',
+  epoque: 'ANTIQUITE',
+  domaine: 'PATRIMOINE_HISTOIRE',
+  region: 'NATIONAL',
+  imageUrl: '',
 };
 
 /** Formulaire ressource admin — chips type/époque/domaine/région + upload image. */
@@ -119,6 +126,18 @@ export default function AdminRessources() {
   const [editing, setEditing] = useState<Resource | null | 'new'>(null);
 
   const handleSave = async (form: FormData) => {
+    if (
+      !form.title.trim() ||
+      !form.description.trim() ||
+      !form.content.trim() ||
+      !form.type ||
+      !form.region ||
+      !form.epoque ||
+      !form.domaine
+    ) {
+      Alert.alert('Champs requis', 'Titre, description, contenu, type, région, époque et domaine sont obligatoires.');
+      return;
+    }
     if (editing === 'new') {
       await create.mutateAsync(form);
     } else if (editing) {
@@ -174,10 +193,10 @@ export default function AdminRessources() {
               title: editing.title,
               description: editing.description ?? '',
               content: editing.content ?? '',
-              type: editing.type ?? '',
-              epoque: editing.epoque ?? '',
-              domaine: editing.domaine ?? '',
-              region: editing.region ?? '',
+              type: editing.type ?? 'CHRONOLOGIE',
+              epoque: editing.epoque ?? 'ANTIQUITE',
+              domaine: editing.domaine ?? 'PATRIMOINE_HISTOIRE',
+              region: editing.region ?? 'NATIONAL',
               imageUrl: editing.imageUrl ?? '',
             }}
             onSave={handleSave}

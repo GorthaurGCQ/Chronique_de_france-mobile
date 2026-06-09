@@ -27,6 +27,8 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { FavoriteItem } from '@/components_V/FavoriteItem';
 // Composant : src/components_V/HistoryItemCard.tsx
 import { HistoryItemCard } from '@/components_V/HistoryItemCard';
+// Composant : src/components_V/PasswordStrength.tsx
+import { PasswordStrength, isPasswordStrong } from '@/components_V/PasswordStrength';
 // Auth : src/lib/auth/auth-client.ts
 import { authClient } from '@/lib/auth/auth-client';
 // Modèle : src/models_M/constants/app.constants.ts
@@ -243,7 +245,7 @@ function SecuriteSection() {
     setError('');
     if (!current || !next || !confirm) { setError('Remplissez tous les champs.'); return; }
     if (next !== confirm) { setError('Les nouveaux mots de passe ne correspondent pas.'); return; }
-    if (next.length < 8) { setError('Minimum 8 caractères.'); return; }
+    if (!isPasswordStrong(next)) { setError('Le mot de passe ne respecte pas les critères de sécurité.'); return; }
     try {
       await changePassword.mutateAsync({ currentPassword: current, newPassword: next });
       setSuccess(true);
@@ -263,9 +265,14 @@ function SecuriteSection() {
       <TextInput style={s.input} value={current} onChangeText={setCurrent} secureTextEntry placeholder="••••••••" placeholderTextColor={COLORS.textMuted} />
       <Text style={s.label}>Nouveau mot de passe</Text>
       <TextInput style={s.input} value={next} onChangeText={setNext} secureTextEntry placeholder="••••••••" placeholderTextColor={COLORS.textMuted} />
+      <PasswordStrength password={next} />
       <Text style={s.label}>Confirmer</Text>
       <TextInput style={[s.input, confirm && confirm !== next && { borderColor: '#e74c3c' }]} value={confirm} onChangeText={setConfirm} secureTextEntry placeholder="••••••••" placeholderTextColor={COLORS.textMuted} />
-      <TouchableOpacity style={s.btn} onPress={handleChange} disabled={changePassword.isPending}>
+      <TouchableOpacity
+        style={[s.btn, (!current || !isPasswordStrong(next) || next !== confirm) && { opacity: 0.5 }]}
+        onPress={handleChange}
+        disabled={changePassword.isPending || !current || !isPasswordStrong(next) || next !== confirm}
+      >
         {changePassword.isPending ? <ActivityIndicator color={COLORS.bg} /> : <Text style={s.btnText}>Modifier le mot de passe</Text>}
       </TouchableOpacity>
     </View>

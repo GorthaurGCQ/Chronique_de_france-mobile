@@ -4,7 +4,7 @@ import { useState } from 'react';
 // Module : node_modules/react-native
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
-  ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator,
+  ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator, Switch,
 } from 'react-native';
 // Module : node_modules/expo-router
 import { router } from 'expo-router';
@@ -12,50 +12,10 @@ import { router } from 'expo-router';
 import { COLORS } from '@/models_M/constants/Colors';
 // Hook : src/hooks/useAuth.ts
 import { useAuth } from '@/hooks/useAuth';
+// Composant : src/components_V/PasswordStrength.tsx
+import { PasswordStrength, isPasswordStrong } from '@/components_V/PasswordStrength';
 
 type Tab = 'login' | 'register';
-
-function PasswordStrength({ password }: { password: string }) {
-  const checks = [
-    { label: '8 caractères min.', ok: password.length >= 8 },
-    { label: 'Majuscule', ok: /[A-Z]/.test(password) },
-    { label: 'Minuscule', ok: /[a-z]/.test(password) },
-    { label: 'Chiffre', ok: /[0-9]/.test(password) },
-    { label: 'Caractère spécial', ok: /[^a-zA-Z0-9]/.test(password) },
-  ];
-  const score = checks.filter((c) => c.ok).length;
-  const colors = ['#e74c3c', '#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#2ecc71'];
-  const labels = ['', 'Très faible', 'Faible', 'Moyen', 'Fort', 'Très fort'];
-
-  if (!password) return null;
-
-  return (
-    <View style={pw.container}>
-      <View style={pw.bars}>
-        {[1, 2, 3, 4, 5].map((i) => (
-          <View key={i} style={[pw.bar, { backgroundColor: i <= score ? colors[score] : COLORS.border }]} />
-        ))}
-      </View>
-      <Text style={[pw.label, { color: colors[score] }]}>{labels[score]}</Text>
-      <View style={pw.checks}>
-        {checks.map((c) => (
-          <Text key={c.label} style={[pw.check, { color: c.ok ? '#2ecc71' : COLORS.textMuted }]}>
-            {c.ok ? '✓' : '○'} {c.label}
-          </Text>
-        ))}
-      </View>
-    </View>
-  );
-}
-
-const pw = StyleSheet.create({
-  container: { marginTop: 8, gap: 6 },
-  bars: { flexDirection: 'row', gap: 4 },
-  bar: { flex: 1, height: 4, borderRadius: 2 },
-  label: { fontSize: 12, fontWeight: '600' },
-  checks: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  check: { fontSize: 11 },
-});
 
 export default function ConnexionScreen() {
   const { login, register } = useAuth();
@@ -73,6 +33,15 @@ export default function ConnexionScreen() {
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
   const [regConfirm, setRegConfirm] = useState('');
+  const [acceptCgu, setAcceptCgu] = useState(false);
+
+  const regFormValid =
+    regPrenom.trim().length > 0 &&
+    regNom.trim().length > 0 &&
+    regEmail.trim().length > 0 &&
+    isPasswordStrong(regPassword) &&
+    regPassword === regConfirm &&
+    acceptCgu;
 
   const handleLogin = async () => {
     setError('');
@@ -101,8 +70,12 @@ export default function ConnexionScreen() {
       setError('Les mots de passe ne correspondent pas.');
       return;
     }
-    if (regPassword.length < 8) {
-      setError('Le mot de passe doit contenir au moins 8 caractères.');
+    if (!isPasswordStrong(regPassword)) {
+      setError('Le mot de passe ne respecte pas les critères de sécurité.');
+      return;
+    }
+    if (!acceptCgu) {
+      setError("Vous devez accepter les conditions d'utilisation.");
       return;
     }
     setIsLoading(true);
@@ -236,7 +209,22 @@ export default function ConnexionScreen() {
               placeholderTextColor={COLORS.textMuted}
               secureTextEntry
             />
-            <TouchableOpacity style={styles.btn} onPress={handleRegister} disabled={isLoading}>
+            <View style={styles.cguRow}>
+              <Switch
+                value={acceptCgu}
+                onValueChange={setAcceptCgu}
+                trackColor={{ false: COLORS.border, true: COLORS.gold }}
+                thumbColor={COLORS.textWhite}
+              />
+              <Text style={styles.cguText}>
+                J&apos;accepte les conditions d&apos;utilisation
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={[styles.btn, !regFormValid && styles.btnDisabled]}
+              onPress={handleRegister}
+              disabled={isLoading || !regFormValid}
+            >
               {isLoading
                 ? <ActivityIndicator color={COLORS.bg} />
                 : <Text style={styles.btnText}>Créer mon compte</Text>}
@@ -294,5 +282,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
   },
+  btnDisabled: { opacity: 0.5 },
   btnText: { color: COLORS.bg, fontWeight: '800', fontSize: 15 },
+  cguRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 16 },
+  cguText: { flex: 1, color: COLORS.textLight, fontSize: 13, lineHeight: 18 },
 });

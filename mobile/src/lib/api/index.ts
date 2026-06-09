@@ -10,7 +10,7 @@ export { favoritesApi } from '@/lib/api/favorites.api';
 // API : src/lib/api/resources.api.ts
 export { resourcesApi } from '@/lib/api/resources.api';
 // API : src/lib/api/events.api.ts
-export { eventsApi } from '@/lib/api/events.api';
+export { eventsApi, type EventRegisterResult } from '@/lib/api/events.api';
 // API : src/lib/api/admin.api.ts
 export { adminApi } from '@/lib/api/admin.api';
 

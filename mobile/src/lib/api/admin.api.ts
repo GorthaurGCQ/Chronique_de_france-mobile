@@ -99,9 +99,15 @@ export const adminApi = {
     }),
 
   getEventRegistrations: (eventId: string) =>
-    apiJson<{ id: string; nom: string; prenom: string; email: string }[]>(
+    apiJson<{ id: string; nom: string; prenom: string; email: string; createdAt?: string }[]>(
       `/admin/events/${eventId}/registrations`,
     ),
+
+  deleteEventRegistration: (eventId: string, registrationId: string) =>
+    apiJson<void>(`/admin/events/${eventId}/registrations`, {
+      method: 'DELETE',
+      body: JSON.stringify({ registrationId }),
+    }),
 
   upload: (formData: FormData) =>
     apiJson<{ url: string }>('/admin/upload', { method: 'POST', body: formData }, true),
