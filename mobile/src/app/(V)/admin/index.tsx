@@ -24,10 +24,13 @@ export default function AdminDashboard() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Tableau de bord</Text>
+      <Text style={styles.subtitle}>Vue d&apos;ensemble de la plateforme</Text>
       <View style={styles.grid}>
         {cards.map((c) => (
-          <View key={c.label} style={[styles.card, { borderTopColor: c.color }]}>
-            <Ionicons name={c.icon} size={28} color={c.color} />
+          <View key={c.label} style={[styles.card, { borderLeftColor: c.color }]}>
+            <View style={[styles.iconWrap, { backgroundColor: `${c.color}22` }]}>
+              <Ionicons name={c.icon} size={24} color={c.color} />
+            </View>
             <Text style={styles.cardValue}>{c.value}</Text>
             <Text style={styles.cardLabel}>{c.label}</Text>
           </View>
@@ -39,20 +42,28 @@ export default function AdminDashboard() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.bg },
-  content: { padding: 20 },
-  title: { color: COLORS.textWhite, fontSize: 20, fontWeight: '800', marginBottom: 20 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  content: { padding: 16, paddingBottom: 40 },
+  title: { color: COLORS.textWhite, fontSize: 20, fontWeight: '800' },
+  subtitle: { color: COLORS.textMuted, fontSize: 12, marginTop: 4, marginBottom: 16 },
+  grid: { gap: 12 },
   card: {
-    width: '47%',
     backgroundColor: COLORS.bgCard,
     borderRadius: 12,
     padding: 16,
-    gap: 6,
-    alignItems: 'center',
+    gap: 8,
     borderWidth: 1,
     borderColor: COLORS.borderLight,
-    borderTopWidth: 3,
+    borderLeftWidth: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  cardValue: { color: COLORS.textWhite, fontSize: 28, fontWeight: '900' },
-  cardLabel: { color: COLORS.textMuted, fontSize: 12 },
+  iconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardValue: { color: COLORS.textWhite, fontSize: 26, fontWeight: '900', flex: 1, marginLeft: 4 },
+  cardLabel: { color: COLORS.textMuted, fontSize: 13, fontWeight: '600' },
 });

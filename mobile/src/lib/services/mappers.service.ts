@@ -93,7 +93,7 @@ export function mapResource(row: WebResourceRow) {
     id: row.id,
     title: row.titre,
     description: row.description ?? '',
-    content: row.contenu ?? undefined,
+    content: row.contenu != null ? row.contenu : '',
     type: row.type ?? '',
     epoque: row.timeline ?? undefined,
     domaine: row.domaine ?? undefined,
@@ -108,6 +108,29 @@ export function mapResource(row: WebResourceRow) {
 function withDefault(value: string | undefined, fallback: string): string {
   const trimmed = value?.trim();
   return trimmed ? trimmed : fallback;
+}
+
+const HTML_TAG_RE = /<[a-z][\s\S]*>/i;
+
+function looksLikeHtml(value: string): boolean {
+  return HTML_TAG_RE.test(value.trim());
+}
+
+function escapePlainText(value: string): string {
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/** HTML TipTap inchangé ; texte brut enveloppé en paragraphes <p> à l'envoi API. */
+export function normalizeEditorContent(content: string | undefined | null): string {
+  const trimmed = (content ?? '').trim();
+  if (!trimmed) return '';
+  if (looksLikeHtml(trimmed)) return trimmed;
+  return trimmed
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean)
+    .map((block) => `<p>${escapePlainText(block).replace(/\n/g, '<br/>')}</p>`)
+    .join('');
 }
 
 /** Convertit une ressource mobile → payload API web (defaults alignés web admin). */
@@ -125,7 +148,7 @@ export function mapResourceToWeb(data: {
   return {
     titre: data.title,
     description: data.description ?? '',
-    contenu: data.content ?? '',
+    contenu: normalizeEditorContent(data.content),
     type: withDefault(data.type, 'CHRONOLOGIE'),
     region: withDefault(data.region, 'NATIONAL'),
     timeline: withDefault(data.epoque, 'ANTIQUITE'),
@@ -171,7 +194,7 @@ export function mapEventToWeb(data: {
   return {
     titre: data.title,
     description: data.description ?? '',
-    contenu: data.content ?? '',
+    contenu: normalizeEditorContent(data.content),
     lieu: data.lieu,
     date: data.date,
     thumbnailUrl: data.imageUrl ?? null,

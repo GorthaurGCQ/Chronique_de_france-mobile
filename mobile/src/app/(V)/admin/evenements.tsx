@@ -121,12 +121,13 @@ function EventForm({ initial, onSave, onClose, isSaving }: { initial: FormData; 
           placeholderTextColor={COLORS.textMuted}
           keyboardType="number-pad"
         />
-        <Text style={fs.label}>Contenu (HTML)</Text>
+        <Text style={fs.label}>Contenu détaillé (optionnel)</Text>
+        <Text style={fs.hint}>Texte libre — pas besoin de balises HTML. Mise en forme avancée : admin web.</Text>
         <TextInput
           style={[fs.input, fs.textarea, { height: 100 }]}
           value={form.content}
           onChangeText={(v) => set('content', v)}
-          placeholder="<p>Contenu détaillé...</p>"
+          placeholder="Informations complémentaires sur l'événement…"
           placeholderTextColor={COLORS.textMuted}
           multiline
         />
@@ -168,7 +169,8 @@ const fs = StyleSheet.create({
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, paddingTop: 50, borderBottomWidth: 1, borderBottomColor: COLORS.border },
   title: { color: COLORS.textWhite, fontSize: 18, fontWeight: '800' },
   body: { padding: 20, gap: 6, paddingBottom: 60 },
-  label: { color: COLORS.textLight, fontSize: 12, fontWeight: '600', marginTop: 10 },
+  label: { color: COLORS.textLight, fontSize: 12, fontWeight: '600', marginTop: 8 },
+  hint: { color: COLORS.textMuted, fontSize: 11, lineHeight: 16, marginBottom: 4 },
   input: { backgroundColor: COLORS.bg, borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, padding: 10, color: COLORS.textWhite, fontSize: 13 },
   textarea: { height: 80, textAlignVertical: 'top' },
   chips: { gap: 8, paddingVertical: 6 },

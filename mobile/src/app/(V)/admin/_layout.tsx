@@ -1,5 +1,5 @@
 ﻿/**
- * Layout admin — garde d'accès (isAdmin) + sidebar de navigation.
+ * Layout admin — garde d'accès (isAdmin) + navigation horizontale pleine largeur (mobile).
  * Redirige vers /dashboard si non authentifié ou non admin.
  */
 // Module : node_modules/react
@@ -10,6 +10,8 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { Slot, router, useSegments } from 'expo-router';
 // Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Module : node_modules/react-native-safe-area-context
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 // Hook : src/hooks/useAuth.ts
@@ -22,12 +24,13 @@ const NAV_ITEMS = [
   { label: 'Utilisateurs', icon: 'people' as const, route: '/admin/utilisateurs' },
   { label: 'Ressources', icon: 'book' as const, route: '/admin/ressources' },
   { label: 'Événements', icon: 'calendar' as const, route: '/admin/evenements' },
-  { label: 'Journal', icon: 'list' as const, route: '/admin/journal' },
+  { label: 'Journal', icon: 'document-text' as const, route: '/admin/journal' },
 ];
 
 export default function AdminLayout() {
   const { isLoading, isAdmin, isAuthenticated } = useAuth();
   const segments = useSegments();
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || !isAdmin)) {
@@ -42,34 +45,49 @@ export default function AdminLayout() {
 
   return (
     <View style={styles.root}>
-      {/* Sidebar */}
-      <View style={styles.sidebar}>
-        <View style={styles.sidebarHeader}>
-          <Ionicons name="shield-checkmark" size={20} color={COLORS.gold} />
-          <Text style={styles.sidebarTitle}>Admin</Text>
-        </View>
-        <ScrollView>
-          {NAV_ITEMS.map((item) => {
-            const isActive = currentPath === item.route || (item.route !== '/admin' && currentPath.startsWith(item.route));
-            return (
-              <TouchableOpacity
-                key={item.route}
-                style={[styles.navItem, isActive && styles.navItemActive]}
-                onPress={() => router.push(item.route as never)}
-              >
-                <Ionicons name={item.icon} size={18} color={isActive ? COLORS.gold : COLORS.textMuted} />
-                <Text style={[styles.navLabel, isActive && styles.navLabelActive]}>{item.label}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.replace('/dashboard')}>
-          <Ionicons name="arrow-back" size={16} color={COLORS.textMuted} />
-          <Text style={styles.backLabel}>Retour</Text>
+      <View style={[styles.topBar, { paddingTop: insets.top + 8 }]}>
+        <TouchableOpacity
+          style={styles.backBtn}
+          onPress={() => router.replace('/dashboard')}
+          accessibilityLabel="Retour à l'espace membre"
+        >
+          <Ionicons name="arrow-back" size={22} color={COLORS.textWhite} />
         </TouchableOpacity>
+        <View style={styles.topBarTitle}>
+          <Ionicons name="shield-checkmark" size={18} color={COLORS.gold} />
+          <Text style={styles.topTitle}>Administration</Text>
+        </View>
       </View>
 
-      {/* Contenu */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.navScroll}
+        contentContainerStyle={styles.navRow}
+      >
+        {NAV_ITEMS.map((item) => {
+          const isActive =
+            currentPath === item.route
+            || (item.route !== '/admin' && currentPath.startsWith(item.route));
+          return (
+            <TouchableOpacity
+              key={item.route}
+              style={[styles.navChip, isActive && styles.navChipActive]}
+              onPress={() => router.push(item.route as never)}
+            >
+              <Ionicons
+                name={item.icon}
+                size={16}
+                color={isActive ? COLORS.bg : COLORS.textMuted}
+              />
+              <Text style={[styles.navChipLabel, isActive && styles.navChipLabelActive]}>
+                {item.label}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+
       <View style={styles.content}>
         <Slot />
       </View>
@@ -78,43 +96,57 @@ export default function AdminLayout() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, flexDirection: 'row', backgroundColor: COLORS.bg },
-  sidebar: {
-    width: 180,
-    backgroundColor: COLORS.navyLight,
-    borderRightWidth: 1,
-    borderRightColor: COLORS.border,
-    paddingTop: 50,
-  },
-  sidebarHeader: {
+  root: { flex: 1, backgroundColor: COLORS.bg },
+  topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 12,
     paddingHorizontal: 16,
-    paddingBottom: 20,
+    paddingBottom: 12,
+    backgroundColor: COLORS.navyLight,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
-    marginBottom: 8,
   },
-  sidebarTitle: { color: COLORS.gold, fontWeight: '800', fontSize: 16 },
-  navItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  navItemActive: { backgroundColor: 'rgba(184,147,58,0.1)', borderRightWidth: 2, borderRightColor: COLORS.gold },
-  navLabel: { color: COLORS.textMuted, fontSize: 13 },
-  navLabelActive: { color: COLORS.gold, fontWeight: '700' },
   backBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.bg,
+    borderWidth: 1,
+    borderColor: COLORS.borderLight,
+  },
+  topBarTitle: { flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1 },
+  topTitle: { color: COLORS.textWhite, fontWeight: '800', fontSize: 17 },
+  navScroll: {
+    flexGrow: 0,
+    flexShrink: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.borderLight,
+    backgroundColor: COLORS.bgSection,
+  },
+  navRow: {
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    gap: 8,
+  },
+  navChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.border,
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    backgroundColor: COLORS.navyLight,
   },
-  backLabel: { color: COLORS.textMuted, fontSize: 13 },
+  navChipActive: {
+    backgroundColor: COLORS.gold,
+    borderColor: COLORS.gold,
+  },
+  navChipLabel: { color: COLORS.textMuted, fontSize: 13, fontWeight: '600' },
+  navChipLabelActive: { color: COLORS.bg, fontWeight: '800' },
   content: { flex: 1 },
 });

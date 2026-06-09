@@ -91,8 +91,16 @@ function ResourceForm({
         {renderSelect('Domaine', 'domaine', DOMAINES)}
         {renderSelect('Région', 'region', REGIONS_LIST.map((r) => ({ id: r.code, label: r.nom })))}
         <ImageUploadField label="Miniature" value={form.imageUrl} onChange={(v) => set('imageUrl', v)} />
-        <Text style={fs.label}>Contenu (HTML)</Text>
-        <TextInput style={[fs.input, fs.textarea, { height: 120 }]} value={form.content} onChangeText={(v) => set('content', v)} placeholder="<p>Contenu...</p>" placeholderTextColor={COLORS.textMuted} multiline />
+        <Text style={fs.label}>Contenu détaillé (optionnel)</Text>
+        <Text style={fs.hint}>Texte libre — pas besoin de balises HTML. Mise en forme avancée : admin web.</Text>
+        <TextInput
+          style={[fs.input, fs.textarea, { height: 120 }]}
+          value={form.content}
+          onChangeText={(v) => set('content', v)}
+          placeholder="Article, chronologie, notes de cours…"
+          placeholderTextColor={COLORS.textMuted}
+          multiline
+        />
         <TouchableOpacity style={fs.saveBtn} onPress={() => onSave(form)} disabled={isSaving || !form.title}>
           {isSaving ? <ActivityIndicator color={COLORS.bg} /> : <Text style={fs.saveBtnText}>Enregistrer</Text>}
         </TouchableOpacity>
@@ -107,6 +115,7 @@ const fs = StyleSheet.create({
   title: { color: COLORS.textWhite, fontSize: 18, fontWeight: '800' },
   body: { padding: 20, gap: 8, paddingBottom: 60 },
   label: { color: COLORS.textLight, fontSize: 12, fontWeight: '600', marginTop: 8 },
+  hint: { color: COLORS.textMuted, fontSize: 11, lineHeight: 16, marginBottom: 4 },
   input: { backgroundColor: COLORS.bg, borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, padding: 10, color: COLORS.textWhite, fontSize: 13 },
   textarea: { height: 80, textAlignVertical: 'top' },
   chips: { gap: 8, paddingVertical: 6 },
@@ -129,13 +138,12 @@ export default function AdminRessources() {
     if (
       !form.title.trim() ||
       !form.description.trim() ||
-      !form.content.trim() ||
       !form.type ||
       !form.region ||
       !form.epoque ||
       !form.domaine
     ) {
-      Alert.alert('Champs requis', 'Titre, description, contenu, type, région, époque et domaine sont obligatoires.');
+      Alert.alert('Champs requis', 'Titre, description, type, région, époque et domaine sont obligatoires.');
       return;
     }
     if (editing === 'new') {

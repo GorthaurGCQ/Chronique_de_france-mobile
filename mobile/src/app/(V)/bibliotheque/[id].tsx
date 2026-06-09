@@ -3,14 +3,10 @@
 import { useEffect } from 'react';
 // Module : node_modules/react-native
 import {
-  View, Text, ScrollView, StyleSheet, Image, TouchableOpacity,
+  View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, useWindowDimensions,
 } from 'react-native';
 // Module : node_modules/expo-router
 import { useLocalSearchParams, router } from 'expo-router';
-// Module : node_modules/react-native-render-html
-import RenderHtml from 'react-native-render-html';
-// Module : node_modules/react-native
-import { useWindowDimensions } from 'react-native';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 // Modèle : src/models_M/constants/app.constants.ts
@@ -29,6 +25,8 @@ import { Badge } from '@/components_V/ui/Badge';
 import { Loader } from '@/components_V/ui/Loader';
 // Composant : src/components_V/MediaPlayer.tsx
 import { MediaPlayer } from '@/components_V/MediaPlayer';
+// Composant : src/components_V/ResourceHtmlContent.tsx
+import { ResourceHtmlContent } from '@/components_V/ResourceHtmlContent';
 // API : src/lib/api/index.ts
 import { profileApi } from '@/lib/api';
 // Hook : src/hooks/useAuth.ts
@@ -116,33 +114,11 @@ export default function ResourceDetailScreen() {
           <Text style={styles.description}>{resource.description}</Text>
         )}
 
-        {/* Contenu HTML */}
-        {resource.content && (
-          <View style={styles.contentSection}>
-            <Text style={styles.sectionTitle}>Contenu</Text>
-            <RenderHtml
-              contentWidth={width - 48}
-              source={{ html: resource.content }}
-              tagsStyles={{
-                p: { color: COLORS.textLight, fontSize: 15, lineHeight: 24, marginBottom: 12 },
-                h1: { color: COLORS.textWhite, fontSize: 22, fontWeight: '800', marginBottom: 8 },
-                h2: { color: COLORS.textWhite, fontSize: 18, fontWeight: '700', marginBottom: 8 },
-                h3: { color: COLORS.gold, fontSize: 16, fontWeight: '700', marginBottom: 6 },
-                strong: { color: COLORS.textWhite, fontWeight: '700' },
-                a: { color: COLORS.gold },
-                li: { color: COLORS.textLight, fontSize: 15, lineHeight: 22 },
-                blockquote: {
-                  borderLeftWidth: 3,
-                  borderLeftColor: COLORS.gold,
-                  paddingLeft: 12,
-                  color: COLORS.textMuted,
-                  fontStyle: 'italic',
-                },
-              }}
-              baseStyle={{ color: COLORS.textLight }}
-            />
-          </View>
-        )}
+        {/* Contenu HTML (TipTap web) ou texte brut */}
+        <ResourceHtmlContent
+          content={resource.content}
+          contentWidth={width - 40}
+        />
 
         {/* Lecteur média (après le contenu, comme sur le web) */}
         {resource.mediaUrl && (
@@ -177,8 +153,6 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   mediaSection: { gap: 8 },
-  sectionTitle: { color: COLORS.gold, fontSize: 13, fontWeight: '700', letterSpacing: 1, textTransform: 'uppercase' },
-  contentSection: { gap: 8 },
   errorContainer: { flex: 1, backgroundColor: COLORS.bg, alignItems: 'center', justifyContent: 'center', padding: 24 },
   errorText: { color: COLORS.textMuted, fontSize: 16, marginBottom: 20 },
   backBtn: { backgroundColor: COLORS.gold, borderRadius: 8, paddingHorizontal: 20, paddingVertical: 10 },
