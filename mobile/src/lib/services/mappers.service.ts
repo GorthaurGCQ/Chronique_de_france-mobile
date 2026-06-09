@@ -34,6 +34,11 @@ type WebEventRow = {
   thumbnailUrl?: string | null;
   createdAt?: string | Date | null;
   publishedAt?: string | Date | null;
+  capaciteMax?: number | null;
+  inscriptionsConfirmees?: number;
+  listeAttenteCount?: number;
+  placesRestantes?: number | null;
+  complet?: boolean;
 };
 
 type WebFavoriteRow = {
@@ -143,6 +148,11 @@ export function mapEvent(row: WebEventRow) {
     domaine: row.domaine ?? undefined,
     imageUrl: row.thumbnailUrl ?? undefined,
     createdAt: toIso(row.createdAt ?? row.publishedAt ?? row.date),
+    capaciteMax: row.capaciteMax ?? null,
+    inscriptionsConfirmees: row.inscriptionsConfirmees ?? 0,
+    listeAttenteCount: row.listeAttenteCount ?? 0,
+    placesRestantes: row.placesRestantes ?? null,
+    complet: row.complet ?? false,
   };
 }
 
@@ -156,6 +166,7 @@ export function mapEventToWeb(data: {
   epoque?: string;
   domaine?: string;
   imageUrl?: string;
+  capaciteMax?: number | null;
 }) {
   return {
     titre: data.title,
@@ -167,6 +178,7 @@ export function mapEventToWeb(data: {
     region: withDefault(data.region, 'NATIONAL'),
     timeline: withDefault(data.epoque, 'CONTEMPORAIN'),
     domaine: withDefault(data.domaine, 'EVENEMENTS_MARQUANTS'),
+    capaciteMax: data.capaciteMax ?? null,
   };
 }
 

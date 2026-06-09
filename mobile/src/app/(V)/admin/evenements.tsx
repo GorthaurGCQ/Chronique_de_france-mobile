@@ -31,6 +31,7 @@ type FormData = {
   domaine: string;
   epoque: string;
   imageUrl: string;
+  capaciteMax: string;
 };
 
 type Registration = {
@@ -51,6 +52,7 @@ const EMPTY: FormData = {
   domaine: 'EVENEMENTS_MARQUANTS',
   epoque: 'CONTEMPORAIN',
   imageUrl: '',
+  capaciteMax: '',
 };
 
 const FIELD_LABELS: Record<'title' | 'description' | 'date' | 'lieu', string> = {
@@ -110,6 +112,15 @@ function EventForm({ initial, onSave, onClose, isSaving }: { initial: FormData; 
             />
           </View>
         ))}
+        <Text style={fs.label}>Capacité max (vide = illimité)</Text>
+        <TextInput
+          style={fs.input}
+          value={form.capaciteMax}
+          onChangeText={(v) => set('capaciteMax', v.replace(/[^\d]/g, ''))}
+          placeholder="Ex. 50"
+          placeholderTextColor={COLORS.textMuted}
+          keyboardType="number-pad"
+        />
         <Text style={fs.label}>Contenu (HTML)</Text>
         <TextInput
           style={[fs.input, fs.textarea, { height: 100 }]}
@@ -190,6 +201,7 @@ export default function AdminEvenements() {
       Alert.alert('Champs requis', 'Titre, description, lieu, date, région, domaine et époque sont obligatoires.');
       return;
     }
+    const capaciteParsed = form.capaciteMax.trim() ? Number(form.capaciteMax) : null;
     const payload = {
       title: form.title.trim(),
       description: form.description.trim(),
@@ -200,6 +212,9 @@ export default function AdminEvenements() {
       domaine: form.domaine,
       epoque: form.epoque,
       imageUrl: form.imageUrl,
+      capaciteMax: capaciteParsed != null && Number.isFinite(capaciteParsed) && capaciteParsed > 0
+        ? capaciteParsed
+        : null,
     };
     if (editing === 'new') await create.mutateAsync(payload);
     else if (editing) await update.mutateAsync({ id: editing.id, ...payload });
@@ -249,7 +264,10 @@ export default function AdminEvenements() {
           <View style={styles.row}>
             <View style={styles.rowInfo}>
               <Text style={styles.rowTitle} numberOfLines={1}>{item.title}</Text>
-              <Text style={styles.rowMeta}>{new Date(item.date).toLocaleDateString('fr-FR')} • {item.lieu ?? '—'}</Text>
+              <Text style={styles.rowMeta}>
+                {new Date(item.date).toLocaleDateString('fr-FR')} • {item.lieu ?? '—'}
+                {item.capaciteMax != null ? ` • ${item.capaciteMax} places` : ''}
+              </Text>
             </View>
             <TouchableOpacity style={styles.iconBtn} onPress={() => viewRegistrations(item.id)}>
               <Ionicons name="people" size={18} color="#76D7C4" />
@@ -288,6 +306,7 @@ export default function AdminEvenements() {
               domaine: editing.domaine ?? 'EVENEMENTS_MARQUANTS',
               epoque: editing.epoque ?? 'CONTEMPORAIN',
               imageUrl: editing.imageUrl ?? '',
+              capaciteMax: editing.capaciteMax != null ? String(editing.capaciteMax) : '',
             }}
             onSave={handleSave}
             onClose={() => setEditing(null)}

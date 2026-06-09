@@ -6,8 +6,15 @@ import {
   View, Text, SectionList, StyleSheet, Modal, TouchableOpacity,
   TextInput, KeyboardAvoidingView, Platform, ActivityIndicator, ScrollView,
 } from 'react-native';
+// Module : node_modules/@tanstack/react-query
+import { useQueryClient } from '@tanstack/react-query';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Modèle : src/models_M/types/event.types.ts
+import {
+  formatEventCapacityInfo,
+  type EventRegistrationStatut,
+} from '@/models_M/types/event.types';
 // Hook : src/hooks/useEvents.ts
 import { useEvents } from '@/hooks/useEvents';
 // Composant : src/components_V/EventCard.tsx
@@ -39,15 +46,19 @@ function InscriptionModal({
   event,
   visible,
   onClose,
+  onRegistered,
 }: {
   event: Event | null;
   visible: boolean;
   onClose: () => void;
+  onRegistered?: () => void;
 }) {
   const [form, setForm] = useState<InscriptionForm>({ nom: '', prenom: '', email: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const [registrationStatut, setRegistrationStatut] = useState<EventRegistrationStatut>('CONFIRME');
+  const [waitlistPosition, setWaitlistPosition] = useState<number | null>(null);
   const [submittedEmail, setSubmittedEmail] = useState('');
   const [error, setError] = useState('');
 
@@ -55,6 +66,8 @@ function InscriptionModal({
     setForm({ nom: '', prenom: '', email: '' });
     setSuccess(false);
     setEmailSent(false);
+    setRegistrationStatut('CONFIRME');
+    setWaitlistPosition(null);
     setSubmittedEmail('');
     setError('');
   };
@@ -63,6 +76,8 @@ function InscriptionModal({
     reset();
     onClose();
   };
+
+  const capacityLabel = event ? formatEventCapacityInfo(event) : null;
 
   const handleSubmit = async () => {
     setError('');
@@ -85,7 +100,10 @@ function InscriptionModal({
       const result = await eventsApi.register({ eventId: event.id, nom, prenom, email });
       setSubmittedEmail(email);
       setEmailSent(result.emailSent === true);
+      setRegistrationStatut(result.statut === 'LISTE_ATTENTE' ? 'LISTE_ATTENTE' : 'CONFIRME');
+      setWaitlistPosition(result.listeAttentePosition ?? null);
       setSuccess(true);
+      onRegistered?.();
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Erreur lors de l'inscription.");
     } finally {
@@ -107,8 +125,18 @@ function InscriptionModal({
 
           {success ? (
             <View style={styles.successBox}>
+              <Text style={styles.successTitle}>
+                {registrationStatut === 'LISTE_ATTENTE' ? 'Liste d\'attente' : 'Inscription confirmée !'}
+              </Text>
               <Text style={styles.successText}>
-                Inscription confirmée ! Vous êtes inscrit(e) à {event?.title}.
+                {registrationStatut === 'LISTE_ATTENTE' ? (
+                  <>
+                    L&apos;événement {event?.title} est complet. Vous êtes en liste d&apos;attente
+                    {waitlistPosition != null ? ` (position ${waitlistPosition})` : ''}.
+                  </>
+                ) : (
+                  <>Vous êtes inscrit(e) à {event?.title}.</>
+                )}
                 {emailSent
                   ? ` Un récapitulatif a été envoyé à ${submittedEmail}.`
                   : " Votre inscription est enregistrée, mais l'e-mail de confirmation n'a pas pu être envoyé."}
@@ -123,6 +151,9 @@ function InscriptionModal({
                 <View style={styles.modalEventInfo}>
                   <Text style={styles.modalEventInfoText}>📅 {formatEventDateTime(event.date)}</Text>
                   {event.lieu ? <Text style={styles.modalEventInfoText}>📍 {event.lieu}</Text> : null}
+                  {capacityLabel ? (
+                    <Text style={styles.modalEventInfoText}>👥 {capacityLabel}</Text>
+                  ) : null}
                 </View>
               )}
               {!!error && (
@@ -165,7 +196,11 @@ function InscriptionModal({
               <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit} disabled={isLoading}>
                 {isLoading
                   ? <ActivityIndicator color={COLORS.bg} />
-                  : <Text style={styles.submitBtnText}>Confirmer l&apos;inscription</Text>}
+                  : (
+                    <Text style={styles.submitBtnText}>
+                      {event?.complet ? "Rejoindre la liste d'attente" : "Confirmer l'inscription"}
+                    </Text>
+                  )}
               </TouchableOpacity>
             </ScrollView>
           )}
@@ -176,6 +211,7 @@ function InscriptionModal({
 }
 
 export default function EvenementsScreen() {
+  const queryClient = useQueryClient();
   const { data: events, isLoading, isError, refetch } = useEvents();
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -249,6 +285,7 @@ export default function EvenementsScreen() {
         event={selectedEvent}
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
+        onRegistered={() => queryClient.invalidateQueries({ queryKey: ['events'] })}
       />
     </View>
   );
@@ -329,6 +366,7 @@ const styles = StyleSheet.create({
     borderRadius: 8, padding: 10, marginBottom: 12,
   },
   errorText: { color: '#e74c3c', fontSize: 13 },
-  successBox: { gap: 16 },
+  successBox: { gap: 8 },
+  successTitle: { color: '#2ecc71', fontSize: 17, fontWeight: '800' },
   successText: { color: '#2ecc71', fontSize: 14, lineHeight: 21 },
 });

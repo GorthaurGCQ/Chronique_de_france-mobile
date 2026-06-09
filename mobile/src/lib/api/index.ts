@@ -23,7 +23,12 @@ export type { Favorite } from '@/models_M/types/favorite.types';
 // Modèle : src/models_M/types/resource.types.ts
 export type { Resource, ResourceFilters, ResourceListResult } from '@/models_M/types/resource.types';
 // Modèle : src/models_M/types/event.types.ts
-export type { Event } from '@/models_M/types/event.types';
+export type {
+  Event,
+  EventCapacitySnapshot,
+  EventRegistrationStatut,
+} from '@/models_M/types/event.types';
+export { formatEventCapacityInfo } from '@/models_M/types/event.types';
 // Modèle : src/models_M/types/admin.types.ts
 export type { AdminUserAction } from '@/models_M/types/admin.types';
 

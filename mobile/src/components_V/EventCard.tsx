@@ -5,6 +5,8 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS } from '@/models_M/constants/Colors';
 // Modèle : src/models_M/constants/app.constants.ts
 import { getDomaineLabel } from '@/models_M/constants/app.constants';
+// Modèle : src/models_M/types/event.types.ts
+import { formatEventCapacityInfo } from '@/models_M/types/event.types';
 // API : src/lib/api/index.ts
 import type { Event } from '@/lib/api';
 
@@ -39,6 +41,9 @@ export function EventCard({ event, onPress, onRegister, compact = false }: Props
     }
   })();
 
+  const capacityLabel = formatEventCapacityInfo(event);
+  const registerLabel = event.complet ? "Liste d'attente →" : "S'inscrire →";
+
   return (
     <TouchableOpacity
       style={[styles.card, compact && styles.cardCompact]}
@@ -65,10 +70,11 @@ export function EventCard({ event, onPress, onRegister, compact = false }: Props
         <View style={styles.info}>
           <Text style={styles.infoText}>📅 {formattedDate}</Text>
           {event.lieu && <Text style={styles.infoText}>📍 {event.lieu}</Text>}
+          {capacityLabel && <Text style={styles.infoText}>👥 {capacityLabel}</Text>}
         </View>
         {!compact && onRegister && (
           <TouchableOpacity style={styles.registerBtn} onPress={onRegister}>
-            <Text style={styles.registerBtnText}>S&apos;inscrire →</Text>
+            <Text style={styles.registerBtnText}>{registerLabel}</Text>
           </TouchableOpacity>
         )}
       </View>
