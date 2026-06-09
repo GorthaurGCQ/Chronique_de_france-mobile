@@ -7,6 +7,8 @@ import { router } from 'expo-router';
 import { COLORS } from '@/models_M/constants/Colors';
 // Modèle : src/models_M/data/regionsContent.ts
 import type { RegionContent } from '@/models_M/data/regionsContent';
+// Module : src/components_V/icons/index.ts
+import { RegionIcon } from '@/components_V/icons';
 // Hook : src/hooks/useAuth.ts
 import { useAuth } from '@/hooks/useAuth';
 // Hook : src/hooks/usePermissions.ts
@@ -38,7 +40,10 @@ export function RegionCard({ region }: Props) {
       <View style={[styles.colorBar, { backgroundColor: region.couleur }]} />
 
       <View style={styles.body}>
-        <Text style={styles.nom}>{region.nom}</Text>
+        <View style={styles.titleRow}>
+          <RegionIcon region={region.nom} size={22} tone="gold" />
+          <Text style={styles.nom}>{region.nom}</Text>
+        </View>
         <Text style={styles.chefLieu}>{region.chefLieu}</Text>
         <View style={styles.footer}>
           <Text style={styles.dept}>{region.nbDepartements} dépt.</Text>
@@ -62,7 +67,8 @@ const styles = StyleSheet.create({
   cardDisabled: { opacity: 0.5 },
   colorBar: { height: 6 },
   body: { padding: 12, gap: 4, flex: 1 },
-  nom: { color: COLORS.textWhite, fontSize: 14, fontWeight: '700', lineHeight: 18 },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  nom: { color: COLORS.textWhite, fontSize: 14, fontWeight: '700', lineHeight: 18, flex: 1 },
   chefLieu: { color: COLORS.textMuted, fontSize: 12 },
   footer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 },
   dept: { color: COLORS.textMuted, fontSize: 11 },

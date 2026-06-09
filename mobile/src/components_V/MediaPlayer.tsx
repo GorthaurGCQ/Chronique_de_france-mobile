@@ -28,6 +28,8 @@ import {
   buildEmbedWebViewDocument,
   getEmbedOrigin,
 } from '@/lib/services/media.service';
+// Module : src/components_V/icons/index.ts
+import { AppIcon } from '@/components_V/icons';
 
 type Props = {
   url: string;
@@ -195,26 +197,36 @@ export function MediaPlayer({ url }: Props) {
 
   const embedKinds = kind === 'youtube' || kind === 'vimeo' || kind === 'iframe';
 
+  const kindIcon = kind === 'youtube' || kind === 'vimeo' || kind === 'video'
+    ? 'play'
+    : kind === 'audio'
+      ? 'music'
+      : kind === 'iframe'
+        ? 'link'
+        : 'document';
+
   return (
     <View style={styles.mediaBlock}>
       <View style={styles.mediaBar}>
-        <Text style={styles.mediaBarTitle}>
-          {kind === 'youtube' && '▶ '}
-          {kind === 'vimeo' && '▶ '}
-          {kind === 'video' && '▶ '}
-          {kind === 'audio' && '🎵 '}
-          {kind === 'iframe' && '🔗 '}
-          {getMediaKindLabel(kind)}
-        </Text>
+        <View style={styles.mediaBarTitleRow}>
+          <AppIcon name={kindIcon} size={16} tone="gold" />
+          <Text style={styles.mediaBarTitle}>{getMediaKindLabel(kind)}</Text>
+        </View>
         <View style={styles.mediaBarActions}>
           <TouchableOpacity
             style={styles.mediaBarBtn}
             onPress={() => setExpanded((v) => !v)}
           >
-            <Text style={styles.mediaBarBtnText}>{expanded ? '▲ Réduire' : '▼ Afficher'}</Text>
+            <View style={styles.mediaBarBtnInner}>
+              <AppIcon name={expanded ? 'chevronUp' : 'chevronDown'} size={12} tone="inherit" color={COLORS.textLight} />
+              <Text style={styles.mediaBarBtnText}>{expanded ? 'Réduire' : 'Afficher'}</Text>
+            </View>
           </TouchableOpacity>
           <TouchableOpacity style={styles.mediaBarBtn} onPress={openExternal}>
-            <Text style={styles.mediaBarBtnText}>↗ Ouvrir</Text>
+            <View style={styles.mediaBarBtnInner}>
+              <AppIcon name="external" size={12} tone="inherit" color={COLORS.textLight} />
+              <Text style={styles.mediaBarBtnText}>Ouvrir</Text>
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -246,11 +258,16 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     gap: 8,
   },
+  mediaBarTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexShrink: 1,
+  },
   mediaBarTitle: {
     color: COLORS.textWhite,
     fontSize: 13,
     fontWeight: '700',
-    flexShrink: 1,
   },
   mediaBarActions: {
     flexDirection: 'row',
@@ -262,6 +279,11 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 4,
     backgroundColor: 'rgba(255,255,255,0.08)',
+  },
+  mediaBarBtnInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   mediaBarBtnText: {
     color: COLORS.textLight,

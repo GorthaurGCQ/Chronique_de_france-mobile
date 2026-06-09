@@ -18,6 +18,8 @@ import { COLORS } from '@/models_M/constants/Colors';
 import { useAuth } from '@/hooks/useAuth';
 // Hook : src/hooks/usePermissions.ts
 import { usePermissions } from '@/hooks/usePermissions';
+// Module : src/components_V/icons/index.ts
+import { FleurDeLys, AppIcon, RegionIcon } from '@/components_V/icons';
 
 /** ViewBox ajusté aux bounds réels des paths + marge (Corse, Bretagne, etc.). */
 const MAP_VIEWBOX = {
@@ -66,7 +68,8 @@ export default function CarteRegions({ selectedCode = null, onSelectRegion }: Pr
           Appuyez sur une région pour afficher ses ressources
         </Text>
         <View style={styles.badge}>
-          <Text style={styles.badgeText}>🇫🇷 {REGIONS.length} régions métropolitaines</Text>
+          <FleurDeLys size={16} />
+          <Text style={styles.badgeText}>{REGIONS.length} régions métropolitaines</Text>
         </View>
       </View>
 
@@ -106,7 +109,7 @@ export default function CarteRegions({ selectedCode = null, onSelectRegion }: Pr
           <View style={[styles.colorBar, { backgroundColor: selectedRegion.couleur }]} />
           <View style={styles.panelBody}>
             <View style={styles.panelHeader}>
-              <View style={[styles.panelDot, { backgroundColor: selectedRegion.couleur }]} />
+              <RegionIcon region={selectedRegion.nom} size={36} tone="gold" />
               <View style={styles.panelInfo}>
                 <Text style={styles.panelName}>{selectedRegion.nom}</Text>
                 <Text style={styles.panelMeta}>
@@ -127,7 +130,8 @@ export default function CarteRegions({ selectedCode = null, onSelectRegion }: Pr
                 style={({ pressed }) => [styles.btnPrimary, pressed && { opacity: 0.85 }]}
                 onPress={handleExploreRegion}
               >
-                <Text style={styles.btnPrimaryText}>Explorer la région →</Text>
+                <Text style={styles.btnPrimaryText}>Explorer la région</Text>
+                <AppIcon name="chevronRight" size={14} color={COLORS.bg} />
               </Pressable>
               )}
             </View>
@@ -156,6 +160,9 @@ const styles = StyleSheet.create({
   title: { color: COLORS.textWhite, fontSize: 18, fontWeight: '800' },
   subtitle: { color: COLORS.textMuted, fontSize: 13, textAlign: 'center', lineHeight: 20 },
   badge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
     marginTop: 4,
     backgroundColor: COLORS.navyLight,
     borderRadius: 20,
@@ -196,6 +203,9 @@ const styles = StyleSheet.create({
   btnPrimary: {
     flex: 1,
     minWidth: 140,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 4,
     backgroundColor: COLORS.gold,
     borderRadius: 8,
     paddingVertical: 12,

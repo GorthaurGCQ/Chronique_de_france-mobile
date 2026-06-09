@@ -13,6 +13,8 @@ import { COLORS } from '@/models_M/constants/Colors';
 import { OCCITANIE_INFO, OCCITANIE_CATEGORIES, OCCITANIE_CARDS } from '@/models_M/data/occitaniaData';
 // Composant : src/components_V/PageAccessGuard.tsx
 import { PageAccessGuard } from '@/components_V/PageAccessGuard';
+// Module : src/components_V/icons/index.ts
+import { AppIcon } from '@/components_V/icons';
 
 const EPOQUES = [
   { id: 'ANTIQUITÉ',     label: 'Antiquité',    date: 'av. J.-C. – Ve s.' },
@@ -91,14 +93,14 @@ function OccitanieContent() {
       <View style={styles.catSection}>
         <View style={styles.catNav}>
           <Pressable style={styles.catArrow} onPress={prevCat}>
-            <Text style={styles.catArrowText}>←</Text>
+            <AppIcon name="chevronLeft" size={22} tone="gold" />
           </Pressable>
           <View style={styles.catCenter}>
             <Text style={styles.catTitle}>{currentCat.label}</Text>
             <Text style={styles.catSubtitle}>{currentCat.subtitle}</Text>
           </View>
           <Pressable style={styles.catArrow} onPress={nextCat}>
-            <Text style={styles.catArrowText}>→</Text>
+            <AppIcon name="chevronRight" size={22} tone="gold" />
           </Pressable>
         </View>
 
@@ -145,7 +147,7 @@ function OccitanieContent() {
       {/* ── GRILLE DE CARDS ── */}
       {currentCat.cards.length === 0 ? (
         <View style={styles.emptyState}>
-          <Text style={styles.emptyIcon}>🏛️</Text>
+          <AppIcon name="monument" size={40} tone="muted" style={styles.emptyIcon} />
           <Text style={styles.emptyText}>Les ressources pour cette catégorie sont en cours de préparation.</Text>
           <Text style={styles.emptyHint}>Revenez bientôt — de nouveaux contenus seront ajoutés prochainement.</Text>
         </View>
@@ -168,7 +170,7 @@ function OccitanieContent() {
                 <Text style={styles.cardDesc}>{card.description}</Text>
                 <View style={styles.cardFooter}>
                   <Text style={styles.cardReadTime}>{card.readTime}</Text>
-                  <Text style={styles.cardArrow}>→</Text>
+                  <AppIcon name="chevronRight" size={16} tone="gold" />
                 </View>
               </View>
             </Pressable>

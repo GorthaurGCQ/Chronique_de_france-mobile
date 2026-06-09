@@ -1,14 +1,14 @@
 ﻿/** Bouton favori — toggle via useFavorites, redirige vers connexion si anonyme. */
 // Module : node_modules/react-native
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-// Modèle : src/models_M/constants/Colors.ts
-import { COLORS } from '@/models_M/constants/Colors';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 // Hook : src/hooks/useFavorites.ts
 import { useFavorites } from '@/hooks/useFavorites';
 // Hook : src/hooks/useAuth.ts
 import { useAuth } from '@/hooks/useAuth';
 // Module : node_modules/expo-router
 import { router } from 'expo-router';
+// Module : src/components_V/icons/index.ts
+import { AppIcon } from '@/components_V/icons';
 
 type Props = {
   resourceId: string;
@@ -34,15 +34,16 @@ export function BookmarkButton({ resourceId, size = 24 }: Props) {
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       style={styles.btn}
     >
-      <Text style={[styles.icon, { fontSize: size }, isFavorite && styles.active]}>
-        {isFavorite ? '★' : '☆'}
-      </Text>
+      <AppIcon
+        name="bookmark"
+        size={size}
+        tone={isFavorite ? 'gold' : 'muted'}
+        filled={isFavorite}
+      />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   btn: { padding: 4 },
-  icon: { color: COLORS.textMuted },
-  active: { color: COLORS.gold },
 });

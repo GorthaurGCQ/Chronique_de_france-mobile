@@ -44,6 +44,8 @@ import {
 import { Loader } from '@/components_V/ui/Loader';
 // Composant : src/components_V/LoginRequiredScreen.tsx
 import { LoginRequiredScreen } from '@/components_V/LoginRequiredScreen';
+// Module : src/components_V/icons/index.ts
+import { LinkLabel } from '@/components_V/icons';
 
 type Section = 'profil' | 'securite' | 'stats' | 'favoris' | 'historique' | 'preferences';
 
@@ -370,7 +372,7 @@ function FavorisSection() {
         <Text style={s.sectionTitle}>Favoris</Text>
         <Text style={s.emptyText}>Aucun favori enregistré.</Text>
         <TouchableOpacity style={s.linkBtn} onPress={() => router.push('/bibliotheque')}>
-          <Text style={s.linkBtnText}>Explorer la bibliothèque →</Text>
+          <LinkLabel label="Explorer la bibliothèque" textStyle={s.linkBtnText} />
         </TouchableOpacity>
       </View>
     );
@@ -510,7 +512,7 @@ export default function DashboardScreen() {
   }
 
   if (!isAuthenticated) {
-    return <LoginRequiredScreen title="Espace membre" icon="person-circle-outline" />;
+    return <LoginRequiredScreen title="Espace membre" icon="user" />;
   }
 
   const SECTIONS: { id: Section; label: string }[] = [

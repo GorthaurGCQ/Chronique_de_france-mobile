@@ -19,6 +19,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { EventCard } from '@/components_V/EventCard';
 // Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
+// Module : src/components_V/icons/index.ts
+import { AppIcon, LinkLabel, type IconName } from '@/components_V/icons';
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
 
@@ -34,7 +36,7 @@ function Hero() {
         <Text style={hero.badgeText}>INSTITUTION CULTURELLE</Text>
       </View>
       {isAuthenticated && user && (
-        <Text style={hero.welcome}>Bonjour, {user.name.split(' ')[0]} 👋</Text>
+        <Text style={hero.welcome}>Bonjour, {user.name.split(' ')[0]}</Text>
       )}
       <Text style={hero.titleTop}>Préserver et transmettre</Text>
       <Text style={hero.titleBottom}>l'héritage de France</Text>
@@ -112,7 +114,7 @@ function ProchainsEvenements() {
       <View style={ev.header}>
         <Text style={ev.title}>Prochains événements</Text>
         <TouchableOpacity onPress={() => router.push('/evenements')}>
-          <Text style={ev.more}>Tout voir →</Text>
+          <LinkLabel label="Tout voir" />
         </TouchableOpacity>
       </View>
       {isLoading ? (
@@ -136,19 +138,19 @@ const ev = StyleSheet.create({
 
 // ── Nos Missions ──────────────────────────────────────────────────────────────
 
-const MISSIONS = [
+const MISSIONS: { icon: IconName; titre: string; texte: string }[] = [
   {
-    icon: '📚',
+    icon: 'book',
     titre: 'Ressources pédagogiques',
     texte: 'Des fiches, chronologies et documents soigneusement sélectionnés pour comprendre l\'histoire de France.',
   },
   {
-    icon: '🗺',
+    icon: 'map',
     titre: 'Patrimoine numérique',
     texte: 'Cartographie historique interactive et archives numériques pour explorer chaque région.',
   },
   {
-    icon: '🎓',
+    icon: 'graduation',
     titre: 'Actions éducatives',
     texte: 'Conférences, ateliers et événements pour diffuser la culture historique auprès du grand public.',
   },
@@ -162,7 +164,7 @@ function NosMissions() {
       <View style={ms.underline} />
       {MISSIONS.map((m) => (
         <View key={m.titre} style={ms.card}>
-          <Text style={ms.icon}>{m.icon}</Text>
+          <AppIcon name={m.icon} size={28} tone="gold" style={ms.iconWrap} />
           <View style={ms.cardBody}>
             <Text style={ms.cardTitle}>{m.titre}</Text>
             <Text style={ms.cardText}>{m.texte}</Text>
@@ -187,7 +189,7 @@ const ms = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
   },
-  icon: { fontSize: 28 },
+  iconWrap: { paddingTop: 2 },
   cardBody: { flex: 1, gap: 4 },
   cardTitle: { color: COLORS.textWhite, fontSize: 15, fontWeight: '700' },
   cardText: { color: COLORS.textMuted, fontSize: 13, lineHeight: 20 },

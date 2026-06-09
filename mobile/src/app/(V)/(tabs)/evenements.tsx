@@ -25,6 +25,8 @@ import { Loader } from '@/components_V/ui/Loader';
 import { EmptyState } from '@/components_V/ui/EmptyState';
 // Composant : src/components_V/PageAccessGuard.tsx
 import { PageAccessGuard } from '@/components_V/PageAccessGuard';
+// Module : src/components_V/icons/index.ts
+import { IconLabel } from '@/components_V/icons';
 // API : src/lib/api/index.ts
 import { eventsApi, type Event } from '@/lib/api';
 
@@ -151,10 +153,12 @@ function InscriptionModal({
             <ScrollView keyboardShouldPersistTaps="handled">
               {event && (
                 <View style={styles.modalEventInfo}>
-                  <Text style={styles.modalEventInfoText}>📅 {formatEventDateTime(event.date)}</Text>
-                  {event.lieu ? <Text style={styles.modalEventInfoText}>📍 {event.lieu}</Text> : null}
+                  <IconLabel name="calendar" label={formatEventDateTime(event.date)} textStyle={styles.modalEventInfoText} />
+                  {event.lieu ? (
+                    <IconLabel name="pin" label={event.lieu} textStyle={styles.modalEventInfoText} />
+                  ) : null}
                   {capacityLabel ? (
-                    <Text style={styles.modalEventInfoText}>👥 {capacityLabel}</Text>
+                    <IconLabel name="users" label={capacityLabel} textStyle={styles.modalEventInfoText} />
                   ) : null}
                 </View>
               )}

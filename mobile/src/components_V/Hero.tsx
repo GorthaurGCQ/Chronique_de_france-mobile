@@ -9,6 +9,8 @@ import Svg, { Rect, Polygon } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Module : src/components_V/icons/index.ts
+import { AppIcon } from '@/components_V/icons';
 
 export default function Hero() {
   const router = useRouter();
@@ -74,7 +76,10 @@ export default function Hero() {
           style={({ pressed }) => [styles.btnGold, pressed && { opacity: 0.8 }]}
           onPress={() => router.push('/bibliotheque')}
         >
-          <Text style={styles.btnGoldText}>📖 Accéder aux ressources</Text>
+          <View style={styles.btnGoldInner}>
+            <AppIcon name="book" size={16} tone="gold" />
+            <Text style={styles.btnGoldText}>Accéder aux ressources</Text>
+          </View>
         </Pressable>
         <Pressable
           style={({ pressed }) => [styles.btnWhite, pressed && { opacity: 0.8 }]}
@@ -147,6 +152,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 14,
     alignItems: 'center',
+  },
+  btnGoldInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   btnGoldText: {
     color: COLORS.gold,

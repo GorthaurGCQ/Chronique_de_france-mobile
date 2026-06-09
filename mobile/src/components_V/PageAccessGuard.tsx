@@ -1,10 +1,10 @@
 /** Garde d'accès page — compte requis, puis droit granulaire pour les membres. */
 // Module : node_modules/react
-import type { ComponentProps, ReactNode } from 'react';
-// Module : node_modules/@expo/vector-icons
-import { Ionicons } from '@expo/vector-icons';
+import type { ReactNode } from 'react';
 // Module : src/lib/permissions.shared.ts
 import type { Permission } from '@/lib/permissions.shared';
+// Module : src/components_V/icons/types.ts
+import type { IconName } from '@/components_V/icons/types';
 // Hook : src/hooks/useAuth.ts
 import { useAuth } from '@/hooks/useAuth';
 // Hook : src/hooks/usePermissions.ts
@@ -16,10 +16,10 @@ import { LoginRequiredScreen } from '@/components_V/LoginRequiredScreen';
 // Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
 
-const SECTION_META: Partial<Record<Permission, { title: string; icon: ComponentProps<typeof Ionicons>['name'] }>> = {
-  ACCES_BIBLIOTHEQUE: { title: 'Bibliothèque', icon: 'book-outline' },
-  ACCES_EVENEMENTS: { title: 'Événements', icon: 'calendar-outline' },
-  ACCES_REGIONS: { title: 'Régions', icon: 'map-outline' },
+const SECTION_META: Partial<Record<Permission, { title: string; icon: IconName }>> = {
+  ACCES_BIBLIOTHEQUE: { title: 'Bibliothèque', icon: 'book' },
+  ACCES_EVENEMENTS: { title: 'Événements', icon: 'calendar' },
+  ACCES_REGIONS: { title: 'Régions', icon: 'map' },
 };
 
 type Props = {

@@ -35,6 +35,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { BookmarkButton } from '@/components_V/BookmarkButton';
 // Composant : src/components_V/PageAccessGuard.tsx
 import { PageAccessGuard } from '@/components_V/PageAccessGuard';
+// Module : src/components_V/icons/index.ts
+import { IconLabel } from '@/components_V/icons';
 
 function ResourceDetailContent() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -100,14 +102,22 @@ function ResourceDetailContent() {
 
         {/* Méta */}
         <View style={styles.meta}>
-          {resource.auteur && <Text style={styles.metaText}>✍ {resource.auteur}</Text>}
+          {resource.auteur && (
+            <IconLabel name="pencil" label={resource.auteur} textStyle={styles.metaText} />
+          )}
           {resource.readingTime && (
-            <Text style={styles.metaText}>⏱ {resource.readingTime} min de lecture</Text>
+            <IconLabel
+              name="clock"
+              label={`${resource.readingTime} min de lecture`}
+              textStyle={styles.metaText}
+            />
           )}
           {resource.createdAt && (
-            <Text style={styles.metaText}>
-              📅 {new Date(resource.createdAt).toLocaleDateString('fr-FR')}
-            </Text>
+            <IconLabel
+              name="calendar"
+              label={new Date(resource.createdAt).toLocaleDateString('fr-FR')}
+              textStyle={styles.metaText}
+            />
           )}
         </View>
 

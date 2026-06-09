@@ -1,27 +1,29 @@
 /** Écran affiché lorsqu'un compte est requis pour accéder à une section. */
 // Module : node_modules/react-native
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-// Module : node_modules/@expo/vector-icons
-import { Ionicons } from '@expo/vector-icons';
 // Module : node_modules/expo-router
 import { router } from 'expo-router';
+// Module : src/components_V/icons/index.ts
+import { AppIcon } from '@/components_V/icons';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Module : src/components_V/icons/types.ts
+import type { IconName } from '@/components_V/icons/types';
 
 type Props = {
   title: string;
-  icon?: React.ComponentProps<typeof Ionicons>['name'];
+  icon?: IconName;
   message?: string;
 };
 
 export function LoginRequiredScreen({
   title,
-  icon = 'person-circle-outline',
+  icon = 'user',
   message = 'Cette section est réservée aux membres inscrits. Créez un compte ou connectez-vous pour y accéder.',
 }: Props) {
   return (
     <View style={styles.container}>
-      <Ionicons name={icon} size={64} color={COLORS.textMuted} />
+      <AppIcon name={icon} size={64} tone="muted" />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.message}>{message}</Text>
       <TouchableOpacity style={styles.primaryBtn} onPress={() => router.push('/connexion')}>

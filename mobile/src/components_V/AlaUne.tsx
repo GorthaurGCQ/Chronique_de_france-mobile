@@ -5,6 +5,8 @@ import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Module : src/components_V/icons/index.ts
+import { LinkLabel } from '@/components_V/icons';
 
 type Card = {
   gradientStart: string;
@@ -58,7 +60,7 @@ export default function AlaUne() {
           <View style={styles.underline} />
         </View>
         <Pressable onPress={() => router.push('/bibliotheque')}>
-          <Text style={styles.seeAll}>Voir tout →</Text>
+          <LinkLabel label="Voir tout" />
         </Pressable>
       </View>
 
@@ -82,7 +84,7 @@ export default function AlaUne() {
                 style={({ pressed }) => [styles.cta, pressed && { opacity: 0.7 }]}
                 onPress={() => router.push(card.ctaRoute)}
               >
-                <Text style={styles.ctaText}>{card.ctaLabel} →</Text>
+                <LinkLabel label={card.ctaLabel} textStyle={styles.ctaText} />
               </Pressable>
             </View>
           </View>

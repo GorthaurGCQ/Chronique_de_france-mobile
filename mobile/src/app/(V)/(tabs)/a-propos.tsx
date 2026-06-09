@@ -5,11 +5,13 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Linking } from 'r
 import { Ionicons } from '@expo/vector-icons';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Module : src/components_V/icons/index.ts
+import { AppIcon, type IconName } from '@/components_V/icons';
 
-const VALEURS = [
-  { icon: '📚', titre: 'Rigueur historique', texte: 'Toutes nos ressources sont sourcées et validées par des historiens et des chercheurs spécialisés.' },
-  { icon: '🌍', titre: 'Accessibilité', texte: 'Nous rendons l\'histoire accessible à tous, du grand public aux chercheurs, gratuitement.' },
-  { icon: '🏛', titre: 'Patrimoine vivant', texte: 'Le patrimoine n\'est pas un musée figé. Nous croyons à sa transmission active et à son ancrage dans le présent.' },
+const VALEURS: { icon: IconName; titre: string; texte: string }[] = [
+  { icon: 'book', titre: 'Rigueur historique', texte: 'Toutes nos ressources sont sourcées et validées par des historiens et des chercheurs spécialisés.' },
+  { icon: 'globe', titre: 'Accessibilité', texte: 'Nous rendons l\'histoire accessible à tous, du grand public aux chercheurs, gratuitement.' },
+  { icon: 'monument', titre: 'Patrimoine vivant', texte: 'Le patrimoine n\'est pas un musée figé. Nous croyons à sa transmission active et à son ancrage dans le présent.' },
 ];
 
 const EQUIPE = [
@@ -42,7 +44,7 @@ export default function AProposScreen() {
         <Text style={styles.sectionTitle}>Nos valeurs</Text>
         {VALEURS.map((v) => (
           <View key={v.titre} style={styles.valeurCard}>
-            <Text style={styles.valeurIcon}>{v.icon}</Text>
+            <AppIcon name={v.icon} size={26} tone="gold" style={styles.valeurIconWrap} />
             <View style={styles.valeurBody}>
               <Text style={styles.valeurTitre}>{v.titre}</Text>
               <Text style={styles.valeurTexte}>{v.texte}</Text>
@@ -56,13 +58,17 @@ export default function AProposScreen() {
         <Text style={styles.sectionTitle}>En chiffres</Text>
         <View style={styles.chiffresGrid}>
           {[
-            { val: '13', label: 'Régions couvertes' },
-            { val: '7', label: 'Époques historiques' },
-            { val: '6', label: 'Domaines d\'étude' },
-            { val: '∞', label: 'Passion de l\'histoire' },
+            { val: '13', label: 'Régions couvertes', icon: null as IconName | null },
+            { val: '7', label: 'Époques historiques', icon: null as IconName | null },
+            { val: '6', label: 'Domaines d\'étude', icon: null as IconName | null },
+            { val: '', label: 'Passion de l\'histoire', icon: 'crown' as IconName },
           ].map((c) => (
             <View key={c.label} style={styles.chiffreCard}>
-              <Text style={styles.chiffreVal}>{c.val}</Text>
+              {c.icon ? (
+                <AppIcon name={c.icon} size={28} tone="gold" />
+              ) : (
+                <Text style={styles.chiffreVal}>{c.val}</Text>
+              )}
               <Text style={styles.chiffreLabel}>{c.label}</Text>
             </View>
           ))}
@@ -141,7 +147,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.borderLight,
   },
-  valeurIcon: { fontSize: 28 },
+  valeurIconWrap: { paddingTop: 2 },
   valeurBody: { flex: 1, gap: 4 },
   valeurTitre: { color: COLORS.textWhite, fontSize: 15, fontWeight: '700' },
   valeurTexte: { color: COLORS.textMuted, fontSize: 13, lineHeight: 20 },

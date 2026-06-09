@@ -1,15 +1,15 @@
 /** Écran affiché lorsqu'un membre connecté n'a pas le droit requis. */
 // Module : node_modules/react-native
 import { View, Text, StyleSheet } from 'react-native';
-// Module : node_modules/@expo/vector-icons
-import { Ionicons } from '@expo/vector-icons';
+// Module : src/components_V/icons/index.ts
+import { AppIcon } from '@/components_V/icons';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 
 export function AccessDeniedScreen() {
   return (
     <View style={styles.container}>
-      <Ionicons name="lock-closed-outline" size={48} color={COLORS.textMuted} />
+      <AppIcon name="denied" size={48} tone="muted" />
       <Text style={styles.title}>Accès refusé</Text>
       <Text style={styles.message}>
         Vous n&apos;avez pas l&apos;autorisation d&apos;accéder à cette section.

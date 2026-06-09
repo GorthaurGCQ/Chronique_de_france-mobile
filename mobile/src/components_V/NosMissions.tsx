@@ -3,9 +3,11 @@
 import { View, Text, StyleSheet } from 'react-native';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Module : src/components_V/icons/index.ts
+import { AppIcon, type IconName } from '@/components_V/icons';
 
 type Mission = {
-  emoji: string;
+  icon: IconName;
   iconBg: 'navy' | 'gold';
   title: string;
   description: string;
@@ -13,19 +15,19 @@ type Mission = {
 
 const missions: Mission[] = [
   {
-    emoji: '🎓',
+    icon: 'graduation',
     iconBg: 'navy',
     title: 'Ouvrages pédagogiques',
     description: 'Nous concevons et diffusons des ouvrages, chronologies et fiches thématiques adaptés à tous les niveaux d\'enseignement.',
   },
   {
-    emoji: '📂',
+    icon: 'folder',
     iconBg: 'gold',
     title: 'Contenus numériques',
     description: 'Notre plateforme met à disposition des ressources numériques accessibles en ligne : archives, publications et documents inédits.',
   },
   {
-    emoji: '🏫',
+    icon: 'school',
     iconBg: 'navy',
     title: 'Actions éducatives',
     description: 'Nous intervenons dans les établissements scolaires et culturels pour animer ateliers, conférences et parcours pédagogiques.',
@@ -49,7 +51,11 @@ export default function NosMissions() {
         {missions.map((mission) => (
           <View key={mission.title} style={styles.card}>
             <View style={[styles.iconWrapper, mission.iconBg === 'navy' ? styles.iconNavy : styles.iconGold]}>
-              <Text style={styles.emoji}>{mission.emoji}</Text>
+              <AppIcon
+                name={mission.icon}
+                size={24}
+                tone={mission.iconBg === 'navy' ? 'gold' : 'navy'}
+              />
             </View>
             <Text style={styles.cardTitle}>{mission.title}</Text>
             <Text style={styles.cardDesc}>{mission.description}</Text>
@@ -119,9 +125,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(184,147,58,0.15)',
     borderWidth: 1,
     borderColor: COLORS.border,
-  },
-  emoji: {
-    fontSize: 22,
   },
   cardTitle: {
     color: COLORS.textWhite,

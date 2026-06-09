@@ -9,6 +9,8 @@ import { getDomaineLabel } from '@/models_M/constants/app.constants';
 import { formatEventCapacityInfo } from '@/models_M/types/event.types';
 // API : src/lib/api/index.ts
 import type { Event } from '@/lib/api';
+// Module : src/components_V/icons/index.ts
+import { IconLabel, LinkLabel } from '@/components_V/icons';
 
 const DOMAINE_COLORS: Record<string, string> = {
   PATRIMOINE_HISTOIRE: '#6b4c2a',
@@ -42,7 +44,7 @@ export function EventCard({ event, onPress, onRegister, compact = false }: Props
   })();
 
   const capacityLabel = formatEventCapacityInfo(event);
-  const registerLabel = event.complet ? "Liste d'attente →" : "S'inscrire →";
+  const registerLabel = event.complet ? "Rejoindre la liste d'attente" : "S'inscrire";
 
   return (
     <TouchableOpacity
@@ -68,13 +70,13 @@ export function EventCard({ event, onPress, onRegister, compact = false }: Props
           <Text style={styles.description} numberOfLines={2}>{event.description}</Text>
         )}
         <View style={styles.info}>
-          <Text style={styles.infoText}>📅 {formattedDate}</Text>
-          {event.lieu && <Text style={styles.infoText}>📍 {event.lieu}</Text>}
-          {capacityLabel && <Text style={styles.infoText}>👥 {capacityLabel}</Text>}
+          <IconLabel name="calendar" label={formattedDate} />
+          {event.lieu && <IconLabel name="pin" label={event.lieu} />}
+          {capacityLabel && <IconLabel name="users" label={capacityLabel} />}
         </View>
         {!compact && onRegister && (
           <TouchableOpacity style={styles.registerBtn} onPress={onRegister}>
-            <Text style={styles.registerBtnText}>{registerLabel}</Text>
+            <LinkLabel label={registerLabel} textStyle={styles.registerBtnText} />
           </TouchableOpacity>
         )}
       </View>
@@ -105,8 +107,7 @@ const styles = StyleSheet.create({
   typeBadgeText: { color: '#fff', fontSize: 10, fontWeight: '700', letterSpacing: 1 },
   title: { color: COLORS.textWhite, fontSize: 15, fontWeight: '700', lineHeight: 20 },
   description: { color: COLORS.textLight, fontSize: 13, lineHeight: 18 },
-  info: { gap: 2 },
-  infoText: { color: COLORS.textMuted, fontSize: 12 },
+  info: { gap: 4 },
   registerBtn: { alignSelf: 'flex-start', marginTop: 4 },
   registerBtnText: { color: COLORS.gold, fontSize: 13, fontWeight: '700' },
 });
