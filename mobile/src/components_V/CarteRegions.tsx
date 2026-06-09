@@ -15,6 +15,16 @@ import { REGIONS, getRegionByCode, type Region } from '@/models_M/data/regions';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 
+/** ViewBox ajusté aux bounds réels des paths + marge (Corse, Bretagne, etc.). */
+const MAP_VIEWBOX = {
+  x: -38,
+  y: 34,
+  width: 652,
+  height: 620,
+} as const;
+
+const MAP_ASPECT_RATIO = MAP_VIEWBOX.height / MAP_VIEWBOX.width;
+
 type Props = {
   selectedCode?: string | null;
   onSelectRegion?: (region: Region | null) => void;
@@ -24,6 +34,7 @@ export default function CarteRegions({ selectedCode = null, onSelectRegion }: Pr
   const router = useRouter();
   const { width } = useWindowDimensions();
   const mapSize = Math.min(width - 32, 420);
+  const mapHeight = mapSize * MAP_ASPECT_RATIO;
   const selectedRegion = selectedCode ? getRegionByCode(selectedCode) ?? null : null;
 
   function handleRegionPress(code: string) {
@@ -50,11 +61,13 @@ export default function CarteRegions({ selectedCode = null, onSelectRegion }: Pr
         </View>
       </View>
 
-      <View style={styles.mapCard}>
+      <View style={styles.mapCard} collapsable={false}>
         <Svg
-          viewBox="0 0 600 680"
+          viewBox={`${MAP_VIEWBOX.x} ${MAP_VIEWBOX.y} ${MAP_VIEWBOX.width} ${MAP_VIEWBOX.height}`}
           width={mapSize}
-          height={mapSize * (680 / 600)}
+          height={mapHeight}
+          preserveAspectRatio="xMidYMid meet"
+          pointerEvents="box-none"
         >
           {FRANCE_SVG_PATHS.map(({ code, d }) => {
             const region = getRegionByCode(code);
@@ -71,7 +84,8 @@ export default function CarteRegions({ selectedCode = null, onSelectRegion }: Pr
                 stroke={isSelected ? COLORS.textWhite : '#ffffff'}
                 strokeWidth={isSelected ? 2.5 : 1.2}
                 opacity={isSelected ? 1 : 0.85}
-                onPress={() => handleRegionPress(code)}
+                // onPressIn : contournement Android + nouvelle arch. (Expo 54) — onPress ne se déclenche pas sur appareil réel
+                onPressIn={() => handleRegionPress(code)}
               />
             );
           })}
@@ -145,12 +159,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
     maxWidth: '100%',
-    overflow: 'hidden',
     backgroundColor: COLORS.bgCard,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: COLORS.border,
-    paddingVertical: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 12,
   },
   panel: {
     backgroundColor: COLORS.bgCard,

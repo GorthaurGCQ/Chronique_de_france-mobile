@@ -1,4 +1,6 @@
 ﻿/** Point d'entrée racine — fonts, React Query, thème sombre, init auth au démarrage. */
+// Module : node_modules/react-native-gesture-handler
+import 'react-native-gesture-handler';
 // Module : node_modules/@expo/vector-icons/FontAwesome
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 // Module : node_modules/@react-navigation/native
@@ -13,6 +15,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 // Module : node_modules/react-native
 import { StatusBar } from 'react-native';
+// Module : node_modules/react-native-safe-area-context
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 // Module : node_modules/react-native-reanimated
 import 'react-native-reanimated';
 // Module : node_modules/@tanstack/react-query
@@ -79,13 +83,15 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider value={ChroniquesTheme}>
-        <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
-        <Stack>
-          <Stack.Screen name="(V)" options={{ headerShown: false }} />
-        </Stack>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider value={ChroniquesTheme}>
+          <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+          <Stack>
+            <Stack.Screen name="(V)" options={{ headerShown: false }} />
+          </Stack>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </SafeAreaProvider>
   );
 }

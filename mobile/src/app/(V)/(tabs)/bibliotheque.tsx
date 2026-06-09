@@ -96,6 +96,8 @@ export default function BibliothequéScreen() {
         renderItem={({ item }) => <ResourceCard resource={item} showBookmark />}
         style={styles.listScroll}
         contentContainerStyle={styles.list}
+        removeClippedSubviews={false}
+        nestedScrollEnabled
         ListHeaderComponent={
           <>
             <View style={styles.header}>
@@ -107,10 +109,12 @@ export default function BibliothequéScreen() {
               </Text>
             </View>
 
-            <CarteRegions
-              selectedCode={selectedRegion?.code ?? null}
-              onSelectRegion={handleRegionSelect}
-            />
+            <View collapsable={false}>
+              <CarteRegions
+                selectedCode={selectedRegion?.code ?? null}
+                onSelectRegion={handleRegionSelect}
+              />
+            </View>
 
             <View style={styles.resourcesHeader}>
               <Text style={styles.resourcesTitle}>{sectionTitle}</Text>
