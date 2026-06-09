@@ -25,6 +25,8 @@ import {
   detectMediaKind,
   getEmbedUrl,
   getMediaKindLabel,
+  buildEmbedWebViewDocument,
+  getEmbedOrigin,
 } from '@/lib/services/media.service';
 
 type Props = {
@@ -121,7 +123,8 @@ function WebEmbedFrame({ embedUrl }: { embedUrl: string }) {
           height: '100%',
           border: 'none',
         }}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; web-share"
+        referrerPolicy="strict-origin-when-cross-origin"
         allowFullScreen
         title="Média associé"
       />
@@ -133,17 +136,27 @@ function NativeEmbedWebView({ embedUrl }: { embedUrl: string }) {
   const [isLoading, setIsLoading] = useState(true);
   // Module : node_modules/react-native-webview (require — chargement conditionnel natif)
   const { WebView } = require('react-native-webview') as typeof import('react-native-webview');
+  const { html, baseUrl } = buildEmbedWebViewDocument(embedUrl);
+  const referer = getEmbedOrigin();
 
   return (
     <View style={styles.videoContainer}>
       <WebView
-        source={{ uri: embedUrl }}
+        source={{
+          html,
+          baseUrl,
+          headers: { Referer: referer },
+        }}
         style={styles.webview}
         allowsFullscreenVideo
         allowsInlineMediaPlayback
         mediaPlaybackRequiresUserAction={false}
         javaScriptEnabled
         domStorageEnabled
+        sharedCookiesEnabled
+        thirdPartyCookiesEnabled
+        setSupportMultipleWindows={false}
+        originWhitelist={['*']}
         onLoadEnd={() => setIsLoading(false)}
       />
       {isLoading && (
