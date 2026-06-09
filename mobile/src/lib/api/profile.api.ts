@@ -10,8 +10,17 @@ import { useAuthStore } from '@/store/authStore';
 import { ApiError, apiFetch, apiJson } from '@/lib/api/client.api';
 // Service : src/lib/services/mappers.service.ts
 import { mapHistoryItem } from '@/lib/services/mappers.service';
+// Module : src/lib/permissions.shared.ts
+import type { Permission } from '@/lib/permissions.shared';
+
+export type ProfileAccess = {
+  role: string;
+  permissions: Permission[];
+};
 
 export const profileApi = {
+  getAccess: () => apiJson<ProfileAccess>('/profile/access'),
+
   get: async (): Promise<Profile> => {
     const user = useAuthStore.getState().user;
     if (!user) throw new ApiError(401, 'Non authentifié');

@@ -33,8 +33,10 @@ import { profileApi } from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
 // Composant : src/components_V/BookmarkButton.tsx
 import { BookmarkButton } from '@/components_V/BookmarkButton';
+// Composant : src/components_V/PageAccessGuard.tsx
+import { PageAccessGuard } from '@/components_V/PageAccessGuard';
 
-export default function ResourceDetailScreen() {
+function ResourceDetailContent() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: resource, isLoading, isError } = useResource(id ?? '');
   const { isAuthenticated } = useAuth();
@@ -128,6 +130,14 @@ export default function ResourceDetailScreen() {
         )}
       </View>
     </ScrollView>
+  );
+}
+
+export default function ResourceDetailScreen() {
+  return (
+    <PageAccessGuard permission="ACCES_BIBLIOTHEQUE">
+      <ResourceDetailContent />
+    </PageAccessGuard>
   );
 }
 

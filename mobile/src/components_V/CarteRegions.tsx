@@ -14,6 +14,10 @@ import { FRANCE_SVG_PATHS } from '@/models_M/data/france-svg-paths';
 import { REGIONS, getRegionByCode, type Region } from '@/models_M/data/regions';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useAuth.ts
+import { useAuth } from '@/hooks/useAuth';
+// Hook : src/hooks/usePermissions.ts
+import { usePermissions } from '@/hooks/usePermissions';
 
 /** ViewBox ajusté aux bounds réels des paths + marge (Corse, Bretagne, etc.). */
 const MAP_VIEWBOX = {
@@ -33,9 +37,14 @@ type Props = {
 export default function CarteRegions({ selectedCode = null, onSelectRegion }: Props) {
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const { isAuthenticated } = useAuth();
+  const { canAccessPage, permissionsReady } = usePermissions();
   const mapSize = Math.min(width - 32, 420);
   const mapHeight = mapSize * MAP_ASPECT_RATIO;
   const selectedRegion = selectedCode ? getRegionByCode(selectedCode) ?? null : null;
+
+  const canNavigateRegions =
+    !isAuthenticated || !permissionsReady || canAccessPage('ACCES_REGIONS');
 
   function handleRegionPress(code: string) {
     const region = getRegionByCode(code);
@@ -45,7 +54,7 @@ export default function CarteRegions({ selectedCode = null, onSelectRegion }: Pr
   }
 
   function handleExploreRegion() {
-    if (!selectedRegion) return;
+    if (!selectedRegion || !canNavigateRegions) return;
     router.push(`/regions/${selectedRegion.id}` as never);
   }
 
@@ -113,12 +122,14 @@ export default function CarteRegions({ selectedCode = null, onSelectRegion }: Pr
               >
                 <Text style={styles.btnSecondaryText}>France entière</Text>
               </Pressable>
+              {canNavigateRegions && (
               <Pressable
                 style={({ pressed }) => [styles.btnPrimary, pressed && { opacity: 0.85 }]}
                 onPress={handleExploreRegion}
               >
                 <Text style={styles.btnPrimaryText}>Explorer la région →</Text>
               </Pressable>
+              )}
             </View>
           </View>
         </View>

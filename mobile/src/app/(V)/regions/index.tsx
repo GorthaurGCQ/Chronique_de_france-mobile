@@ -7,8 +7,10 @@ import { COLORS } from '@/models_M/constants/Colors';
 import { REGIONS_CONTENT } from '@/models_M/data/regionsContent';
 // Composant : src/components_V/RegionCard.tsx
 import { RegionCard } from '@/components_V/RegionCard';
+// Composant : src/components_V/PageAccessGuard.tsx
+import { PageAccessGuard } from '@/components_V/PageAccessGuard';
 
-export default function RegionsScreen() {
+function RegionsContent() {
   // Regroupe par paires pour affichage en grille 2 colonnes
   const pairs = [];
   for (let i = 0; i < REGIONS_CONTENT.length; i += 2) {
@@ -43,6 +45,14 @@ export default function RegionsScreen() {
         contentContainerStyle={styles.list}
       />
     </View>
+  );
+}
+
+export default function RegionsScreen() {
+  return (
+    <PageAccessGuard permission="ACCES_REGIONS">
+      <RegionsContent />
+    </PageAccessGuard>
   );
 }
 

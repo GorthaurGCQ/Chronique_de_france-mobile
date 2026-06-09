@@ -1,28 +1,17 @@
 /**
- * Système RBAC granulaire — permissions custom par utilisateur (JSON en base).
- * DEFAULT_PAGE_PERMISSIONS = droits de base pour tout membre connecté.
+ * UI permissions — groupes pour la modal admin.
+ * Logique métier : src/lib/permissions.shared.ts
  */
-export type Permission =
-  | 'CREER_RESSOURCES'
-  | 'MODIFIER_RESSOURCES'
-  | 'SUPPRIMER_RESSOURCES'
-  | 'IMPORTER_MEDIAS'
-  | 'VOIR_TABLEAU_BORD'
-  | 'GERER_UTILISATEURS'
-  | 'GERER_RESSOURCES_ADMIN'
-  | 'ACCES_EVENEMENTS'
-  | 'ACCES_BIBLIOTHEQUE'
-  | 'ACCES_REGIONS';
-
-export const DEFAULT_PAGE_PERMISSIONS: Permission[] = [
-  'ACCES_BIBLIOTHEQUE',
-  'ACCES_REGIONS',
-  'ACCES_EVENEMENTS',
-];
+// Module : src/lib/permissions.shared.ts
+export type { Permission } from '@/lib/permissions.shared';
+export {
+  parsePermissions,
+  DEFAULT_MEMBER_PAGE_PERMISSIONS,
+} from '@/lib/permissions.shared';
 
 export const PERMISSION_GROUPS: {
   label: string;
-  items: { key: Permission; label: string; desc: string }[];
+  items: { key: import('@/lib/permissions.shared').Permission; label: string; desc: string }[];
 }[] = [
   {
     label: 'Ressources',
@@ -50,11 +39,3 @@ export const PERMISSION_GROUPS: {
     ],
   },
 ];
-
-export function parsePermissions(raw: string | null | undefined): Permission[] {
-  try {
-    return JSON.parse(raw ?? '[]') as Permission[];
-  } catch {
-    return [];
-  }
-}

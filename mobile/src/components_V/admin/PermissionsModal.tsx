@@ -11,7 +11,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/models_M/constants/Colors';
 // Modèle : src/models_M/constants/permissions.ts
 import {
-  DEFAULT_PAGE_PERMISSIONS,
   PERMISSION_GROUPS,
   parsePermissions,
   type Permission,
@@ -39,12 +38,12 @@ const ROLES = [
 
 export function PermissionsModal({ user, onClose, onSave, isSaving }: Props) {
   const [role, setRole] = useState('user');
-  const [perms, setPerms] = useState<Permission[]>(DEFAULT_PAGE_PERMISSIONS);
+  const [perms, setPerms] = useState<Permission[]>([]);
 
   useEffect(() => {
     if (!user) return;
     setRole(user.role ?? 'user');
-    setPerms(Array.from(new Set([...DEFAULT_PAGE_PERMISSIONS, ...parsePermissions(user.customPermissions)])));
+    setPerms(parsePermissions(user.customPermissions));
   }, [user]);
 
   const toggle = (p: Permission) => {

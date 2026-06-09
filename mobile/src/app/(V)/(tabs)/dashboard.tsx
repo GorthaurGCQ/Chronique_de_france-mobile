@@ -1,6 +1,6 @@
 ﻿/**
  * Espace membre — 6 sections : profil, sécurité, stats, favoris, historique, préférences.
- * Point d'entrée admin si isAdmin (lien vers /admin).
+ * Point d'entrée admin si hasAdminPanelAccess (lien vers /admin).
  */
 // Module : node_modules/react
 import { useState, useEffect } from 'react';
@@ -496,7 +496,7 @@ function PreferencesSection() {
 // ── Ecran principal ──────────────────────────────────────────────────────────
 
 export default function DashboardScreen() {
-  const { user, isLoading, isAuthenticated, logout, isAdmin } = useAuth();
+  const { user, isLoading, isAuthenticated, logout, hasAdminPanelAccess } = useAuth();
   const [section, setSection] = useState<Section>('profil');
 
   if (isLoading) {
@@ -564,7 +564,7 @@ export default function DashboardScreen() {
       </View>
 
       {/* Bouton admin */}
-      {isAdmin && (
+      {hasAdminPanelAccess && (
         <TouchableOpacity style={styles.adminBtn} onPress={() => router.push('/admin')}>
           <Ionicons name="shield-checkmark" size={16} color={COLORS.bg} />
           <Text style={styles.adminBtnText}>Panneau administrateur</Text>

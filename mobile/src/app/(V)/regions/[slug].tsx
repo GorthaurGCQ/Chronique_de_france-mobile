@@ -21,10 +21,12 @@ import { FilterBar } from '@/components_V/FilterBar';
 import { Loader } from '@/components_V/ui/Loader';
 // Composant : src/components_V/ui/EmptyState.tsx
 import { EmptyState } from '@/components_V/ui/EmptyState';
+// Composant : src/components_V/PageAccessGuard.tsx
+import { PageAccessGuard } from '@/components_V/PageAccessGuard';
 // Modèle : src/models_M/constants/app.constants.ts
 import { LEGACY_TO_WEB_REGION, type DomaineId, type EpoqueId, type ResourceTypeId } from '@/models_M/constants/app.constants';
 
-export default function RegionDetailScreen() {
+function RegionDetailContent() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const region = getRegionBySlug(slug ?? '');
   const [type, setType] = useState<ResourceTypeId | ''>('');
@@ -111,6 +113,14 @@ export default function RegionDetailScreen() {
         )}
       </View>
     </ScrollView>
+  );
+}
+
+export default function RegionDetailScreen() {
+  return (
+    <PageAccessGuard permission="ACCES_REGIONS">
+      <RegionDetailContent />
+    </PageAccessGuard>
   );
 }
 

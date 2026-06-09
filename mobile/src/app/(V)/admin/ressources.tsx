@@ -12,6 +12,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/models_M/constants/Colors';
 // Hook : src/hooks/useAdmin.ts
 import { useAdminResources, useAdminCreateResource, useAdminUpdateResource, useAdminDeleteResource } from '@/hooks/useAdmin';
+// Hook : src/hooks/usePermissions.ts
+import { usePermissions } from '@/hooks/usePermissions';
 // Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
 // API : src/lib/api/index.ts
@@ -49,11 +51,13 @@ function ResourceForm({
   onSave,
   onClose,
   isSaving,
+  allowImport,
 }: {
   initial: FormData;
   onSave: (data: FormData) => void;
   onClose: () => void;
   isSaving: boolean;
+  allowImport: boolean;
 }) {
   const [form, setForm] = useState<FormData>(initial);
   const set = (k: keyof FormData, v: string) => setForm((p) => ({ ...p, [k]: v }));
@@ -90,7 +94,9 @@ function ResourceForm({
         {renderSelect('Époque', 'epoque', EPOQUES)}
         {renderSelect('Domaine', 'domaine', DOMAINES)}
         {renderSelect('Région', 'region', REGIONS_LIST.map((r) => ({ id: r.code, label: r.nom })))}
-        <ImageUploadField label="Miniature" value={form.imageUrl} onChange={(v) => set('imageUrl', v)} />
+        {allowImport && (
+          <ImageUploadField label="Miniature" value={form.imageUrl} onChange={(v) => set('imageUrl', v)} />
+        )}
         <Text style={fs.label}>Contenu détaillé (optionnel)</Text>
         <Text style={fs.hint}>Texte libre — pas besoin de balises HTML. Mise en forme avancée : admin web.</Text>
         <TextInput
@@ -132,7 +138,28 @@ export default function AdminRessources() {
   const create = useAdminCreateResource();
   const update = useAdminUpdateResource();
   const del = useAdminDeleteResource();
+  const {
+    canCreateResource,
+    canEditResource,
+    canDeleteResource,
+    canImportMedia,
+  } = usePermissions();
   const [editing, setEditing] = useState<Resource | null | 'new'>(null);
+
+  const allowCreate = canCreateResource();
+  const allowEdit = canEditResource();
+  const allowDelete = canDeleteResource();
+  const allowImport = canImportMedia();
+
+  const openCreate = () => {
+    if (!allowCreate) return;
+    setEditing('new');
+  };
+
+  const openEdit = (item: Resource) => {
+    if (!allowEdit) return;
+    setEditing(item);
+  };
 
   const handleSave = async (form: FormData) => {
     if (
@@ -174,21 +201,30 @@ export default function AdminRessources() {
               <Text style={styles.rowTitle} numberOfLines={1}>{item.title}</Text>
               <Text style={styles.rowMeta}>{getResourceTypeLabel(item.type)} • {item.epoque ? getEpoqueLabel(item.epoque) : '—'}</Text>
             </View>
-            <TouchableOpacity style={styles.iconBtn} onPress={() => setEditing(item)}>
-              <Ionicons name="pencil" size={18} color={COLORS.gold} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iconBtn} onPress={() => handleDelete(item)}>
-              <Ionicons name="trash" size={18} color="#e74c3c" />
-            </TouchableOpacity>
+            {allowEdit && (
+              <TouchableOpacity style={styles.iconBtn} onPress={() => openEdit(item)}>
+                <Ionicons name="pencil" size={18} color={COLORS.gold} />
+              </TouchableOpacity>
+            )}
+            {allowDelete && (
+              <TouchableOpacity style={styles.iconBtn} onPress={() => handleDelete(item)}>
+                <Ionicons name="trash" size={18} color="#e74c3c" />
+              </TouchableOpacity>
+            )}
+            {!allowEdit && !allowDelete && (
+              <Text style={styles.readOnly}>Lecture seule</Text>
+            )}
           </View>
         )}
         ListHeaderComponent={
           <View style={styles.header}>
             <Text style={styles.title}>Ressources ({resources?.length ?? 0})</Text>
-            <TouchableOpacity style={styles.addBtn} onPress={() => setEditing('new')}>
-              <Ionicons name="add" size={18} color={COLORS.bg} />
-              <Text style={styles.addBtnText}>Ajouter</Text>
-            </TouchableOpacity>
+            {allowCreate && (
+              <TouchableOpacity style={styles.addBtn} onPress={openCreate}>
+                <Ionicons name="add" size={18} color={COLORS.bg} />
+                <Text style={styles.addBtnText}>Ajouter</Text>
+              </TouchableOpacity>
+            )}
           </View>
         }
         contentContainerStyle={styles.list}
@@ -210,6 +246,7 @@ export default function AdminRessources() {
             onSave={handleSave}
             onClose={() => setEditing(null)}
             isSaving={create.isPending || update.isPending}
+            allowImport={allowImport}
           />
         )}
       </Modal>
@@ -239,4 +276,5 @@ const styles = StyleSheet.create({
   rowTitle: { color: COLORS.textWhite, fontSize: 14, fontWeight: '600' },
   rowMeta: { color: COLORS.textMuted, fontSize: 11 },
   iconBtn: { padding: 4 },
+  readOnly: { color: COLORS.textMuted, fontSize: 11, fontStyle: 'italic' },
 });

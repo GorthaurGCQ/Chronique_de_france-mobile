@@ -25,6 +25,8 @@ import { EmptyState } from '@/components_V/ui/EmptyState';
 import CarteRegions from '@/components_V/CarteRegions';
 // Composant : src/components_V/FriseChronologique.tsx
 import { FriseChronologique } from '@/components_V/FriseChronologique';
+// Composant : src/components_V/PageAccessGuard.tsx
+import { PageAccessGuard } from '@/components_V/PageAccessGuard';
 // Modèle : src/models_M/data/regions.ts
 import type { Region } from '@/models_M/data/regions';
 // Modèle : src/models_M/constants/app.constants.ts
@@ -91,6 +93,7 @@ export default function BibliothequéScreen() {
   }
 
   return (
+    <PageAccessGuard permission="ACCES_BIBLIOTHEQUE">
     <View style={styles.container}>
       <FlatList
         data={resources}
@@ -179,6 +182,7 @@ export default function BibliothequéScreen() {
         }
       />
     </View>
+    </PageAccessGuard>
   );
 }
 

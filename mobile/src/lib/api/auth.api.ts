@@ -33,7 +33,7 @@ export const authApi = {
     return body;
   },
 
-  signOut: () => apiJson<void>('/auth/sign-out', { method: 'POST' }),
+  signOut: () => apiJson<void>('/auth/sign-out', { method: 'POST', body: '{}' }),
 
   getSession: async () => {
     const res = await apiFetch('/auth/get-session');

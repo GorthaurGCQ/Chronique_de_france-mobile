@@ -21,6 +21,10 @@ import { usePathname, withLayoutContext } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useAuth.ts
+import { useAuth } from '@/hooks/useAuth';
+// Hook : src/hooks/usePermissions.ts
+import { usePermissions } from '@/hooks/usePermissions';
 
 const { Navigator } = createMaterialTopTabNavigator();
 
@@ -64,6 +68,13 @@ export default function TabLayout() {
   const pathname = usePathname();
   const tabBarHeight = 60 + insets.bottom;
   const headerTitle = getTabHeaderTitle(pathname);
+  const { isAuthenticated } = useAuth();
+  const { canAccessPage, permissionsReady } = usePermissions();
+
+  const showBibliotheque =
+    !isAuthenticated || (permissionsReady && canAccessPage('ACCES_BIBLIOTHEQUE'));
+  const showEvenements =
+    !isAuthenticated || (permissionsReady && canAccessPage('ACCES_EVENEMENTS'));
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -108,7 +119,8 @@ export default function TabLayout() {
           options={{
             title: 'Bibliothèque',
             tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
-            swipeEnabled: true,
+            swipeEnabled: showBibliotheque,
+            ...(showBibliotheque ? {} : { tabBarButton: () => null }),
           }}
         />
         <SwipeTabs.Screen
@@ -116,6 +128,8 @@ export default function TabLayout() {
           options={{
             title: 'Événements',
             tabBarIcon: ({ color }) => <TabBarIcon name="calendar" color={color} />,
+            swipeEnabled: showEvenements,
+            ...(showEvenements ? {} : { tabBarButton: () => null }),
           }}
         />
         <SwipeTabs.Screen

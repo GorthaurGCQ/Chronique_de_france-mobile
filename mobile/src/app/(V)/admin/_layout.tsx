@@ -1,9 +1,9 @@
 ﻿/**
- * Layout admin — garde d'accès (isAdmin) + navigation horizontale pleine largeur (mobile).
- * Redirige vers /dashboard si non authentifié ou non admin.
+ * Layout admin — garde d'accès (hasAdminPanelAccess) + navigation filtrée par droits.
+ * Redirige vers /dashboard si accès interdit ou route non autorisée.
  */
 // Module : node_modules/react
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 // Module : node_modules/react-native
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 // Module : node_modules/expo-router
@@ -16,32 +16,74 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '@/models_M/constants/Colors';
 // Hook : src/hooks/useAuth.ts
 import { useAuth } from '@/hooks/useAuth';
+// Hook : src/hooks/usePermissions.ts
+import { usePermissions } from '@/hooks/usePermissions';
 // Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
 
 const NAV_ITEMS = [
-  { label: 'Dashboard', icon: 'stats-chart' as const, route: '/admin' },
-  { label: 'Utilisateurs', icon: 'people' as const, route: '/admin/utilisateurs' },
-  { label: 'Ressources', icon: 'book' as const, route: '/admin/ressources' },
-  { label: 'Événements', icon: 'calendar' as const, route: '/admin/evenements' },
-  { label: 'Journal', icon: 'document-text' as const, route: '/admin/journal' },
+  { label: 'Dashboard', icon: 'stats-chart' as const, route: '/admin', adminOnly: false },
+  { label: 'Utilisateurs', icon: 'people' as const, route: '/admin/utilisateurs', adminOnly: false },
+  { label: 'Ressources', icon: 'book' as const, route: '/admin/ressources', adminOnly: false },
+  { label: 'Événements', icon: 'calendar' as const, route: '/admin/evenements', adminOnly: true },
+  { label: 'Journal', icon: 'document-text' as const, route: '/admin/journal', adminOnly: true },
 ];
 
 export default function AdminLayout() {
-  const { isLoading, isAdmin, isAuthenticated } = useAuth();
+  const { isLoading, isAuthenticated } = useAuth();
+  const {
+    permissionsReady,
+    isPrivileged,
+    hasAdminPanelAccess,
+    canAccessAdminRoute,
+    isLoadingPermissions,
+  } = usePermissions();
   const segments = useSegments();
   const insets = useSafeAreaInsets();
 
-  useEffect(() => {
-    if (!isLoading && (!isAuthenticated || !isAdmin)) {
-      router.replace('/dashboard');
-    }
-  }, [isLoading, isAuthenticated, isAdmin]);
-
-  if (isLoading) return <Loader />;
-  if (!isAdmin) return null;
-
   const currentPath = '/' + segments.join('/');
+
+  const visibleItems = useMemo(() => {
+    if (isPrivileged) return NAV_ITEMS;
+    return NAV_ITEMS.filter((item) => {
+      if (item.adminOnly) return false;
+      return canAccessAdminRoute(item.route);
+    });
+  }, [isPrivileged, canAccessAdminRoute]);
+
+  const canViewCurrentPage =
+    isPrivileged || canAccessAdminRoute(currentPath);
+
+  useEffect(() => {
+    if (isLoading || !permissionsReady) return;
+
+    if (!isAuthenticated) {
+      router.replace('/connexion');
+      return;
+    }
+
+    if (!hasAdminPanelAccess) {
+      router.replace('/dashboard');
+      return;
+    }
+
+    if (!canViewCurrentPage && visibleItems.length > 0) {
+      router.replace(visibleItems[0].route as never);
+    }
+  }, [
+    isLoading,
+    permissionsReady,
+    isAuthenticated,
+    hasAdminPanelAccess,
+    canViewCurrentPage,
+    visibleItems,
+  ]);
+
+  if (isLoading || (isAuthenticated && !isPrivileged && (isLoadingPermissions || !permissionsReady))) {
+    return <Loader />;
+  }
+
+  if (!isAuthenticated || !hasAdminPanelAccess) return null;
 
   return (
     <View style={styles.root}>
@@ -65,7 +107,7 @@ export default function AdminLayout() {
         style={styles.navScroll}
         contentContainerStyle={styles.navRow}
       >
-        {NAV_ITEMS.map((item) => {
+        {visibleItems.map((item) => {
           const isActive =
             currentPath === item.route
             || (item.route !== '/admin' && currentPath.startsWith(item.route));

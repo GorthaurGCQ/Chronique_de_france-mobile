@@ -23,6 +23,8 @@ import { EventCard } from '@/components_V/EventCard';
 import { Loader } from '@/components_V/ui/Loader';
 // Composant : src/components_V/ui/EmptyState.tsx
 import { EmptyState } from '@/components_V/ui/EmptyState';
+// Composant : src/components_V/PageAccessGuard.tsx
+import { PageAccessGuard } from '@/components_V/PageAccessGuard';
 // API : src/lib/api/index.ts
 import { eventsApi, type Event } from '@/lib/api';
 
@@ -237,6 +239,7 @@ export default function EvenementsScreen() {
   };
 
   return (
+    <PageAccessGuard permission="ACCES_EVENEMENTS">
     <View style={styles.container}>
       <SectionList
         sections={sections}
@@ -288,6 +291,7 @@ export default function EvenementsScreen() {
         onRegistered={() => queryClient.invalidateQueries({ queryKey: ['events'] })}
       />
     </View>
+    </PageAccessGuard>
   );
 }
 

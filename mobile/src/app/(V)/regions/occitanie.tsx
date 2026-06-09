@@ -11,6 +11,8 @@ import { useRouter } from 'expo-router';
 import { COLORS } from '@/models_M/constants/Colors';
 // Modèle : src/models_M/data/occitaniaData.ts
 import { OCCITANIE_INFO, OCCITANIE_CATEGORIES, OCCITANIE_CARDS } from '@/models_M/data/occitaniaData';
+// Composant : src/components_V/PageAccessGuard.tsx
+import { PageAccessGuard } from '@/components_V/PageAccessGuard';
 
 const EPOQUES = [
   { id: 'ANTIQUITÉ',     label: 'Antiquité',    date: 'av. J.-C. – Ve s.' },
@@ -23,6 +25,14 @@ const EPOQUES = [
 ] as const;
 
 export default function OccitanieScreen() {
+  return (
+    <PageAccessGuard permission="ACCES_REGIONS">
+      <OccitanieContent />
+    </PageAccessGuard>
+  );
+}
+
+function OccitanieContent() {
   const router = useRouter();
   const [catIdx, setCatIdx] = useState(0);
   const [epoqueFilter, setEpoqueFilter] = useState<string | null>(null);

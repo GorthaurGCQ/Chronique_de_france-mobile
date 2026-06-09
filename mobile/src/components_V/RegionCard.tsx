@@ -7,17 +7,32 @@ import { router } from 'expo-router';
 import { COLORS } from '@/models_M/constants/Colors';
 // Modèle : src/models_M/data/regionsContent.ts
 import type { RegionContent } from '@/models_M/data/regionsContent';
+// Hook : src/hooks/useAuth.ts
+import { useAuth } from '@/hooks/useAuth';
+// Hook : src/hooks/usePermissions.ts
+import { usePermissions } from '@/hooks/usePermissions';
 
 type Props = {
   region: RegionContent;
 };
 
 export function RegionCard({ region }: Props) {
+  const { isAuthenticated } = useAuth();
+  const { canAccessPage, permissionsReady } = usePermissions();
+
+  const canNavigate =
+    !isAuthenticated || !permissionsReady || canAccessPage('ACCES_REGIONS');
+
+  const handlePress = () => {
+    if (!canNavigate) return;
+    router.push(`/regions/${region.slug}`);
+  };
+
   return (
     <TouchableOpacity
-      style={styles.card}
-      activeOpacity={0.85}
-      onPress={() => router.push(`/regions/${region.slug}`)}
+      style={[styles.card, !canNavigate && styles.cardDisabled]}
+      activeOpacity={canNavigate ? 0.85 : 1}
+      onPress={handlePress}
     >
       {/* Bande couleur */}
       <View style={[styles.colorBar, { backgroundColor: region.couleur }]} />
@@ -44,6 +59,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     minHeight: 110,
   },
+  cardDisabled: { opacity: 0.5 },
   colorBar: { height: 6 },
   body: { padding: 12, gap: 4, flex: 1 },
   nom: { color: COLORS.textWhite, fontSize: 14, fontWeight: '700', lineHeight: 18 },
