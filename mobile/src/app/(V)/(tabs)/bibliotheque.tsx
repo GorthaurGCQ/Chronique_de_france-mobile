@@ -3,8 +3,10 @@
 import { useState, useEffect, useMemo } from 'react';
 // Module : node_modules/react-native
 import {
-  View, Text, FlatList, StyleSheet, TouchableOpacity,
+  View, Text, StyleSheet, TouchableOpacity,
 } from 'react-native';
+// Module : node_modules/react-native-gesture-handler
+import { FlatList } from 'react-native-gesture-handler';
 // Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 // Hook : src/hooks/useResources.ts

@@ -3,6 +3,8 @@
 import React from 'react';
 // Module : node_modules/react-native
 import { StyleSheet, Text, View } from 'react-native';
+// Module : node_modules/react-native-gesture-handler
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // Module : node_modules/@react-navigation/native
 import type { ParamListBase, TabNavigationState } from '@react-navigation/native';
 // Module : node_modules/@react-navigation/material-top-tabs
@@ -64,7 +66,7 @@ export default function TabLayout() {
   const headerTitle = getTabHeaderTitle(pathname);
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <TabHeader title={headerTitle} paddingTop={insets.top} />
       <SwipeTabs
         tabBarPosition="bottom"
@@ -98,6 +100,7 @@ export default function TabLayout() {
           options={{
             title: 'Accueil',
             tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+            swipeEnabled: true,
           }}
         />
         <SwipeTabs.Screen
@@ -105,7 +108,7 @@ export default function TabLayout() {
           options={{
             title: 'Bibliothèque',
             tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
-            swipeEnabled: false,
+            swipeEnabled: true,
           }}
         />
         <SwipeTabs.Screen
@@ -130,7 +133,7 @@ export default function TabLayout() {
           }}
         />
       </SwipeTabs>
-    </View>
+    </GestureHandlerRootView>
   );
 }
 

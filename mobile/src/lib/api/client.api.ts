@@ -25,6 +25,11 @@ async function buildHeaders(extra?: Record<string, string>): Promise<Record<stri
     'Content-Type': 'application/json',
     ...extra,
   };
+  // Better Auth exige Origin sur les POST (CSRF) ; fetch React Native ne l'envoie pas.
+  if (Platform.OS !== 'web') {
+    headers['Origin'] = API_URL;
+    headers['expo-origin'] = 'mobile://';
+  }
   const token = await getStoredToken();
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;

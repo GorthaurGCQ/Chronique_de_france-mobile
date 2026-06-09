@@ -104,6 +104,20 @@ function ProfilSection() {
     }
   };
 
+  const handleLogout = () => {
+    Alert.alert(
+      'Déconnexion',
+      'Voulez-vous vous déconnecter ?',
+      [
+        { text: 'Annuler', style: 'cancel' },
+        {
+          text: 'Se déconnecter',
+          onPress: () => logout(),
+        },
+      ],
+    );
+  };
+
   const handleDeleteAccount = () => {
     Alert.alert(
       'Supprimer le compte',
@@ -218,6 +232,14 @@ function ProfilSection() {
       <Text style={s.label}>Rôle</Text>
       <View style={s.fieldRow}>
         <Text style={[s.fieldValue, { color: COLORS.gold }]}>{displayRole}</Text>
+      </View>
+
+      <View style={s.accountActions}>
+        <Text style={s.accountActionsTitle}>Mon compte</Text>
+        <TouchableOpacity style={s.logoutAccountBtn} onPress={handleLogout}>
+          <Ionicons name="log-out-outline" size={18} color={COLORS.textWhite} />
+          <Text style={s.logoutAccountBtnText}>Se déconnecter</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={s.dangerZone}>
@@ -498,6 +520,20 @@ export default function DashboardScreen() {
     );
   }
 
+  const handleLogout = () => {
+    Alert.alert(
+      'Déconnexion',
+      'Voulez-vous vous déconnecter ?',
+      [
+        { text: 'Annuler', style: 'cancel' },
+        {
+          text: 'Se déconnecter',
+          onPress: () => logout(),
+        },
+      ],
+    );
+  };
+
   const SECTIONS: { id: Section; label: string }[] = [
     { id: 'profil', label: 'Profil' },
     { id: 'securite', label: 'Sécurité' },
@@ -521,8 +557,9 @@ export default function DashboardScreen() {
             <Text style={styles.userRole}>{user?.role}</Text>
           </View>
         </View>
-        <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
-          <Ionicons name="log-out-outline" size={22} color={COLORS.textMuted} />
+        <TouchableOpacity onPress={handleLogout} style={styles.logoutBtn} accessibilityLabel="Se déconnecter">
+          <Ionicons name="log-out-outline" size={20} color={COLORS.gold} />
+          <Text style={styles.logoutBtnText}>Déconnexion</Text>
         </TouchableOpacity>
       </View>
 
@@ -581,7 +618,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  userInfo: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  userInfo: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 14, minWidth: 0 },
   userAvatar: {
     width: 52, height: 52, borderRadius: 26,
     backgroundColor: COLORS.gold, alignItems: 'center', justifyContent: 'center',
@@ -590,7 +627,18 @@ const styles = StyleSheet.create({
   userName: { color: COLORS.textWhite, fontSize: 16, fontWeight: '700' },
   userEmail: { color: COLORS.textMuted, fontSize: 12 },
   userRole: { color: COLORS.gold, fontSize: 11, fontWeight: '600', textTransform: 'capitalize' },
-  logoutBtn: { padding: 8 },
+  logoutBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    backgroundColor: COLORS.navyLight,
+  },
+  logoutBtnText: { color: COLORS.gold, fontSize: 12, fontWeight: '700' },
   adminBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -698,6 +746,24 @@ const s = StyleSheet.create({
     marginTop: 4,
   },
   dangerBtnText: { color: '#e74c3c', fontWeight: '700', fontSize: 13 },
+  accountActions: {
+    marginTop: 24,
+    gap: 10,
+  },
+  accountActionsTitle: { color: COLORS.textWhite, fontSize: 15, fontWeight: '800' },
+  logoutAccountBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    backgroundColor: COLORS.navyLight,
+  },
+  logoutAccountBtnText: { color: COLORS.textWhite, fontWeight: '700', fontSize: 14 },
   chartBox: { marginTop: 20, gap: 10 },
   chartTitle: { color: COLORS.textLight, fontSize: 13, fontWeight: '700' },
   chartRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },

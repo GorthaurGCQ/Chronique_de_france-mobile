@@ -1,6 +1,8 @@
 ﻿/** Écran accueil — hero, missions, carte régions, prochains événements. */
 // Module : node_modules/react-native
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+// Module : node_modules/react-native-gesture-handler
+import { ScrollView } from 'react-native-gesture-handler';
 // Module : node_modules/expo-router
 import { router } from 'expo-router';
 // Module : node_modules/expo-linear-gradient
@@ -195,7 +197,11 @@ const ms = StyleSheet.create({
 
 export default function AccueilScreen() {
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      nestedScrollEnabled
+    >
       <Hero />
       <ProchainsEvenements />
       <View style={styles.divider} />
