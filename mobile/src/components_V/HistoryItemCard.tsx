@@ -1,8 +1,13 @@
 ﻿/** Carte historique de lecture — ressource consultée avec date. */
+// Module : node_modules/react-native
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+// Module : node_modules/expo-router
 import { router } from 'expo-router';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// API : src/lib/api/index.ts
 import type { Resource } from '@/lib/api';
+// Modèle : src/models_M/constants/app.constants.ts
 import { EPOQUE_COLORS, getEpoqueLabel, getResourceTypeLabel } from '@/models_M/constants/app.constants';
 
 type Props = {

@@ -1,10 +1,15 @@
 ﻿/** Page dédiée Occitanie — carousel catégories et filtres par époque. */
+// Module : node_modules/react
 import { useState } from 'react';
+// Module : node_modules/react-native
 import {
   View, Text, ScrollView, StyleSheet, Pressable, FlatList,
 } from 'react-native';
+// Module : node_modules/expo-router
 import { useRouter } from 'expo-router';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Modèle : src/models_M/data/occitaniaData.ts
 import { OCCITANIE_INFO, OCCITANIE_CATEGORIES, OCCITANIE_CARDS } from '@/models_M/data/occitaniaData';
 
 const EPOQUES = [

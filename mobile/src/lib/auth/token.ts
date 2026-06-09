@@ -3,7 +3,9 @@
  * - Natif (iOS/Android) : expo-secure-store (chiffrement matériel)
  * - Web : localStorage
  */
+// Module : node_modules/expo-secure-store
 import * as SecureStore from 'expo-secure-store';
+// Module : node_modules/react-native
 import { Platform } from 'react-native';
 
 export const TOKEN_KEY = 'better_auth_token';

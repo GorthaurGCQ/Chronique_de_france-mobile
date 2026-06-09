@@ -1,12 +1,21 @@
 ﻿/** Gestion utilisateurs — recherche, ban/rôles et permissions granulaires. */
+// Module : node_modules/react
 import { useState } from 'react';
+// Module : node_modules/react-native
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useAdmin.ts
 import { useAdminUsers, useAdminUserAction } from '@/hooks/useAdmin';
+// Composant : src/components_V/admin/PermissionsModal.tsx
 import { PermissionsModal, type AdminUserRow } from '@/components_V/admin/PermissionsModal';
+// Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
+// API : src/lib/api/index.ts
 import type { AdminUserAction } from '@/lib/api';
+// Modèle : src/models_M/constants/permissions.ts
 import type { Permission } from '@/models_M/constants/permissions';
 
 export default function AdminUtilisateurs() {

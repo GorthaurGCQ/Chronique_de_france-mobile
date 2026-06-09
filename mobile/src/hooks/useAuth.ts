@@ -1,6 +1,10 @@
+// Module : node_modules/react
 import { useCallback } from 'react';
+// Store : src/store/authStore.ts
 import { useAuthStore } from '@/store/authStore';
+// Auth : src/lib/auth/auth-client.ts
 import { authClient } from '@/lib/auth/auth-client';
+// Auth : src/lib/auth/token.ts
 import { getStoredToken } from '@/lib/auth/token';
 
 /** Promesse singleton — garantit un seul appel initAuthSession au démarrage. */

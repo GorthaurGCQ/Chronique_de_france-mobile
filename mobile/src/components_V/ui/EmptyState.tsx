@@ -1,6 +1,9 @@
 ﻿/** Placeholder liste vide — icône, texte et action optionnelle. */
+// Module : node_modules/react-native
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 
 type Props = {

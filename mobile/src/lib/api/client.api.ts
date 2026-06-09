@@ -3,8 +3,11 @@
  * Toutes les requêtes passent par ici vers le backend Next.js externe ({API_URL}/api/*).
  * Gère l'authentification hybride Better Auth (Bearer + cookie sur natif).
  */
+// Module : node_modules/react-native
 import { Platform } from 'react-native';
+// Modèle : src/models_M/types/api.types.ts
 import type { ApiEnvelope } from '@/models_M/types/api.types';
+// Auth : src/lib/auth/token.ts
 import { getStoredToken } from '@/lib/auth/token';
 
 /** URL de base du backend Next.js — définie dans mobile/.env (EXPO_PUBLIC_API_URL) */
@@ -125,6 +128,7 @@ export async function storeAuthTokenFromResponse(
   res: Response,
   body: { token?: string; session?: { token?: string } },
 ): Promise<void> {
+  // Auth : src/lib/auth/token.ts (import dynamique — évite dépendance circulaire)
   const { setStoredToken } = await import('@/lib/auth/token');
   const headerToken = res.headers.get('set-auth-token');
   const token = body.token ?? body.session?.token ?? headerToken;

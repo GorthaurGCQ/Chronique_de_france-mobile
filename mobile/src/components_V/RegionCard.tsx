@@ -1,7 +1,11 @@
 ﻿/** Tuile région — couleur, chef-lieu et époque phare, lien vers /regions/[slug]. */
+// Module : node_modules/react-native
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+// Module : node_modules/expo-router
 import { router } from 'expo-router';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Modèle : src/models_M/data/regionsContent.ts
 import type { RegionContent } from '@/models_M/data/regionsContent';
 
 type Props = {

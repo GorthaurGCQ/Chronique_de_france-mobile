@@ -2,21 +2,34 @@
  * Espace membre — 6 sections : profil, sécurité, stats, favoris, historique, préférences.
  * Point d'entrée admin si isAdmin (lien vers /admin).
  */
+// Module : node_modules/react
 import { useState, useEffect } from 'react';
+// Module : node_modules/react-native
 import {
   View, Text, ScrollView, StyleSheet, TouchableOpacity,
   TextInput, Image, ActivityIndicator, Alert, Switch,
 } from 'react-native';
+// Module : node_modules/expo-router
 import { router } from 'expo-router';
+// Module : node_modules/expo-image-picker
 import * as ImagePicker from 'expo-image-picker';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useAuth.ts
 import { useAuth } from '@/hooks/useAuth';
+// Hook : src/hooks/useProfile.ts
 import { useProfile, useProfileHistory, useUpdateProfile, useChangePassword, useUploadAvatar } from '@/hooks/useProfile';
+// Hook : src/hooks/useFavorites.ts
 import { useFavorites } from '@/hooks/useFavorites';
+// Composant : src/components_V/FavoriteItem.tsx
 import { FavoriteItem } from '@/components_V/FavoriteItem';
+// Composant : src/components_V/HistoryItemCard.tsx
 import { HistoryItemCard } from '@/components_V/HistoryItemCard';
+// Auth : src/lib/auth/auth-client.ts
 import { authClient } from '@/lib/auth/auth-client';
+// Modèle : src/models_M/constants/app.constants.ts
 import {
   DEFAULT_USER_PREFERENCES,
   EPOQUE_COLORS,
@@ -25,6 +38,7 @@ import {
   type RegionCode,
   type UserPreferences,
 } from '@/models_M/constants/app.constants';
+// Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
 
 type Section = 'profil' | 'securite' | 'stats' | 'favoris' | 'historique' | 'preferences';

@@ -1,11 +1,17 @@
 ﻿/** Bloc info développeur Expo — chemin fichier et liens doc (template). */
+// Module : node_modules/react
 import React from 'react';
+// Module : node_modules/react-native
 import { StyleSheet } from 'react-native';
 
+// Composant : src/components_V/ExternalLink.tsx
 import { ExternalLink } from './ExternalLink';
+// Composant : src/components_V/StyledText.tsx
 import { MonoText } from './StyledText';
+// Composant : src/components_V/Themed.tsx
 import { Text, View } from './Themed';
 
+// Modèle : src/models_M/constants/Colors.ts
 import Colors from '@/models_M/constants/Colors';
 
 export default function EditScreenInfo({ path }: { path: string }) {

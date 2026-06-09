@@ -1,8 +1,13 @@
 ﻿/** Bannière accueil réutilisable — gradient, illustration château SVG, CTAs navigation. */
+// Module : node_modules/react-native
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+// Module : node_modules/expo-router
 import { useRouter } from 'expo-router';
+// Module : node_modules/react-native-svg
 import Svg, { Rect, Polygon } from 'react-native-svg';
+// Module : node_modules/expo-linear-gradient
 import { LinearGradient } from 'expo-linear-gradient';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 
 export default function Hero() {

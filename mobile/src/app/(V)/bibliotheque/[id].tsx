@@ -1,12 +1,19 @@
 /** Détail ressource — rendu HTML, lecteur média, favori, enregistrement historique. */
+// Module : node_modules/react
 import { useEffect } from 'react';
+// Module : node_modules/react-native
 import {
   View, Text, ScrollView, StyleSheet, Image, TouchableOpacity,
 } from 'react-native';
+// Module : node_modules/expo-router
 import { useLocalSearchParams, router } from 'expo-router';
+// Module : node_modules/react-native-render-html
 import RenderHtml from 'react-native-render-html';
+// Module : node_modules/react-native
 import { useWindowDimensions } from 'react-native';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Modèle : src/models_M/constants/app.constants.ts
 import {
   EPOQUE_COLORS,
   getDomaineLabel,
@@ -14,12 +21,19 @@ import {
   getRegionLabel,
   getResourceTypeLabel,
 } from '@/models_M/constants/app.constants';
+// Hook : src/hooks/useResources.ts
 import { useResource } from '@/hooks/useResources';
+// Composant : src/components_V/ui/Badge.tsx
 import { Badge } from '@/components_V/ui/Badge';
+// Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
+// Composant : src/components_V/MediaPlayer.tsx
 import { MediaPlayer } from '@/components_V/MediaPlayer';
+// API : src/lib/api/index.ts
 import { profileApi } from '@/lib/api';
+// Hook : src/hooks/useAuth.ts
 import { useAuth } from '@/hooks/useAuth';
+// Composant : src/components_V/BookmarkButton.tsx
 import { BookmarkButton } from '@/components_V/BookmarkButton';
 
 export default function ResourceDetailScreen() {

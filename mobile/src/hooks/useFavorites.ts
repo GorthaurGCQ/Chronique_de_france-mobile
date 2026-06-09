@@ -2,8 +2,11 @@
  * Gestion des favoris avec mutations optimistes (UI réactive avant réponse API).
  * Nécessite une session authentifiée.
  */
+// Module : node_modules/@tanstack/react-query
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+// API : src/lib/api/index.ts
 import { favoritesApi } from '@/lib/api';
+// Hook : src/hooks/useAuth.ts
 import { useAuth } from './useAuth';
 
 export function useFavorites() {

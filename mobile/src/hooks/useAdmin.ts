@@ -1,6 +1,9 @@
 ﻿/** Hooks React Query pour la zone admin — stats, CRUD, audit. */
+// Module : node_modules/@tanstack/react-query
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+// API : src/lib/api/index.ts
 import { adminApi, type AdminUserAction, type Resource, type Event } from '@/lib/api';
+// Modèle : src/models_M/constants/permissions.ts
 import type { Permission } from '@/models_M/constants/permissions';
 
 export function useAdminStats() {

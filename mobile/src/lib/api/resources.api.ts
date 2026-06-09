@@ -1,6 +1,9 @@
 /** API bibliothèque — liste paginée et détail des ressources éditoriales. */
+// Modèle : src/models_M/types/resource.types.ts
 import type { Resource, ResourceFilters, ResourceListResult } from '@/models_M/types/resource.types';
+// API : src/lib/api/client.api.ts
 import { ApiError, apiFetch, apiJson } from '@/lib/api/client.api';
+// Service : src/lib/services/mappers.service.ts
 import { mapResource } from '@/lib/services/mappers.service';
 
 export const resourcesApi = {

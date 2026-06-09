@@ -1,4 +1,5 @@
 /** Template HTML racine web — meta, reset scroll et fond sombre (rendu statique Expo). */
+// Module : node_modules/expo-router/html
 import { ScrollViewStyleReset } from 'expo-router/html';
 
 export default function Root({ children }: { children: React.ReactNode }) {

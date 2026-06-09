@@ -1,5 +1,7 @@
 /** Endpoints Better Auth — sign-in/up, session, reset mot de passe. */
+// Modèle : src/models_M/types/auth.types.ts
 import type { AuthSessionUser } from '@/models_M/types/auth.types';
+// API : src/lib/api/client.api.ts
 import { API_URL, ApiError, apiFetch, apiJson, storeAuthTokenFromResponse } from '@/lib/api/client.api';
 
 export const authApi = {

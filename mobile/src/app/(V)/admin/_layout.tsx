@@ -2,12 +2,19 @@
  * Layout admin — garde d'accès (isAdmin) + sidebar de navigation.
  * Redirige vers /dashboard si non authentifié ou non admin.
  */
+// Module : node_modules/react
 import { useEffect } from 'react';
+// Module : node_modules/react-native
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+// Module : node_modules/expo-router
 import { Slot, router, useSegments } from 'expo-router';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useAuth.ts
 import { useAuth } from '@/hooks/useAuth';
+// Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
 
 const NAV_ITEMS = [

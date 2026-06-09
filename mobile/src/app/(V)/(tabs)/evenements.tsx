@@ -1,14 +1,22 @@
 ﻿/** Liste événements publics — affichage et inscription via modal. */
+// Module : node_modules/react
 import { useState } from 'react';
+// Module : node_modules/react-native
 import {
   View, Text, FlatList, StyleSheet, Modal, TouchableOpacity,
   TextInput, KeyboardAvoidingView, Platform, ActivityIndicator, ScrollView,
 } from 'react-native';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useEvents.ts
 import { useEvents } from '@/hooks/useEvents';
+// Composant : src/components_V/EventCard.tsx
 import { EventCard } from '@/components_V/EventCard';
+// Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
+// Composant : src/components_V/ui/EmptyState.tsx
 import { EmptyState } from '@/components_V/ui/EmptyState';
+// API : src/lib/api/index.ts
 import { eventsApi, type Event } from '@/lib/api';
 
 type InscriptionForm = { nom: string; prenom: string; email: string };

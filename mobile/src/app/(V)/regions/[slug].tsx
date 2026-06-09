@@ -1,15 +1,27 @@
 /** Fiche région — contenu statique + ressources filtrées (code legacy → enum API). */
+// Module : node_modules/react
 import { useState, useMemo } from 'react';
+// Module : node_modules/react-native
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
+// Module : node_modules/expo-router
 import { useLocalSearchParams } from 'expo-router';
+// Module : node_modules/expo-linear-gradient
 import { LinearGradient } from 'expo-linear-gradient';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Modèle : src/models_M/data/regionsContent.ts
 import { getRegionBySlug } from '@/models_M/data/regionsContent';
+// Hook : src/hooks/useResources.ts
 import { useResourcesFlat } from '@/hooks/useResources';
+// Composant : src/components_V/ResourceCard.tsx
 import { ResourceCard } from '@/components_V/ResourceCard';
+// Composant : src/components_V/FilterBar.tsx
 import { FilterBar } from '@/components_V/FilterBar';
+// Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
+// Composant : src/components_V/ui/EmptyState.tsx
 import { EmptyState } from '@/components_V/ui/EmptyState';
+// Modèle : src/models_M/constants/app.constants.ts
 import { LEGACY_TO_WEB_REGION, type DomaineId, type EpoqueId, type ResourceTypeId } from '@/models_M/constants/app.constants';
 
 export default function RegionDetailScreen() {

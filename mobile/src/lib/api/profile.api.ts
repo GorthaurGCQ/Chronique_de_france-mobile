@@ -2,9 +2,13 @@
  * API profil utilisateur.
  * get() fusionne les données authStore (identité) avec les préférences stockées côté API.
  */
+// Modèle : src/models_M/types/profile.types.ts
 import type { Profile } from '@/models_M/types/profile.types';
+// Store : src/store/authStore.ts
 import { useAuthStore } from '@/store/authStore';
+// API : src/lib/api/client.api.ts
 import { ApiError, apiFetch, apiJson } from '@/lib/api/client.api';
+// Service : src/lib/services/mappers.service.ts
 import { mapHistoryItem } from '@/lib/services/mappers.service';
 
 export const profileApi = {

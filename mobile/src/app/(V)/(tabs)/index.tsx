@@ -1,12 +1,21 @@
 ﻿/** Écran accueil — hero, missions, carte régions, prochains événements. */
+// Module : node_modules/react-native
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
+// Module : node_modules/expo-router
 import { router } from 'expo-router';
+// Module : node_modules/expo-linear-gradient
 import { LinearGradient } from 'expo-linear-gradient';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useEvents.ts
 import { useUpcomingEvents } from '@/hooks/useEvents';
+// Hook : src/hooks/useAuth.ts
 import { useAuth } from '@/hooks/useAuth';
+// Composant : src/components_V/EventCard.tsx
 import { EventCard } from '@/components_V/EventCard';
+// Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
 
 // ── Hero ──────────────────────────────────────────────────────────────────────

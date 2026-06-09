@@ -1,6 +1,9 @@
 ﻿/** Section accueil « À la une » — cartes statiques vers bibliothèque et événements. */
+// Module : node_modules/react-native
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
+// Module : node_modules/expo-router
 import { useRouter } from 'expo-router';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 
 type Card = {

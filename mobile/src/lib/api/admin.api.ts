@@ -1,8 +1,13 @@
 /** Surface API admin — CRUD ressources/événements, utilisateurs, audit, upload. */
+// Modèle : src/models_M/types/admin.types.ts
 import type { AdminUserAction } from '@/models_M/types/admin.types';
+// Modèle : src/models_M/types/event.types.ts
 import type { Event } from '@/models_M/types/event.types';
+// Modèle : src/models_M/types/resource.types.ts
 import type { Resource } from '@/models_M/types/resource.types';
+// API : src/lib/api/client.api.ts
 import { apiJson } from '@/lib/api/client.api';
+// Service : src/lib/services/mappers.service.ts
 import {
   mapAdminStats,
   mapAuditLog,

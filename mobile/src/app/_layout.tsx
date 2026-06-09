@@ -1,16 +1,28 @@
 ﻿/** Point d'entrée racine — fonts, React Query, thème sombre, init auth au démarrage. */
+// Module : node_modules/@expo/vector-icons/FontAwesome
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+// Module : node_modules/@react-navigation/native
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
+// Module : node_modules/expo-font
 import { useFonts } from 'expo-font';
+// Module : node_modules/expo-router
 import { Stack } from 'expo-router';
+// Module : node_modules/expo-splash-screen
 import * as SplashScreen from 'expo-splash-screen';
+// Module : node_modules/react
 import { useEffect } from 'react';
+// Module : node_modules/react-native
 import { StatusBar } from 'react-native';
+// Module : node_modules/react-native-reanimated
 import 'react-native-reanimated';
+// Module : node_modules/@tanstack/react-query
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useAuth.ts
 import { initAuthSession } from '@/hooks/useAuth';
 
+// Module : node_modules/expo-router
 export { ErrorBoundary } from 'expo-router';
 
 export const unstable_settings = {

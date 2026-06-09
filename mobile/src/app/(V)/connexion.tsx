@@ -1,11 +1,16 @@
 ﻿/** Écran connexion/inscription — Better Auth via useAuth (login/register). */
+// Module : node_modules/react
 import { useState } from 'react';
+// Module : node_modules/react-native
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator,
 } from 'react-native';
+// Module : node_modules/expo-router
 import { router } from 'expo-router';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useAuth.ts
 import { useAuth } from '@/hooks/useAuth';
 
 type Tab = 'login' | 'register';

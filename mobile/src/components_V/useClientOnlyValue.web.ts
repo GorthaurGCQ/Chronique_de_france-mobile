@@ -1,4 +1,5 @@
 /** Web — hydrate après montage (valeur serveur → client via useEffect). */
+// Module : node_modules/react
 import React from 'react';
 
 export function useClientOnlyValue<S, C>(server: S, client: C): S | C {

@@ -1,7 +1,10 @@
 ﻿/** Composants Text/View thémés — couleurs light/dark via useColorScheme. */
+// Module : node_modules/react-native
 import { Text as DefaultText, View as DefaultView } from 'react-native';
 
+// Modèle : src/models_M/constants/Colors.ts
 import Colors from '@/models_M/constants/Colors';
+// Hook : src/components_V/useColorScheme.ts
 import { useColorScheme } from './useColorScheme';
 
 type ThemeProps = {

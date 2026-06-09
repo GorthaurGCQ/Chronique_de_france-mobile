@@ -1,7 +1,10 @@
 ﻿/** Écran 404 — route inexistante, lien retour accueil. */
+// Module : node_modules/expo-router
 import { Link, Stack } from 'expo-router';
+// Module : node_modules/react-native
 import { StyleSheet } from 'react-native';
 
+// Composant : src/components_V/Themed.tsx
 import { Text, View } from '@/components_V/Themed';
 
 export default function NotFoundScreen() {

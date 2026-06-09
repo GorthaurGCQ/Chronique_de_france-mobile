@@ -1,6 +1,9 @@
 ﻿/** Champ recherche textuelle bibliothèque — icône et bouton effacer. */
+// Module : node_modules/react-native
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 
 type Props = {

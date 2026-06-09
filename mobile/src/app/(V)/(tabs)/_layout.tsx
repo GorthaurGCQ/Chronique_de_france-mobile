@@ -1,7 +1,11 @@
 ﻿/** Barre d'onglets — 5 sections : Accueil, Bibliothèque, Événements, Espace membre, À propos. */
+// Module : node_modules/react
 import React from 'react';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Module : node_modules/expo-router
 import { Tabs } from 'expo-router';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 
 function TabBarIcon(props: {

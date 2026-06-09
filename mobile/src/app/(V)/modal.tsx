@@ -1,8 +1,12 @@
 ﻿/** Modal Expo Router par défaut — écran d'exemple (template). */
+// Module : node_modules/expo-status-bar
 import { StatusBar } from 'expo-status-bar';
+// Module : node_modules/react-native
 import { Platform, StyleSheet } from 'react-native';
 
+// Composant : src/components_V/EditScreenInfo.tsx
 import EditScreenInfo from '@/components_V/EditScreenInfo';
+// Composant : src/components_V/Themed.tsx
 import { Text, View } from '@/components_V/Themed';
 
 export default function ModalScreen() {

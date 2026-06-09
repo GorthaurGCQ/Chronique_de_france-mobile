@@ -2,7 +2,9 @@
  * État global d'authentification (Zustand).
  * Source de vérité pour user/isAuthenticated — alimenté par useAuth et initAuthSession.
  */
+// Module : node_modules/zustand
 import { create } from 'zustand';
+// Modèle : src/models_M/types/auth.types.ts
 import type { AuthUser } from '@/models_M/types/auth.types';
 
 type AuthState = {

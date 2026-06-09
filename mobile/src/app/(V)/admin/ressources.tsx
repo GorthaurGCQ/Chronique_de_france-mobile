@@ -1,15 +1,24 @@
 ﻿/** CRUD ressources bibliothèque — formulaire modal création/édition. */
+// Module : node_modules/react
 import { useState } from 'react';
+// Module : node_modules/react-native
 import {
   View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput,
   Modal, ScrollView, Alert, ActivityIndicator,
 } from 'react-native';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useAdmin.ts
 import { useAdminResources, useAdminCreateResource, useAdminUpdateResource, useAdminDeleteResource } from '@/hooks/useAdmin';
+// Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
+// API : src/lib/api/index.ts
 import type { Resource } from '@/lib/api';
+// Modèle : src/models_M/constants/app.constants.ts
 import { EPOQUES, DOMAINES, RESOURCE_TYPES, REGIONS_LIST, getEpoqueLabel, getResourceTypeLabel } from '@/models_M/constants/app.constants';
+// Composant : src/components_V/admin/ImageUploadField.tsx
 import { ImageUploadField } from '@/components_V/admin/ImageUploadField';
 
 type FormData = {

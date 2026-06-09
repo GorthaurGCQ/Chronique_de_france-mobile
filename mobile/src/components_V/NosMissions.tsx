@@ -1,5 +1,7 @@
 ﻿/** Section missions institutionnelles — 3 piliers pédagogiques sur l'accueil. */
+// Module : node_modules/react-native
 import { View, Text, StyleSheet } from 'react-native';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 
 type Mission = {

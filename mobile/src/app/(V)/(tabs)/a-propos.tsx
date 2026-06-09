@@ -1,6 +1,9 @@
 ﻿/** À propos — mission, valeurs, équipe et contacts institutionnels. */
+// Module : node_modules/react-native
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 
 const VALEURS = [

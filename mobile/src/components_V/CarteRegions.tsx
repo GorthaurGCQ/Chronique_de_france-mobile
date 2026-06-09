@@ -2,11 +2,17 @@
  * Carte SVG interactive de France — codes INSEE liés à REGIONS et france-svg-paths.
  * Sélection → callback ou navigation vers /regions/[slug].
  */
+// Module : node_modules/react-native
 import { View, Text, StyleSheet, Pressable, useWindowDimensions } from 'react-native';
+// Module : node_modules/react-native-svg
 import Svg, { Path } from 'react-native-svg';
+// Module : node_modules/expo-router
 import { useRouter } from 'expo-router';
+// Modèle : src/models_M/data/france-svg-paths.ts
 import { FRANCE_SVG_PATHS } from '@/models_M/data/france-svg-paths';
+// Modèle : src/models_M/data/regions.ts
 import { REGIONS, getRegionByCode, type Region } from '@/models_M/data/regions';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 
 type Props = {

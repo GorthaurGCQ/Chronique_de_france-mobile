@@ -2,7 +2,9 @@
  * Lecteur média multi-plateforme pour les ressources bibliothèque.
  * Web : iframe natif | Natif : WebView (embed) ou expo-av (fichiers directs).
  */
+// Module : node_modules/react
 import { useState, useRef } from 'react';
+// Module : node_modules/react-native
 import {
   View,
   Text,
@@ -12,9 +14,13 @@ import {
   Linking,
   Platform,
 } from 'react-native';
+// Module : node_modules/expo-av
 import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Service : src/lib/services/media.service.ts
 import {
   detectMediaKind,
   getEmbedUrl,
@@ -125,6 +131,7 @@ function WebEmbedFrame({ embedUrl }: { embedUrl: string }) {
 
 function NativeEmbedWebView({ embedUrl }: { embedUrl: string }) {
   const [isLoading, setIsLoading] = useState(true);
+  // Module : node_modules/react-native-webview (require — chargement conditionnel natif)
   const { WebView } = require('react-native-webview') as typeof import('react-native-webview');
 
   return (

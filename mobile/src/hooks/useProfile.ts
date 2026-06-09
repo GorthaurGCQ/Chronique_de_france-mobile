@@ -1,6 +1,9 @@
 /** Hooks profil — données, historique, avatar, mot de passe. */
+// Module : node_modules/@tanstack/react-query
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+// API : src/lib/api/index.ts
 import { profileApi } from '@/lib/api';
+// Hook : src/hooks/useAuth.ts
 import { useAuth } from './useAuth';
 
 export function useProfile() {

@@ -1,7 +1,11 @@
 ﻿/** Filtres bibliothèque — chips type/domaine/époque (enums PostgreSQL). */
+// Module : node_modules/react
 import type { ReactNode } from 'react';
+// Module : node_modules/react-native
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Modèle : src/models_M/constants/app.constants.ts
 import { DOMAINES, EPOQUES, RESOURCE_TYPES, type DomaineId, type EpoqueId, type ResourceTypeId } from '@/models_M/constants/app.constants';
 
 type Props = {

@@ -1,10 +1,17 @@
 ﻿/** Ligne favori dashboard — aperçu ressource, note éditable, suppression. */
+// Module : node_modules/react
 import { useState } from 'react';
+// Module : node_modules/react-native
 import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+// Module : node_modules/expo-router
 import { router } from 'expo-router';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// API : src/lib/api/index.ts
 import type { Favorite } from '@/lib/api';
+// Modèle : src/models_M/constants/app.constants.ts
 import {
   EPOQUE_COLORS,
   getEpoqueLabel,

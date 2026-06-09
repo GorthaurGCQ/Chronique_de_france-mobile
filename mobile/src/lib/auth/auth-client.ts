@@ -1,5 +1,8 @@
+// API : src/lib/api/auth.api.ts
 import { authApi } from '@/lib/api/auth.api';
+// Auth : src/lib/auth/token.ts
 import { clearStoredToken } from '@/lib/auth/token';
+// Modèle : src/models_M/types/auth.types.ts
 import type { AuthSessionUser, AuthUser, SignInResult, SignUpResult } from '@/models_M/types/auth.types';
 
 /** Normalise le rôle Better Auth en minuscules pour les comparaisons (admin, founder). */

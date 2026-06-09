@@ -1,5 +1,7 @@
 /** Pagination infinie des ressources bibliothèque avec filtres optionnels. */
+// Module : node_modules/@tanstack/react-query
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+// API : src/lib/api/index.ts
 import { resourcesApi, type ResourceFilters } from '@/lib/api';
 
 export function useResources(filters: Omit<ResourceFilters, 'page' | 'offset'> = {}) {

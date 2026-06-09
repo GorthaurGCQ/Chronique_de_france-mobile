@@ -1,7 +1,11 @@
 ﻿/** Grille des 13 régions — navigation vers fiches détail par slug. */
+// Module : node_modules/react-native
 import { View, Text, FlatList, StyleSheet } from 'react-native';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Modèle : src/models_M/data/regionsContent.ts
 import { REGIONS_CONTENT } from '@/models_M/data/regionsContent';
+// Composant : src/components_V/RegionCard.tsx
 import { RegionCard } from '@/components_V/RegionCard';
 
 export default function RegionsScreen() {

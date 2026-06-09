@@ -1,10 +1,17 @@
 ﻿/** Carte ressource bibliothèque — badges type/domaine et favori optionnel. */
+// Module : node_modules/react-native
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+// Module : node_modules/expo-router
 import { router } from 'expo-router';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Composant : src/components_V/ui/Badge.tsx
 import { Badge } from '@/components_V/ui/Badge';
+// Composant : src/components_V/BookmarkButton.tsx
 import { BookmarkButton } from '@/components_V/BookmarkButton';
+// Modèle : src/models_M/constants/app.constants.ts
 import { getDomaineLabel, getEpoqueLabel, getResourceTypeLabel, EPOQUE_COLORS } from '@/models_M/constants/app.constants';
+// API : src/lib/api/index.ts
 import type { Resource } from '@/lib/api';
 
 type Props = {

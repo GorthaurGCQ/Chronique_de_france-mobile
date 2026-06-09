@@ -1,9 +1,15 @@
 ﻿/** Journal d'audit admin — logs filtrés par catégorie (auth, resources, etc.). */
+// Module : node_modules/react
 import { useState } from 'react';
+// Module : node_modules/react-native
 import { View, Text, FlatList, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useAdmin.ts
 import { useAdminAuditLogs } from '@/hooks/useAdmin';
+// Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
+// Composant : src/components_V/ui/EmptyState.tsx
 import { EmptyState } from '@/components_V/ui/EmptyState';
 
 const CATEGORIES = ['auth', 'resources', 'events', 'users', 'admin'];

@@ -1,10 +1,14 @@
 ﻿/** Demande réinitialisation mot de passe — envoi e-mail via Better Auth. */
+// Module : node_modules/react
 import { useState } from 'react';
+// Module : node_modules/react-native
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   KeyboardAvoidingView, Platform, ActivityIndicator,
 } from 'react-native';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Auth : src/lib/auth/auth-client.ts
 import { authClient } from '@/lib/auth/auth-client';
 
 export default function MotDePasseOublieScreen() {

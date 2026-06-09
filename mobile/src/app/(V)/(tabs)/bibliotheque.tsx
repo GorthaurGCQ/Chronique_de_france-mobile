@@ -1,18 +1,31 @@
 ﻿/** Bibliothèque — filtres (type, domaine, époque, région) + scroll infini React Query. */
+// Module : node_modules/react
 import { useState, useEffect, useMemo } from 'react';
+// Module : node_modules/react-native
 import {
   View, Text, FlatList, StyleSheet, TouchableOpacity,
 } from 'react-native';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useResources.ts
 import { useResources } from '@/hooks/useResources';
+// Composant : src/components_V/ResourceCard.tsx
 import { ResourceCard } from '@/components_V/ResourceCard';
+// Composant : src/components_V/FilterBar.tsx
 import { FilterBar } from '@/components_V/FilterBar';
+// Composant : src/components_V/SearchBar.tsx
 import { SearchBar } from '@/components_V/SearchBar';
+// Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
+// Composant : src/components_V/ui/EmptyState.tsx
 import { EmptyState } from '@/components_V/ui/EmptyState';
+// Composant : src/components_V/CarteRegions.tsx
 import CarteRegions from '@/components_V/CarteRegions';
+// Composant : src/components_V/FriseChronologique.tsx
 import { FriseChronologique } from '@/components_V/FriseChronologique';
+// Modèle : src/models_M/data/regions.ts
 import type { Region } from '@/models_M/data/regions';
+// Modèle : src/models_M/constants/app.constants.ts
 import { getWebRegionCodeFromSlug, type DomaineId, type EpoqueId, type ResourceTypeId } from '@/models_M/constants/app.constants';
 
 const PAGE_SIZE = 20;

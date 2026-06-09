@@ -1,4 +1,6 @@
+// Module : node_modules/@tanstack/react-query
 import { useQuery } from '@tanstack/react-query';
+// API : src/lib/api/index.ts
 import { eventsApi } from '@/lib/api';
 
 export function useEvents() {

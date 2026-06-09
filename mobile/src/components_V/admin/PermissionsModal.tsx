@@ -1,10 +1,15 @@
 ﻿/** Modal admin — édition rôle et permissions granulaires d'un utilisateur. */
+// Module : node_modules/react
 import { useEffect, useState } from 'react';
+// Module : node_modules/react-native
 import {
   View, Text, Modal, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator,
 } from 'react-native';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Modèle : src/models_M/constants/permissions.ts
 import {
   DEFAULT_PAGE_PERMISSIONS,
   PERMISSION_GROUPS,

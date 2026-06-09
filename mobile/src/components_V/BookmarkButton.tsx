@@ -1,8 +1,13 @@
 ﻿/** Bouton favori — toggle via useFavorites, redirige vers connexion si anonyme. */
+// Module : node_modules/react-native
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useFavorites.ts
 import { useFavorites } from '@/hooks/useFavorites';
+// Hook : src/hooks/useAuth.ts
 import { useAuth } from '@/hooks/useAuth';
+// Module : node_modules/expo-router
 import { router } from 'expo-router';
 
 type Props = {

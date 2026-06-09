@@ -1,15 +1,24 @@
 ﻿/** CRUD événements admin — formulaire modal avec upload image. */
+// Module : node_modules/react
 import { useState } from 'react';
+// Module : node_modules/react-native
 import {
   View, Text, FlatList, StyleSheet, TouchableOpacity,
   Modal, ScrollView, Alert, ActivityIndicator, TextInput,
 } from 'react-native';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useAdmin.ts
 import { useAdminEvents, useAdminCreateEvent, useAdminUpdateEvent, useAdminDeleteEvent } from '@/hooks/useAdmin';
+// Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
+// API : src/lib/api/index.ts
 import { adminApi, type Event } from '@/lib/api';
+// Modèle : src/models_M/constants/app.constants.ts
 import { DOMAINES, EPOQUES, REGIONS_LIST } from '@/models_M/constants/app.constants';
+// Composant : src/components_V/admin/ImageUploadField.tsx
 import { ImageUploadField } from '@/components_V/admin/ImageUploadField';
 
 type FormData = { title: string; description: string; date: string; lieu: string; region: string; domaine: string; epoque: string; imageUrl: string };

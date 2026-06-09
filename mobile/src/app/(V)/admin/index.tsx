@@ -1,8 +1,13 @@
 ﻿/** Tableau de bord admin — compteurs utilisateurs, ressources et événements. */
+// Module : node_modules/react-native
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Hook : src/hooks/useAdmin.ts
 import { useAdminStats } from '@/hooks/useAdmin';
+// Composant : src/components_V/ui/Loader.tsx
 import { Loader } from '@/components_V/ui/Loader';
 
 export default function AdminDashboard() {

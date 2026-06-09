@@ -1,5 +1,7 @@
 /** Navigation stack principale — tabs, auth, bibliothèque, régions, admin. */
+// Module : node_modules/expo-router
 import { Stack } from 'expo-router';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
 
 export const unstable_settings = {

@@ -1,11 +1,16 @@
 ﻿/** Nouveau mot de passe — token reçu par lien e-mail (param URL). */
+// Module : node_modules/react
 import { useState } from 'react';
+// Module : node_modules/react-native
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   KeyboardAvoidingView, Platform, ActivityIndicator,
 } from 'react-native';
+// Module : node_modules/expo-router
 import { useLocalSearchParams, router } from 'expo-router';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// Auth : src/lib/auth/auth-client.ts
 import { authClient } from '@/lib/auth/auth-client';
 
 export default function ResetPasswordScreen() {

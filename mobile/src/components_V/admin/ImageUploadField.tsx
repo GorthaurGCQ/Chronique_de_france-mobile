@@ -1,9 +1,15 @@
 ﻿/** Upload image admin — ImagePicker → FormData → adminApi.upload. */
+// Module : node_modules/react
 import { useState } from 'react';
+// Module : node_modules/react-native
 import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+// Module : node_modules/expo-image-picker
 import * as ImagePicker from 'expo-image-picker';
+// Module : node_modules/@expo/vector-icons
 import { Ionicons } from '@expo/vector-icons';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// API : src/lib/api/index.ts
 import { adminApi } from '@/lib/api';
 
 type Props = {

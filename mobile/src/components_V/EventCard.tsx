@@ -1,6 +1,9 @@
 ﻿/** Carte événement — date FR, badge domaine et CTA inscription optionnel. */
+// Module : node_modules/react-native
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+// Modèle : src/models_M/constants/Colors.ts
 import { COLORS } from '@/models_M/constants/Colors';
+// API : src/lib/api/index.ts
 import type { Event } from '@/lib/api';
 
 /** Couleurs accent par slug domaine legacy (histoire, patrimoine…). */
